@@ -87,7 +87,11 @@ export default class extends BaseCommand {
             if (!nsfw) commands = commands.filter(({ data }) => data.config.category !== 'nsfw')
             let text = `*👋🏻 (❤️ω❤️) Konnichiwa, senpai @${M.sender.jid.split('@')[0]}! I'm ${
                 this.client.config.name
-            }, your trusty companion on this epic journey! 🚀✨*`
+            }, your trusty companion on this epic journey! 🚀✨*\n\n*🎋 Prifix: ${
+                this.client.config.prefix
+            }*\n\n📌 *❯─「${'𝙍𝙐𝙇𝙀𝙎'}」─❮* 📌\n*- Avoid spamming the bot; it's not cool.*\n*- Refrain from calling the bot to prevent a ban.*\n*- Stay away from doing anything foolish.*\n\n🎫 *${
+                this.client.config.name
+            } Command List* 🎫`
             const categories: string[] = []
             for (const command of commands) {
                 if (categories.includes(command.data.config.category)) continue
@@ -97,16 +101,25 @@ export default class extends BaseCommand {
                 const categoryCommands: string[] = []
                 const filteredCommands = commands.filter((command) => command.data.config.category === category)
                 const data = this.list.find((x) => x.id.toLowerCase() === category.toLocaleLowerCase())
-                text += `\n\n  ${data?.emoji} *❯─「${data?.font}」─❮* ${data?.emoji}\n`
+                text += `\n\n${data?.emoji} *❯─「${data?.font}」─❮* ${data?.emoji}\n`
                 filteredCommands.forEach((command) => categoryCommands.push(command.data.name))
-                text += `➤ \`\`\`${categoryCommands.join(', ')}\`\`\``
+                text += `${categoryCommands
+                    .map((cmd) => `➤ \`\`\`${this.client.config.prefix}${cmd}\`\`\``)
+                    .join('\n')}`
             }
             text += '\n\n'
             text += `*📇 Notes:*
 *➪ Use ${this.client.config.prefix}help <command name> from help the list to see its description and usage*
 *➪ Eg: ${this.client.config.prefix}help profile*
 *➪ <> means required and [ ] means optional, don't include <> or [ ] when using command.*`
-            return void (await M.reply(text, 'text', undefined, undefined, undefined, [M.sender.jid]))
+            return void (await M.reply(
+                await this.client.utils.getBuffer('https://media.tenor.com/f-oT0-W_HVUAAAPo/saber.mp4'),
+                'video',
+                true,
+                undefined,
+                text,
+                [M.sender.jid]
+            ))
         } else {
             const cmd = context.trim().toLowerCase()
             const command = this.handler.commands.get(cmd) || this.handler.aliases.get(cmd)

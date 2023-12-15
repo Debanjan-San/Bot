@@ -31,8 +31,8 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
             prefix: '-',
             mods: [],
             PORT: Number(process.env.PORT || Math.floor(Math.random() * (9000 - 3000) + 3000)),
-            casinoGroup: '120363126235797589@g.us',
-            adminsGroup: '120363161086270701@g.us'
+            casinoGroup: '',
+            adminsGroup: ''
         }
         new Server(this)
     }
