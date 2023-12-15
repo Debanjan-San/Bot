@@ -2,7 +2,7 @@ import { BaseCommand, Command, Message } from '../../Structures'
 
 @Command('daily', {
     category: 'economy',
-    description: '',
+    description: 'Claim your daily transaction reward',
     usage: 'daily',
     exp: 10
 })

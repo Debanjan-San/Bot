@@ -13,10 +13,10 @@ import {
     Group,
     featureSchema,
     characterSchema,
-    TFeatureModel,
     cardsSchema,
     TCardsModel,
-    CardSchema
+    CardSchema,
+    Feature
 } from '../Database'
 import moment from 'moment-timezone'
 import { Utils } from '../lib'
@@ -127,6 +127,20 @@ export class Database {
         await this.user.updateOne({ jid }, { inventory })
     }
 
+    public updateOfflineStatus = async (jid: string, action: boolean, reason: string = '') => {
+        const time = action ? moment.tz('Etc/GMT').format('MMM D, YYYY HH:mm:ss') : ''
+        await this.user.updateOne(
+            { jid },
+            {
+                $set: {
+                    isOffline: action,
+                    time: time,
+                    reason: reason
+                }
+            }
+        )
+    }
+
     public denyCommand = async (command: string, reason: string, username: string) => {
         const disabledCommands = await this.getDisabledCommands()
         const time = moment.tz('Etc/GMT').format('MMM D, YYYY HH:mm:ss')
@@ -171,8 +185,43 @@ export class Database {
         return text
     }
 
-    public getFeature = async (feature: string): Promise<TFeatureModel> =>
-        (await this.feature.findOne({ feature })) || (await new this.feature({ feature }).save())
+    public getFeature = async (feature: string): Promise<Feature> => {
+        if (feature !== 'store')
+            return (
+                (await this.feature.findOne({ feature })) ||
+                (await new this.feature({ feature, newsId: '', items: [] }).save())
+            )
+        return {
+            feature: 'store',
+            newsId: '',
+            items: [
+                {
+                    id: 1,
+                    name: 'protection charm',
+                    description: 'Charm to protect user from getting robbed',
+                    emoji: '🎐',
+                    usageLimit: 2073600000,
+                    price: 1500000
+                },
+                {
+                    name: 'experience charm',
+                    id: 2,
+                    description: 'Charm to double the exprrience earned in using commands',
+                    price: 250000,
+                    usageLimit: 2073600000,
+                    emoji: '🌟'
+                },
+                {
+                    name: 'gold charm',
+                    id: 3,
+                    description: 'Charm to double the gold earned in using commands',
+                    price: 350000,
+                    usageLimit: 2073600000,
+                    emoji: '✨'
+                }
+            ]
+        }
+    }
 
     public getDisabledCommands = async (): Promise<TCommandModel['disabledCommands']> => {
         const result =

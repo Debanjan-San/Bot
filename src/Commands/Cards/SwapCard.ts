@@ -15,6 +15,7 @@ export default class command extends BaseCommand {
             return void M.reply(
                 `Provide the index numbers of cards to be swapped. Example: *${this.client.config.prefix}swap-card 1 4*`
             )
+        if (this.handler.auction.get(M.from)?.seller == M.sender.jid) return void M.reply('Auction is Ongoing, Baka!')
         const data = await this.client.DB.getUser(M.sender.jid)
         if (M.numbers[0] > data.deck.length || M.numbers[1] > data.deck.length || M.numbers[0] < 1 || M.numbers[1] < 1)
             return void M.reply('Invaild index number of a card in your deck')

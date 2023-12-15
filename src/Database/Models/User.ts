@@ -26,6 +26,17 @@ class Gallery implements ICharacter {
     public favorites!: number
 }
 
+class Afk {
+    @prop({ type: Boolean, required: true, default: false })
+    public isOffline!: boolean
+
+    @prop({ type: String })
+    public reason?: string
+
+    @prop({ type: String })
+    public time?: string
+}
+
 class Ban {
     @prop({ type: Boolean, required: true, default: false })
     public banned!: boolean
@@ -259,6 +270,9 @@ export class User {
 
     @prop({ type: () => Ban, required: true, default: () => ({ banned: false }) })
     public ban!: Ban
+
+    @prop({ type: () => Afk, required: true, default: () => ({ isOffline: false }) })
+    public afk!: Afk
 
     @prop({ type: Number, required: true, default: 1 })
     public level!: number

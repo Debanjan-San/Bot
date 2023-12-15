@@ -4,7 +4,7 @@ import { IArgs } from '../../Types'
 
 @Command('gamble', {
     description: '',
-    usage: '',
+    usage: 'gamble <amount> <direction>',
     category: 'economy',
     cooldown: 25,
     exp: 20,
@@ -15,6 +15,7 @@ export default class command extends BaseCommand {
         const directions = ['left', 'right'] as TGamblingDirections[]
         if (M.numbers.length < 1 || args.length < 1)
             return void M.reply(`Invalid usage! Example: *${this.client.config.prefix}gamble right 500*`)
+        if (this.handler.highestBit.get(M.from)?.buyer == M.sender.jid) return void M.reply('Auction is Ongoing, Baka!')
         const amount = M.numbers[0]
         const { wallet } = await this.client.DB.getUser(M.sender.jid)
         if (amount > wallet) return void M.reply(`Check your wallet`)

@@ -10,7 +10,7 @@ import { TCardsTier } from '../../Types'
 })
 export default class command extends BaseCommand {
     override execute = async (M: Message): Promise<void> => {
-        if (!this.handler.cardResponse.has(M.from)) return void M.reply("🟥 *There aren't any cards to claim*")
+        if (!this.handler.cardResponse.has(M.from)) return void M.reply("There aren't any cards to claim")
         const data = this.handler.cardResponse.get(M.from) as {
             price: number
             name: string
@@ -22,7 +22,7 @@ export default class command extends BaseCommand {
         }
         const { deck, cardCollection: collection, wallet } = await this.client.DB.getUser(M.sender.jid)
         if (data.price > wallet)
-            return void M.reply(`🟥 *You need ${data.price - wallet} more gold in your wallet to claim this card*`)
+            return void M.reply(`You need ${data.price - wallet} more gold in your wallet to claim this card`)
         this.handler.cardResponse.delete(M.from)
         let flag = false
         if (deck.length >= 12) flag = true

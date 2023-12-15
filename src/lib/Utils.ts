@@ -65,6 +65,15 @@ export class Utils {
         return pokemonStats
     }
 
+    public pad = (s: number): string => (s < 10 ? '0' : '') + s
+
+    public formatTime = (seconds: number): string => {
+        const hours = Math.floor(seconds / (60 * 60))
+        const minutes = Math.floor((seconds % (60 * 60)) / 60)
+        const secs = Math.floor(seconds % 60)
+        return `*${this.pad(hours)} hour(s), ${this.pad(minutes)} minute(s), ${this.pad(secs)} second(s)*`
+    }
+
     public displayBoard = async (Board: string[]): Promise<Buffer> => {
         const board = Board as ('X' | 'O')[]
         const data = {

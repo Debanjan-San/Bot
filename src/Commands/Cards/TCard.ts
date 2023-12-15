@@ -16,6 +16,7 @@ export default class command extends BaseCommand {
             return void M.reply(
                 `Invalid Usage. Example: *${this.client.config.prefix}tcard 2 (which is the index number of the card in your deck that you wanna trade) | Chitoge Kirisaki (which is the name of the card that you want for the trade) | 5 (which is the tier of the card that you want for the trade)*`
             )
+        if (this.handler.auction.get(M.from)?.seller == M.sender.jid) return void M.reply('Auction is Ongoing, Baka!')
         const index = parseInt(terms[0].trim())
         const { deck } = await this.client.DB.getUser(M.sender.jid)
         if (isNaN(index) || index > deck.length || index < 1)

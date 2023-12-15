@@ -27,8 +27,8 @@ export default class extends BaseCommand {
             emoji: '💈'
         },
         {
-            id: 'chara',
-            font: '𝘾𝙃𝘼𝙍𝘼',
+            id: 'characters',
+            font: '𝘾𝙃𝘼𝙍𝘼𝘾𝙏𝙀𝙍𝙎',
             emoji: '💠'
         },
         {
@@ -45,6 +45,11 @@ export default class extends BaseCommand {
             id: 'fun',
             font: '𝙁𝙐𝙉',
             emoji: '🎡'
+        },
+        {
+            id: 'nsfw',
+            font: '𝙉𝙎𝙁𝙒',
+            emoji: '🔞'
         },
         {
             id: 'pokemon',
@@ -80,11 +85,9 @@ export default class extends BaseCommand {
             })).filter((command) => command.data.config.category !== 'dev')
             const { nsfw } = await this.client.DB.getGroup(M.from)
             if (!nsfw) commands = commands.filter(({ data }) => data.config.category !== 'nsfw')
-            let text = `*👋🏻 (❤️ω❤️) Konnichiwa, senpai *@${M.sender.jid.split('@')[0]}*! I am ${
+            let text = `*👋🏻 (❤️ω❤️) Konnichiwa, senpai @${M.sender.jid.split('@')[0]}! I'm ${
                 this.client.config.name
-            }, 
-your trusty companion. 🌟 Prepare for an adventure with my mighty powers! 🚀✨ My command prefix is set to 
-"${this.client.config.prefix}"—the key to unlock my magic! 🔮✨:*`
+            }, your trusty companion on this epic journey! 🚀✨*`
             const categories: string[] = []
             for (const command of commands) {
                 if (categories.includes(command.data.config.category)) continue
@@ -94,7 +97,7 @@ your trusty companion. 🌟 Prepare for an adventure with my mighty powers! 🚀
                 const categoryCommands: string[] = []
                 const filteredCommands = commands.filter((command) => command.data.config.category === category)
                 const data = this.list.find((x) => x.id.toLowerCase() === category.toLocaleLowerCase())
-                text += `\n\n  ${data?.emoji} *❯──「${data?.font}」──❮* ${data?.emoji}\n`
+                text += `\n\n  ${data?.emoji} *❯─「${data?.font}」─❮* ${data?.emoji}\n`
                 filteredCommands.forEach((command) => categoryCommands.push(command.data.name))
                 text += `➤ \`\`\`${categoryCommands.join(', ')}\`\`\``
             }

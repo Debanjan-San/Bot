@@ -2,8 +2,8 @@ import { BaseCommand, Command, Message } from '../../Structures'
 
 @Command('give', {
     category: 'economy',
-    description: '',
-    usage: '',
+    description: 'Transfer money',
+    usage: 'give <amount> @user',
     exp: 25,
     cooldown: 35
 })
@@ -13,6 +13,7 @@ export default class command extends BaseCommand {
         if (M.quoted && !users.includes(M.quoted.sender.jid)) users.push(M.quoted.sender.jid)
         if (!users.length || users.length < 0) return void M.reply('Tag or quote a user to give')
         if (users[0] === M.sender.jid) return void M.reply('tag someone')
+        if (this.handler.highestBit.get(M.from)?.buyer == M.sender.jid) return void M.reply('Auction is Ongoing, Baka!')
         if (M.numbers.length < 1) return void M.reply(`amount?`)
         const user = users[0]
         const { wallet } = await this.client.DB.getUser(M.sender.jid)

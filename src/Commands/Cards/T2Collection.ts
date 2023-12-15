@@ -16,6 +16,7 @@ export default class command extends BaseCommand {
             return void M.reply(
                 'Provide the index number of a card in your deck that you wanna store in your collection'
             )
+        if (this.handler.auction.get(M.from)?.seller == M.sender.jid) return void M.reply('Auction is Ongoing, Baka!')
         const i = M.numbers[1]
         if (i < 1 || i > deck.length) return void M.reply('Invalid index number of a card in your deck')
         const data = deck[i - 1]

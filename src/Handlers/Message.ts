@@ -194,12 +194,6 @@ export class MessageHandler {
                     headerType: type === 'image' ? 4 : 5
                 }
                 await this.client.sendMessage(jid, buttonMessage as unknown as AnyMessageContent)
-                if (!image.includes('eventcards')) {
-                    await delay(3000)
-                    await this.client.utils
-                        .fetch<string>(`https://shooting-star-unique-api.vercel.app/api/mwl/insert?id=${id}`)
-                        .catch((err) => this.client.log(err.message))
-                }
             })
             .catch(async (err) => {
                 return void (await this.client.sendMessage(jid, {
@@ -333,6 +327,7 @@ export class MessageHandler {
         const args = M.content.split(' ')
         const title = M.chat === 'dm' ? 'DM' : M.groupMetadata?.subject || 'Group'
         await this.moderate(M)
+        await this.isOfflineUser(M)
         if (!args[0] || !args[0].startsWith(prefix))
             return void this.client.log(
                 `${chalk.cyanBright('Message')} from ${chalk.yellowBright(M.sender.username)} in ${chalk.blueBright(
@@ -368,6 +363,8 @@ export class MessageHandler {
         if (M.chat === 'dm' && !command.config.dm) return void M.reply('You can use this command only in groups')
         if (command.config.category === 'moderation' && !M.sender.isAdmin)
             return void M.reply('This command can only be used by the group admins')
+        if (command.config.category === 'nsfw' && !(await this.client.DB.getGroup(M.from)).nsfw)
+            return void M.reply('This comand can ONLY be used in NSFW enabled groups!')
         if (command.config.antiTrade && this.userTradeSet.has(M.sender.jid))
             return void M.reply("You can't use this command right now as you created an ongoing card trade")
         if (command.config.category === 'pokemon' && companion === 'None' && command.name !== 'start-journey') {
@@ -404,11 +401,13 @@ export class MessageHandler {
         } else this.cooldowns.set(`${M.sender.jid}${command.name}`, time)
         setTimeout(() => this.cooldowns.delete(`${M.sender.jid}${command.name}`), cooldownAmount)
         let exp = command.config.exp ?? 10
-        if (inventory.findIndex((x) => x.item === 'experience charm') > -1) exp = exp * 2
+        let money = Math.floor(Math.random() * 75)
+        const timeLeft_ = inventory.find((x) => x.item === 'experience charm')
+        if (2073600000 - (Date.now() - timeLeft_?.usageLeft!) > 0) exp = exp * 2
+        const timeLeft = inventory.find((x) => x.item === 'gold charm')
+        if (2073600000 - (Date.now() - timeLeft?.usageLeft!) > 0) money = money * 2
         await this.client.DB.setExp(M.sender.jid, exp)
-        let gold = Math.floor(Math.random() * 75)
-        if (inventory.findIndex((x) => x.item === 'gold charm') > -1) gold = gold * 2
-        await this.client.DB.setGold(M.sender.jid, gold)
+        await this.client.DB.setGold(M.sender.jid, money)
         await this.handleUserStats(M)
         try {
             await command.execute(M, this.formatArgs(args))
@@ -447,6 +446,25 @@ export class MessageHandler {
             } which has enabled cards`
         )
         await this.spawnCard()
+    }
+
+    public isOfflineUser = async (M: Message): Promise<void> => {
+        const { afk } = await this.client.DB.getUser(M.sender.jid)
+        if (!afk) await this.client.DB.updateUser(M.sender.jid, 'afk', 'set', { isOffline: false })
+        if (M.message.key.fromMe) return void null
+        if (afk.isOffline) {
+            await this.client.DB.updateOfflineStatus(M.sender.jid, false)
+            return void M.reply(`${M.sender.username} is back to Online! \nTime you were AFK for ${afk.time}`)
+        }
+        if (M.quoted || M.mentioned.length) {
+            const mentions = M.quoted ? [M.quoted.sender.jid] : M.mentioned
+            for (const mention of mentions) {
+                const { username } = this.client.contact.getContact(mention)
+                const { afk: info } = await this.client.DB.getUser(mention)
+                if (info.isOffline)
+                    return void M.reply(`${username} is afk!\nReason: ${info.reason}\nLast seen: ${info.time}`)
+            }
+        }
     }
 
     private moderate = async (M: Message): Promise<void> => {
@@ -771,6 +789,10 @@ export class MessageHandler {
         string,
         { creator: string; offer: Card; index: number; with: { name: string; tier: TCardsTier } }
     >()
+
+    public auction = new Map<string, { price: number; card: Card; seller: string; position: number }>()
+
+    public highestBit = new Map<string, { buyer: string; bit: number }>()
 
     public userTradeSet = new Set<string>()
 

@@ -1,14 +1,15 @@
 import { BaseCommand, Command, Message } from '../../Structures'
 
 @Command('deposit', {
-    description: '',
-    usage: '',
+    description: 'Deposit your money',
+    usage: 'deposit <amount>',
     cooldown: 15,
     exp: 5,
     category: 'economy'
 })
 export default class command extends BaseCommand {
     override execute = async (M: Message): Promise<void> => {
+        if (this.handler.highestBit.get(M.from)?.buyer == M.sender.jid) return void M.reply('Auction is Ongoing, Baka!')
         if (M.numbers.length < 1) return void M.reply('Specify the amount of gold to deposit')
         const { wallet } = await this.client.DB.getUser(M.sender.jid)
         if (M.numbers[0] > wallet) return void M.reply(`Check your wallet`)

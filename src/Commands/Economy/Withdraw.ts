@@ -1,8 +1,8 @@
 import { BaseCommand, Command, Message } from '../../Structures'
 
 @Command('withdraw', {
-    description: '',
-    usage: '',
+    description: 'Withdraw money',
+    usage: 'withdraw <amount>',
     cooldown: 15,
     exp: 5,
     category: 'economy'

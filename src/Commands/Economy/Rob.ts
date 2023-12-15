@@ -1,19 +1,25 @@
 import { BaseCommand, Command, Message } from '../../Structures'
 
 @Command('rob', {
-    description: '',
+    description: 'Rob some users',
     category: 'economy',
-    usage: '',
+    usage: 'rob @user',
     exp: 10
 })
 export default class command extends BaseCommand {
     override execute = async (M: Message): Promise<void> => {
         if (M.from === this.client.config.casinoGroup) return void M.reply("don't rob here")
         const time = 900000
-        const { lastRob: cd } = await this.client.DB.getUser(M.sender.jid)
-        if (time - (Date.now() - cd) > 0) return void M.reply('wait sometime')
+        const { lastRob: cd, inventory } = await this.client.DB.getUser(M.sender.jid)
+        const timeLeft = inventory.find((x) => x.item === 'protection charm')
+        if (2592000000 - (Date.now() - timeLeft?.usageLeft!) > 0)
+            return void M.reply(`The user has *🎐 Protection Charm* therefore you can not rob him/her!!`)
+
+        if (time - (Date.now() - cd) > 0) return void M.reply('wait sometime until the cooldown expires')
+        if (this.handler.highestBit.get(M.from)?.buyer == M.sender.jid) return void M.reply('Auction is Ongoing, Baka!')
         const { wallet } = await this.client.DB.getUser(M.sender.jid)
         const target = M.quoted && M.mentioned.length === 0 ? M.quoted.sender.jid : M.mentioned[0] || ''
+        if (this.handler.highestBit.get(target)?.buyer == M.sender.jid) return void M.reply('You can not rob him yet')
         if (target === '' || target === M.sender.jid) return void M.reply('Tag or quote a user to rob')
         const { wallet: Wallet } = await this.client.DB.getUser(target)
         await this.client.DB.user.updateOne({ jid: M.sender.jid }, { $set: { lastRob: Date.now() } })

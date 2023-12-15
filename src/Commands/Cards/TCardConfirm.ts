@@ -18,6 +18,7 @@ export default class command extends BaseCommand {
             return void M.reply(
                 `You can't proceed this trade as you don't have *${res.with.name} - ${res.with.tier}* in your deck`
             )
+        if (this.handler.auction.get(M.from)?.seller == M.sender.jid) return void M.reply('Auction is Ongoing, Baka!')
         const { deck: Deck } = await this.client.DB.getUser(res.creator)
         const card = deck[index]
         Deck[res.index] = card

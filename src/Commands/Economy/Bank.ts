@@ -1,7 +1,7 @@
 import { BaseCommand, Command, Message } from '../../Structures'
 
 @Command('bank', {
-    description: '',
+    description: 'Get the current bank information',
     usage: 'bank',
     category: 'economy',
     exp: 10,
