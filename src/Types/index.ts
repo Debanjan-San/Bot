@@ -19,6 +19,66 @@ export interface IGroup extends GroupMetadata {
     admins?: string[]
 }
 
+export interface AnimeSearch {
+    title: {
+        romaji: string
+        english?: string
+        native: string
+    }
+    status: string
+    format: string
+    isAdult: boolean
+    duration?: number
+    episodes?: number
+    genres: string[]
+    startDate: string
+    endDate: string
+    studios: string
+    trailer?: {
+        id: string
+        site: string
+        thumbnail: string
+    }
+    imageUrl: string
+    description: string
+}
+
+export interface MangaSearch {
+    title: {
+        romaji: string
+        english?: string
+        native: string
+    }
+    status: string
+    format: string
+    isAdult: boolean
+    genres: string[]
+    startDate: string
+    endDate: string
+    volumes?: number
+    chapters?: number
+    trailer?: {
+        id: string
+        site: string
+        thumbnail: string
+    }
+    imageUrl: string
+    description: string
+}
+
+export interface CharacterSearch {
+    name: {
+        full: string
+        native: string
+    }
+    age?: string
+    gender?: string
+    bloodType?: any
+    image: string
+    siteUrl: string
+    description: string
+}
+
 export interface ICall {
     content: {
         attrs: {

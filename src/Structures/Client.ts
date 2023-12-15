@@ -26,9 +26,9 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
         super()
         Config()
         this.config = {
-            name: 'Levi',
-            session: process.env.SESSION || 'Myno',
-            prefix: '#',
+            name: 'Ligma',
+            session: process.env.SESSION || 'Ligma',
+            prefix: '-',
             mods: [],
             PORT: Number(process.env.PORT || Math.floor(Math.random() * (9000 - 3000) + 3000)),
             casinoGroup: '120363126235797589@g.us',

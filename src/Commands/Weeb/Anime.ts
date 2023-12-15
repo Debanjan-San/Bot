@@ -1,63 +1,42 @@
 import { BaseCommand, Command, Message } from '../../Structures'
-import { IArgs } from '../../Types'
-import { Anime } from '@shineiichijo/marika'
-import { AnyMessageContent } from '@whiskeysockets/baileys'
+import { IArgs, AnimeSearch } from '../../Types'
 
 @Command('anime', {
-    description: 'Searches an anime in MyAnimeList',
+    description: 'Searches an anime of the given query',
     aliases: ['ani'],
-    cooldown: 20,
-    exp: 20,
     category: 'weeb',
-    usage: '${helper.config.prefix}anime [query]'
+    usage: 'anime [query]',
+    exp: 20,
+    cooldown: 10
 })
-export default class command extends BaseCommand {
-    override execute = async (M: Message, { context }: IArgs): Promise<void> => {
-        if (!context) return void M.reply('Provide the query, Baka!')
-        const { searchAnime } = new Anime()
-        const term = context.trim()
-        await searchAnime(term)
-            .then(async ({ data }) => {
-                const result = data[0]
-                let text: string = ''
-                text += `🎀 *Title:* ${result.title}\n`
-                text += `🎋 *Format:* ${result.type}\n`
-                text += `📈 *Status:* ${this.client.utils.capitalize(result.status.replace(/\_/g, ' '))}\n`
-                text += `🍥 *Total episodes:* ${result.episodes}\n`
-                text += `🎈 *Duration:* ${result.duration}\n`
-                text += `🧧 *Genres:* ${result.genres.map((genre) => genre.name).join(', ')}\n`
-                text += `✨ *Based on:* ${this.client.utils.capitalize(result.source)}\n`
-                text += `📍 *Studios:* ${result.studios.map((studio) => studio.name).join(', ')}\n`
-                text += `🎴 *Producers:* ${result.producers.map((producer) => producer.name).join(', ')}\n`
-                text += `💫 *Premiered on:* ${result.aired.from}\n`
-                text += `🎗 *Ended on:* ${result.aired.to}\n`
-                text += `🎐 *Popularity:* ${result.popularity}\n`
-                text += `🎏 *Favorites:* ${result.favorites}\n`
-                text += `🎇 *Rating:* ${result.rating}\n`
-                text += `🏅 *Rank:* ${result.rank}\n\n`
-                if (result.background !== null) text += `🎆 *Background:* ${result.background}*\n\n`
-                text += `❄ *Description:* ${result.synopsis.replace(/\[Written by MAL Rewrite]/g, '')}`
-                const image = await this.client.utils.getBuffer(result.images.jpg.large_image_url)
-                return void (await this.client.sendMessage(
-                    M.from,
-                    {
-                        image,
-                        caption: text,
-                        jpegThumbnail: image.toString('base64'),
-                        contextInfo: {
-                            externalAdReply: {
-                                title: result.title,
-                                mediaType: 1,
-                                thumbnail: image,
-                                sourceUrl: result.url
-                            }
-                        }
-                    } as unknown as AnyMessageContent,
-                    {
-                        quoted: M.message
-                    }
-                ))
+export default class extends BaseCommand {
+    public override execute = async (M: Message, { context }: IArgs): Promise<void> => {
+        if (!context) return void M.reply('Provide a query for the search, Baka!')
+        const query = context.trim()
+        await this.client.utils
+            .fetch<AnimeSearch[]>(`https://weeb-api.vercel.app/anime?search=${query}`)
+            .then(async (data) => {
+                if (!data.length) return void M.reply('Not Found - Invalid Input')
+                let msg = ''
+                msg += `🎀 *Name: ${data[0].title.english}*\n`
+                msg += `👁️‍🗨️ *Romanji: ${data[0].title.romaji}*\n`
+                msg += `💮 *Japanese:* *${data[0].title.native}*\n`
+                msg += `♨ *Type: ${data[0].format}*\n`
+                msg += `🔞 *Is-Adult: ${data[0].isAdult}*\n`
+                msg += `💫 *Status: ${data[0].status}*\n`
+                msg += `🚥 *Episodes: ${data[0].episodes}*\n`
+                msg += `🕛 *Duration: ${data[0].duration} Per Ep.*\n`
+                msg += `🎐 *First Aired: ${data[0].startDate}*\n`
+                msg += `🍥 *Last Aired: ${data[0].endDate}*\n`
+                msg += `🧧 *Genres: ${data[0].genres.join(', ')}*\n`
+                msg += `🎭 *Studios: ${data[0].studios}*\n`
+                msg += `🎞 *Trailer: https://youtu.be/${data[0].trailer ? data[0].trailer.id : 'null'}*\n\n`
+                msg += `📃 *Description:* ${data[0].description}`
+                const image = await this.client.utils.getBuffer(data[0].imageUrl)
+                return void (await M.reply(image, 'image', undefined, undefined, msg))
             })
-            .catch(() => M.reply(`Couldn't find any anime | *"${term}"*`))
+            .catch(() => {
+                return void M.reply(`Couldn't find any anime | *"${query}"*`)
+            })
     }
 }
