@@ -401,11 +401,11 @@ export class MessageHandler {
         } else this.cooldowns.set(`${M.sender.jid}${command.name}`, time)
         setTimeout(() => this.cooldowns.delete(`${M.sender.jid}${command.name}`), cooldownAmount)
         let exp = command.config.exp ?? 10
-        let money = Math.floor(Math.random() * 75)
+        let money = 0
         const timeLeft_ = inventory.find((x) => x.item === 'experience charm')
         if (2073600000 - (Date.now() - timeLeft_?.usageLeft!) > 0) exp = exp * 2
         const timeLeft = inventory.find((x) => x.item === 'gold charm')
-        if (2073600000 - (Date.now() - timeLeft?.usageLeft!) > 0) money = money * 2
+        if (2073600000 - (Date.now() - timeLeft?.usageLeft!) > 0) money = Math.floor(Math.random() * 75)
         await this.client.DB.setExp(M.sender.jid, exp)
         await this.client.DB.setGold(M.sender.jid, money)
         await this.handleUserStats(M)
@@ -450,10 +450,10 @@ export class MessageHandler {
 
     public isOfflineUser = async (M: Message): Promise<void> => {
         const { afk } = await this.client.DB.getUser(M.sender.jid)
-        if (!afk) await this.client.DB.updateUser(M.sender.jid, 'afk', 'set', { isOffline: false })
+        if (!afk) return void null
         if (M.message.key.fromMe) return void null
         if (afk.isOffline) {
-            await this.client.DB.updateOfflineStatus(M.sender.jid, false)
+            await this.client.DB.updateUser(M.sender.jid, 'afk', 'set', { isOffline: false })
             return void M.reply(`${M.sender.username} is back to Online! \nTime you were AFK for ${afk.time}`)
         }
         if (M.quoted || M.mentioned.length) {

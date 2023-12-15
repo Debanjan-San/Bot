@@ -24,7 +24,7 @@ export default class command extends BaseCommand {
                     command,
                     data
                 })).length
-            }\n\n💮 *Groups:* ${groups.length}\n\n🎐 *Users:* ${users.length}\n\n🚦 *Uptime:* ${uptime}`
+            }\n💮 *Groups:* ${groups.length}\n🎐 *Users:* ${users.length}\n🚦 *Uptime:* ${uptime}`
         ))
     }
 }
