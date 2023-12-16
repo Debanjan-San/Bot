@@ -69,7 +69,7 @@ export default class extends BaseCommand {
                     party = party.filter((pkmn) => pkmn.hp > 0)
                     if (!party.length)
                         return void M.reply(
-                            "🟥 *Pokemon challenge cancelled as you don't have any Pokemon (in your party) capable of battling someone right now as all of them have been fainted.*"
+                            "Pokemon challenge cancelled as you don't have any Pokemon (in your party) capable of battling someone right now as all of them have been fainted"
                         )
                     const Data = (await this.client.DB.getUser(data.challenger)).party.filter((pkmn) => pkmn.hp > 0)
                     this.handler.pokemonBattleResponse.set(M.from, {
