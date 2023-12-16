@@ -12,10 +12,10 @@ import { BaseCommand, Command, Message } from '../../Structures'
 })
 export default class command extends BaseCommand {
     override execute = async (M: Message): Promise<void> => {
-        if (M.numbers.length < 1) return void M.reply(`amount?`)
+        if (M.numbers.length < 1) return void M.reply(`Have not provided any ammount`)
         const amount = M.numbers[0]
         const { wallet } = await this.client.DB.getUser(M.sender.jid)
-        if (amount > wallet) return void M.reply(`check ur wallet`)
+        if (amount > wallet) return void M.reply(`You need to have a look in your wallet!!`)
         if (this.handler.highestBit.get(M.from)?.buyer == M.sender.jid) return void M.reply('Auction is Ongoing, Baka!')
         const machine = new SlotMachine(3, this.symbols)
         const results = machine.play()

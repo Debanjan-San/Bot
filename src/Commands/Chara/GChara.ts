@@ -10,11 +10,11 @@ import { Message, Command, BaseCommand } from '../../Structures'
 export default class extends BaseCommand {
     public override execute = async (M: Message): Promise<void> => {
         const { gallery } = await this.client.DB.getUser(M.sender.jid)
-        if (!gallery.length) return void M.reply('no claimed charas')
+        if (!gallery.length) return void M.reply('You have not claimed any character')
         if (!M.numbers.length || M.numbers[0] < 1 || M.numbers[0] > gallery.length)
-            return void M.reply('provide a valid gallery index to give with tagged or quoted person')
+            return void M.reply('Provide a valid gallery index to give with tagged or quoted person')
         const user = M.mentioned.length ? M.mentioned[0] : M.quoted ? M.quoted.sender.jid : ''
-        if (user === '') return void M.reply('tag or quote a user')
+        if (user === '') return void M.reply('Tag or quote is required!!')
         const t = gallery[M.numbers[0] - 1]
         const { gallery: Gallery } = await this.client.DB.getUser(user)
         Gallery.push(t)
@@ -22,7 +22,7 @@ export default class extends BaseCommand {
         await this.client.DB.updateUser(M.sender.jid, 'gallery', 'set', gallery)
         await this.client.DB.updateUser(user, 'gallery', 'set', Gallery)
         return void M.reply(
-            `@${M.sender.jid.split('@')[0]} gave ${t.name} to @${user.split('@')[0]}`,
+            `🎉 @${M.sender.jid.split('@')[0]} gave ${t.name} to @${user.split('@')[0]}`,
             'text',
             undefined,
             user,

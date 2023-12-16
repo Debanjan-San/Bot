@@ -11,10 +11,10 @@ import { BaseCommand, Command, Message } from '../../Structures'
 export default class command extends BaseCommand {
     override execute = async (M: Message): Promise<void> => {
         if (!this.handler.pokemonEvolutionResponse.has(M.sender.jid))
-            return void M.reply("🟥 *You don't have any pokemon which is evolving right now*")
+            return void M.reply("You don't have any pokemon which is evolving right now")
         const data = this.handler.pokemonEvolutionResponse.get(M.sender.jid)
         if (data?.group !== M.from)
-            return void M.reply("🟨 *This command can only be used in the group where your pokemon's evolving*")
+            return void M.reply("This command can only be used in the group where your pokemon's evolving")
         this.handler.pokemonEvolutionResponse.delete(M.sender.jid)
         const chain = await this.client.utils.getPokemonEvolutionChain(data?.pokemon)
         return void M.reply(

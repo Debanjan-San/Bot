@@ -12,7 +12,7 @@ import { IArgs } from '../../Types'
 })
 export default class command extends BaseCommand {
     override execute = async (M: Message, { context }: IArgs): Promise<void> => {
-        if (!context) return void M.reply('*Provide a Spotify track URL to download*')
+        if (!context) return void M.reply('Provide a Spotify track URL to download')
         const url = context.trim().split(' ')[0]
         const song = new spotify(url)
         const info = await song.getInfo()

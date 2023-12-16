@@ -11,7 +11,7 @@ export default class command extends BaseCommand {
     override execute = async ({ quoted, reply }: Message, { context }: IArgs): Promise<void> => {
         if (!quoted && !context)
             return void reply(
-                '🟥 *Provide the invite link next to the command or by quoting the message which has the invite link*'
+                'Provide the invite link next to the command or by quoting the message which has the invite link'
             )
         let body!: string
         if (!context) body = quoted?.content as string

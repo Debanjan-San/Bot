@@ -9,7 +9,7 @@ import { Command, BaseCommand, Message } from '../../Structures'
 })
 export default class extends BaseCommand {
     public override execute = async (M: Message): Promise<void> => {
-        if (this.handler.chess.ongoing.has(M.from)) return void M.reply('a chess match ongoing atm for this group')
+        if (this.handler.chess.ongoing.has(M.from)) return void M.reply('A chess match ongoing atm for this group')
         let users = M.mentioned
         if (M.quoted && !users.includes(M.quoted.sender.jid)) users.push(M.quoted.sender.jid)
         users = users.filter((x) => x !== M.sender.jid)

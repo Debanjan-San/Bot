@@ -6,11 +6,9 @@ import { readFile, unlink, writeFile } from 'fs-extra'
 import regex from 'emoji-regex'
 import * as linkify from 'linkifyjs'
 import { Canvacord } from 'canvacord'
-import puppeteer from 'puppeteer'
 import { MoveClient } from 'pokenode-ts'
 import Canvas from 'canvas'
 import { join } from 'path'
-import { load } from 'cheerio'
 import { IPokemonAPIResponse, IPokemonChainResponse, TCardsTier } from '../Types'
 import { Pokemon, PokemonMove } from '../Database'
 import { MessageHandler } from '../Handlers'
@@ -93,54 +91,6 @@ export class Utils {
             x: 'red',
             o: 'white'
         })
-    }
-
-    public superFetch = async (url: string): Promise<string> => {
-        const browser = await puppeteer.launch({
-            headless: true,
-            args: ["--proxy-server='direct://'", '--proxy-bypass-list=*', '--no-sandbox', '--disable-setuid-sandbox']
-        })
-        const page = await browser.newPage()
-        page.setDefaultNavigationTimeout(0)
-        return await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 }).then(async () => {
-            //@ts-ignore
-            const data = await page.evaluate(() => document.querySelector('*').outerHTML)
-            await browser.close()
-            return data
-        })
-    }
-
-    public validateCard = (data: string): boolean => {
-        const $ = load(data)
-        const image = $(
-            '#root > div > div.yield.cont > div.uber.relative > div:nth-child(10) > div > div > div:nth-child(1) > div > div > div > div.cardData > img'
-        ).attr('src')
-        if (!image) return false
-        return true
-    }
-
-    public scrapCardData = (data: string): { name: string; tier: TCardsTier; description: string; image: string } => {
-        const $ = load(data)
-        const image = $('.img-fluid').attr('src') as string
-        const name = $(
-            '#root > div > div.yield.cont > div.uber.relative > div:nth-child(9) > ol > li:nth-child(5) > a > span'
-        ).text()
-        const source = $(
-            '#root > div > div.yield.cont > div.uber.relative > div:nth-child(9) > ol > li:nth-child(4) > span'
-        ).text()
-        const tier = $(
-            '#root > div > div.yield.cont > div.uber.relative > div:nth-child(9) > ol > li:nth-child(3) > a > span'
-        )
-            .text()
-            .split('Tier')[1]
-            .trim() as TCardsTier
-        const description = `${name} from ${source}.`
-        return {
-            name,
-            tier,
-            description,
-            image
-        }
     }
 
     public drawPokemonBattle = async (data: {

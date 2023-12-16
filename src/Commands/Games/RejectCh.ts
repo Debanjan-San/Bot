@@ -10,9 +10,9 @@ import { Command, BaseCommand, Message } from '../../Structures'
 export default class extends BaseCommand {
     public override execute = async (M: Message): Promise<void> => {
         const ch = this.handler.chess.challenges.get(M.from)
-        if (!ch || ch.challengee !== M.sender.jid) return void M.reply('no one challenged u')
-        if (this.handler.chess.ongoing.has(M.from)) return void M.reply('ongoing')
+        if (!ch || ch.challengee !== M.sender.jid) return void M.reply('No one challenged u')
+        if (this.handler.chess.ongoing.has(M.from)) return void M.reply('Ongoing right now')
         this.handler.chess.challenges.delete(M.from)
-        return void M.reply('rejected')
+        return void M.reply('Rejected')
     }
 }

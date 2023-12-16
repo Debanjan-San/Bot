@@ -24,7 +24,7 @@ export default class command extends BaseCommand {
             }
             let caption: string
             if ((!context && !M.quoted?.content) || (!context && M.quoted?.content === ''))
-                return void M.reply('🟥 *Provide the text to be broadcasted*')
+                return void M.reply('🟥 Provide the text to be broadcasted')
             if (context) caption = context.trim()
             else caption = M.quoted?.content.trim() as string
             if (!arr.length) arr = await this.client.getAllGroups()

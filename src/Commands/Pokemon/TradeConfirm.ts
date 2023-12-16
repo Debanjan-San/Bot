@@ -14,18 +14,18 @@ export default class command extends BaseCommand {
         if (!this.handler.pokemonTradeResponse.has(M.from))
             return void M.reply("There aren't any pokemon trade going on right now for this group")
         const trade = this.handler.pokemonTradeResponse.get(M.from)
-        if (trade?.creator === M.sender.jid) return void M.reply("🟥 *You can't tade with yourself*")
+        if (trade?.creator === M.sender.jid) return void M.reply("You can't tade with yourself")
         const { party } = await this.client.DB.getUser(M.sender.jid)
         const i = party.findIndex((x) => x.name === (trade?.with as string))
         if (i < 0)
             return void M.reply(
-                `🟥 *You can\'t proceed to this trade as you don\'t have ${this.client.utils.capitalize(
+                `You can\'t proceed to this trade as you don\'t have ${this.client.utils.capitalize(
                     trade?.with as string
-                )} in your party*`
+                )} in your party`
             )
         const pkmn = trade?.offer as Pokemon
         const pokemon = party[i]
-        if (party[i].tag === '0') return void M.reply("🟥 *You can't trade with your own companion*")
+        if (party[i].tag === '0') return void M.reply("You can't trade with your own companion")
         const { party: Party } = await this.client.DB.getUser(trade?.creator as string)
         const index = Party.findIndex((x) => x.tag === pkmn.tag)
         if (index < 0) {

@@ -11,7 +11,7 @@ export default class command extends BaseCommand {
     override execute = async (M: Message): Promise<void> => {
         if (M.numbers.length < 1) return void M.reply('amount?')
         const { bank } = await this.client.DB.getUser(M.sender.jid)
-        if (M.numbers[0] > bank) return void M.reply(`check ur bank`)
+        if (M.numbers[0] > bank) return void M.reply(`Need an immediate check up of your bank balance`)
         await this.client.DB.setGold(M.sender.jid, -M.numbers[0], 'bank')
         await this.client.DB.setGold(M.sender.jid, M.numbers[0])
         const buttonMessage = {

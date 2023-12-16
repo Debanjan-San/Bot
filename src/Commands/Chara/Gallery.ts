@@ -11,7 +11,7 @@ import { Command, BaseCommand, Message } from '../../Structures'
 export default class extends BaseCommand {
     public override execute = async (M: Message): Promise<void> => {
         const { gallery } = await this.client.DB.getUser(M.sender.jid)
-        if (!gallery.length) return void M.reply('no claimed chara')
+        if (!gallery.length) return void M.reply('Have not claimed any characters')
         if (!M.numbers.length || M.numbers[0] < 1 || M.numbers[0] > gallery.length) {
             let text = M.sender.username
             text += ' '

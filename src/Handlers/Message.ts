@@ -149,14 +149,10 @@ export class MessageHandler {
     public summonCard = async (jid: string, id: string): Promise<void> => {
         const url = `https://shoob.gg/cards/info/${id}`
         return await this.client.utils
-            .superFetch(url)
-            .then(async (data) => {
-                const valid = this.client.utils.validateCard(data)
-                if (!valid)
-                    return void (await this.client.sendMessage(jid, {
-                        text: 'Invalid Card ID'
-                    }))
-                const { name, image, description, tier } = this.client.utils.scrapCardData(data)
+            .fetch<{ name: string; image: string; description: string; tier: TCardsTier }>(
+                `https://shoob-146d4f044d9a.herokuapp.com/card?id=${id}`
+            )
+            .then(async ({ name, image, description, tier }) => {
                 const price =
                     tier === '1'
                         ? Math.floor(Math.random() * (1000 - 650) + 650)
@@ -273,9 +269,10 @@ export class MessageHandler {
                     )
                     const url = `https://shoob.gg/cards/info/${id}`
                     await this.client.utils
-                        .superFetch(url)
-                        .then(async (data) => {
-                            const { name, image, description, tier } = this.client.utils.scrapCardData(data)
+                        .fetch<{ name: string; image: string; description: string; tier: TCardsTier }>(
+                            `https://shoob-146d4f044d9a.herokuapp.com/card?id=${id}`
+                        )
+                        .then(async ({ name, image, description, tier }) => {
                             const price =
                                 tier === '1'
                                     ? Math.floor(Math.random() * (1000 - 650) + 650)

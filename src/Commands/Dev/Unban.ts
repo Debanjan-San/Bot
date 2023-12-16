@@ -10,7 +10,7 @@ export default class command extends BaseCommand {
         const users = mentioned
         const arr: string[] = []
         if (quoted && !users.includes(quoted.sender.jid)) users.push(quoted.sender.jid)
-        if (users.length <= 0) return void reply(`🟥 *Tag/quote a user to unban*`)
+        if (users.length <= 0) return void reply(`Tag/quote a user to unban`)
         let text = '🟩 Unbanned:\n'
         for (const user of users) {
             const { ban } = await this.client.DB.getUser(user)

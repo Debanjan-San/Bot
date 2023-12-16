@@ -13,7 +13,7 @@ export default class command extends BaseCommand {
     override execute = async (M: Message, { context }: IArgs): Promise<void> => {
         if (this.handler.pokemonTradeResponse.has(M.from))
             return void M.reply(`There's a trade ongoing in this group, try again later.`)
-        if (M.numbers.length < 1) return void M.reply(`*🟥 *Provide the pokemons. Example - :trade 4 pikachu*`)
+        if (M.numbers.length < 1) return void M.reply(`*Provide the pokemons. Example - :trade 4 pikachu`)
         const { party } = await this.client.DB.getUser(M.sender.jid)
         M.numbers.forEach((x) => (context = context.replace(x.toString(), '')))
         if (M.numbers[0] > party.length || M.numbers[0] < 1) return void M.reply('Invalid party index number!')

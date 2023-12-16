@@ -11,7 +11,7 @@ export default class extends BaseCommand {
     public override execute = async (M: Message): Promise<void> => {
         const ch = this.handler.chess.challenges.get(M.from)
         if (!ch || !Object.values(ch).includes(M.sender.jid) || !this.handler.chess.ongoing.has(M.from))
-            return void M.reply('no ongoing chess match for u in this group')
+            return void M.reply('No ongoing chess match for u in this group')
         await this.client.utils.endChess(
             this.handler,
             this.client,

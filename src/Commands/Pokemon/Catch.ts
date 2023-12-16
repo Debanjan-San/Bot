@@ -13,8 +13,7 @@ import { Pokemon } from '../../Database'
 })
 export default class command extends BaseCommand {
     override execute = async (M: Message, { context }: IArgs): Promise<void> => {
-        if (!this.handler.pokemonResponse.has(M.from))
-            return void M.reply("🟥 *There aren't any wild pokemons to catch*")
+        if (!this.handler.pokemonResponse.has(M.from)) return void M.reply("There aren't any wild pokemons to catch")
         const data = this.handler.pokemonResponse.get(M.from) as Pokemon
         if (!context) return void M.reply('Provide the name of the pokemon, Baka!')
         const pokemon = context.trim().toLowerCase().split(' ')[0].trim()

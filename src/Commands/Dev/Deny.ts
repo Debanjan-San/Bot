@@ -11,13 +11,13 @@ export default class command extends BaseCommand {
     override execute = async ({ sender, reply }: Message, { context }: IArgs): Promise<void> => {
         if (!context)
             return void reply(
-                '🟥 *Provide the command that you want it to be denied globally with the reason for denying it*'
+                'Provide the command that you want it to be denied globally with the reason for denying it'
             )
         const terms = context.trim().split('|')
         const cmd = terms[0].toLowerCase().trim()
         if (!terms[1])
             return void reply(
-                `🟥 *Provide the reason for denying it*. Example - *${this.client.config.prefix}deny hi | Under maintenance*`
+                `Provide the reason for denying it*. Example - *${this.client.config.prefix}deny hi | Under maintenance`
             )
         const command = this.handler.commands.get(cmd) || this.handler.aliases.get(cmd)
         if (!command) return void reply('🟨 *Provide a command which exists*')
