@@ -2,11 +2,11 @@ import { BaseCommand, Command, Message } from '../../Structures'
 import { IArgs, IPokemonAPIResponse } from '../../Types'
 
 @Command('trade', {
-    description: '',
+    description: "Trades a pokemon in user's party with another user's pokemon",
     category: 'pokemon',
-    usage: '',
+    usage: 'tpokemon <index_number_of_the_pokemon_in_your_party_that_you_wanna_trade> | <name_of_the_pokemon_that_you_wanna_trade_with> | <tier_of_the_pokemon_that_you_wanna_trade_with>',
     cooldown: 35,
-    aliases: ['t'],
+    aliases: ['tpokemon'],
     exp: 10
 })
 export default class command extends BaseCommand {

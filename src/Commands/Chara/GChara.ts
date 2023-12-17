@@ -1,7 +1,7 @@
 import { Message, Command, BaseCommand } from '../../Structures'
 
 @Command('gchara', {
-    description: 'gives chara to people',
+    description: 'Gives chara to people',
     usage: 'gchara [index of gallery]',
     exp: 10,
     cooldown: 10,

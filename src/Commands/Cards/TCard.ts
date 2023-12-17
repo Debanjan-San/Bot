@@ -1,5 +1,4 @@
 import { BaseCommand, Command, Message } from '../../Structures'
-import { Card } from '../../Database'
 import { IArgs, TCardsTier } from '../../Types'
 
 @Command('tcard', {

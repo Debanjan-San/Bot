@@ -1,7 +1,7 @@
 import { Command, BaseCommand, Message } from '../../Structures'
 
 @Command('collect', {
-    description: 'collects charactr',
+    description: 'Collects charactr',
     exp: 10,
     cooldown: 10,
     usage: 'collect',

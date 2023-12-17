@@ -2,7 +2,7 @@ import { Character } from '@shineiichijo/marika'
 import { Command, BaseCommand, Message } from '../../Structures'
 
 @Command('gallery', {
-    description: 'gallery',
+    description: 'Get your gallery',
     usage: 'gallery',
     category: 'characters',
     cooldown: 10,

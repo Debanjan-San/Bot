@@ -1,7 +1,7 @@
 import { Command, BaseCommand, Message } from '../../Structures'
 
 @Command('schara', {
-    description: 'swaps chara',
+    description: 'Swaps chara sequences',
     cooldown: 10,
     exp: 10,
     usage: 'schara',

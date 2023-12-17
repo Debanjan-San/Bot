@@ -1,8 +1,8 @@
 import { BaseCommand, Command, Message } from '../../Structures'
 
 @Command('bid', {
-    description: 'set bids for cards( Dalali Ke liye boli)',
-    usage: 'boli',
+    description: 'Set bids for cards( Dalali Ke liye boli)',
+    usage: 'bid [amount]',
     cooldown: 15,
     exp: 5,
     category: 'cards'
