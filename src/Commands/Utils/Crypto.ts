@@ -12,7 +12,7 @@ import { IArgs } from '../../Types'
 })
 export default class extends BaseCommand {
     public override execute = async (M: Message, { args }: IArgs): Promise<void> => {
-        if (!args.length) return void (await M.reply('Baka!! what image you wnt?'))
+        args = args.map((x) => x.toUpperCase())
         let text = ''
         await axios
             .get(`https://public.coindcx.com/market_data/current_prices`)
