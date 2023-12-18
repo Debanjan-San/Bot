@@ -5,7 +5,7 @@ export class RedditFetcher {
 
     public fetch = async (): Promise<IRedditResponse | { error: string }> => {
         return await this.utils
-            .fetch<IRedditResponse>(`https://meme-api.herokuapp.com/gimme/${this.reddit}`)
+            .fetch<IRedditResponse>(`https://meme-api.com/gimme/${this.reddit}`)
             .then((res) => {
                 if (!res.url) return { error: 'An error occurred' }
                 return res
