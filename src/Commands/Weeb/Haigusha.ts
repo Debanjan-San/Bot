@@ -10,35 +10,21 @@ import { AnyMessageContent } from '@whiskeysockets/baileys'
     usage: 'haigusha || haigusha --waifu || haigusha --husbando'
 })
 export default class command extends BaseCommand {
-    override execute = async ({ from, message }: Message, { flags }: IArgs): Promise<void> => {
-        let haigusha = await this.client.utils.fetch<WaifuResponse>(
-            'https://shooting-star-unique-api.vercel.app/api/mwl/random'
-        )
+    override execute = async ({ from, message, reply }: Message, { flags }: IArgs): Promise<void> => {
+        let haigusha
         if (flags.includes('--waifu'))
-            haigusha = await this.client.utils.fetch<WaifuResponse>(
-                'https://shooting-star-unique-api.vercel.app/api/mwl/random/husbando'
-            )
+            haigusha = await this.client.utils.fetch<WaifuResponse>('https://api.claustai.com/waifu')
         else if (flags.includes('--husbando'))
-            haigusha = await this.client.utils.fetch<WaifuResponse>(
-                'https://shooting-star-unique-api.vercel.app/api/mwl/random/waifu'
-            )
-        const appearances = haigusha.appearances as WaifuResponse['series'][]
+            haigusha = await this.client.utils.fetch<WaifuResponse>('https://api.claustai.com/husbando')
+        else return void reply('Define the type of haigusha using the --waifu/ --husbando flags')
+        haigusha.gender = flags.includes('--husbando') ? 'Male' : 'Female'
         this.handler.haigushaResponse.set(from, haigusha)
         let text = `🎐 *Name:* ${haigusha.name}\n\n`
-        if (haigusha.original_name && haigusha.original_name !== null && haigusha.original_name !== '')
+        if (haigusha.original_name && haigusha.original_name !== '')
             text += `🎗 *Original Name:* ${haigusha.original_name}\n\n`
-        if (haigusha.age && haigusha.age !== null) text += `🍀 *Age:* ${haigusha.age}\n\n`
-        text += `🎀 *Gender:* ${haigusha.husbando ? 'Male' : 'Female'}\n\n🔗 *Appearance:* ${
-            haigusha.series !== null || haigusha.series ? haigusha.series?.name : appearances[0]?.name
-        }\n\n❄ *Description:* ${haigusha.description}`
-        const buttons = [
-            {
-                buttonId: 'id1',
-                buttonText: { displayText: `${this.client.config.prefix}marry` },
-                type: 1
-            }
-        ]
-        const buffer = await this.client.utils.getBuffer(haigusha.display_picture as string)
+        if (haigusha.age) text += `🍀 *Age:* ${haigusha.age}\n\n`
+        text += `🎀 *Gender:* ${haigusha.gender}\n\n🔗 *Appearance:* ${haigusha.appears_in}\n\n❄ *Description:* ${haigusha.description}`
+        const buffer = await this.client.utils.getBuffer(haigusha.image_link)
         const buttonMessage = {
             image: buffer,
             caption: text,
@@ -49,11 +35,11 @@ export default class command extends BaseCommand {
                     title: haigusha.name,
                     mediaType: 1,
                     thumbnail: buffer,
-                    sourceUrl: `https://mywaifulist.moe/waifu/${haigusha.slug}`
+                    sourceUrl: ''
                 }
             }
         }
-        return void (await this.client.sendMessage(from, buttonMessage as unknown as AnyMessageContent, {
+        return void (await this.client.sendMessage(from, buttonMessage, {
             quoted: message
         }))
     }

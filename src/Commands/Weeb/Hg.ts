@@ -30,16 +30,13 @@ export default class command extends BaseCommand {
         if (user === M.sender.jid) username = M.sender.username
         if (name.custom) username = name.name as string
         const haigusha = Haigusha.data as WaifuResponse
-        const appearances = haigusha.appearances as WaifuResponse['series'][]
         let text = `🎐 *Name:* ${haigusha.name}\n\n`
-        if (haigusha.original_name && haigusha.original_name !== null && haigusha.original_name !== '')
+        if (haigusha.original_name && haigusha.original_name !== '')
             text += `🎗 *Original Name:* ${haigusha.original_name}\n\n`
         text += `❤️‍🩹 *Married to:* ${username}\n\n`
-        if (haigusha.age && haigusha.age !== null) text += `🍀 *Age:* ${haigusha.age}\n\n`
-        text += `🎀 *Gender:* ${haigusha.husbando ? 'Male' : 'Female'}\n\n🔗 *Appearance:* ${
-            haigusha.series !== null || haigusha.series ? haigusha.series?.name : appearances[0]?.name
-        }\n\n❄ *Description:* ${haigusha.description}`
-        const buffer = await this.client.utils.getBuffer(haigusha.display_picture as string)
+        if (haigusha.age) text += `🍀 *Age:* ${haigusha.age}\n\n`
+        text += `🎀 *Gender:* ${haigusha.gender}\n\n🔗 *Appearance:* ${haigusha.appears_in}\n\n❄ *Description:* ${haigusha.description}`
+        const buffer = await this.client.utils.getBuffer(haigusha.image_link as string)
         return void (await this.client.sendMessage(
             M.from,
             {
@@ -51,7 +48,7 @@ export default class command extends BaseCommand {
                         title: haigusha.name,
                         mediaType: 1,
                         thumbnail: buffer,
-                        sourceUrl: `https://mywaifulist.moe/waifu/${haigusha.slug}`
+                        sourceUrl: ''
                     }
                 }
             } as unknown as AnyMessageContent,

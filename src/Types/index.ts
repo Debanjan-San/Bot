@@ -95,50 +95,22 @@ export interface IEvent {
 }
 
 export interface WaifuResponse {
-    id: string
-    slug: string
     name: string
-    original_name?: string
-    romaji_name?: string
-    display_picture: string
-    description?: string
-    weight?: string | number
-    height?: string | number
-    bust?: string | number
-    hip?: string | number
-    waist?: string | number
-    blood_type?: string
-    origin?: string
-    age?: number
-    birthday_month?: string
-    birthday_day?: number
-    birthday_year?: string | number
-    likes?: number
-    trash?: number
-    popularity_rank?: number
-    like_rank?: number
-    trash_rank?: number
-    husbando: boolean
-    nsfw: boolean
-    creator?: { id: number; name: string }
-    tags?: string[]
-    url?: string
-    appearances?: series[]
-    series?: series
-}
-
-export interface series {
-    name: string
-    original_name?: string
-    romaji_name?: string
-    description?: string
-    slug?: string
-    airing_start?: string
-    airing_end?: string
-    episode_count?: string
-    release?: string
-    display_picture?: string
-    studio?: string
+    image_link: string
+    romaji_name: string
+    gender: 'Male' | 'Female'
+    original_name: string
+    appears_in: string
+    place_of_origin: string
+    age: string
+    date_of_birth: string
+    height: string
+    weight: string
+    blood_type: string
+    bust: string
+    waist: string
+    hip: string
+    description: string
 }
 
 export interface IPokemonChainResponse {
