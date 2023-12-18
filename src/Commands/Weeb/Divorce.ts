@@ -14,7 +14,7 @@ export default class command extends BaseCommand {
         const buttonMessage = {
             text: `💔 You divorced *${haigusha.data?.name}*`
         }
-        await this.client.DB.characters.updateOne({ mwl: 'married' }, { $pull: { slugs: haigusha.data?.slug } })
+        await this.client.DB.characters.updateOne({ mwl: 'married' }, { $pull: { slugs: haigusha.data } })
         await this.client.DB.user.updateOne(
             { jid: sender.jid },
             { $set: { 'haigusha.married': false }, $unset: { 'haigusha.data': '' } }

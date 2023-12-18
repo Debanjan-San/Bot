@@ -20,6 +20,7 @@ import {
 } from '../Database'
 import moment from 'moment-timezone'
 import { Utils } from '../lib'
+import { WaifuResponse } from '../Types'
 
 export class Database {
     public getUser = async (jid: string): Promise<TUserModel> =>
@@ -89,7 +90,7 @@ export class Database {
         await this.group.updateOne({ jid }, { $set: { [field]: update } })
     }
 
-    public getMarriedSlugs = async (): Promise<string[]> => {
+    public getMarriedSlugs = async (): Promise<WaifuResponse[]> => {
         const result =
             (await this.characters.findOne({ mwl: 'married' })) ||
             (await new this.characters({ mwl: 'married' }).save())

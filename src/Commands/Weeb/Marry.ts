@@ -1,6 +1,7 @@
 import { BaseCommand, Command, Message } from '../../Structures'
 import { Ship } from '@shineiichijo/canvas-chan'
 import { AnyMessageContent } from '@whiskeysockets/baileys'
+import { WaifuResponse } from '../../Types'
 
 @Command('marry', {
     description: 'Marries the summoned haigusha',
@@ -25,9 +26,9 @@ export default class command extends BaseCommand {
             }))
         }
         const slugs = await this.client.DB.getMarriedSlugs()
-        const res = this.handler.haigushaResponse.get(from)
-        if (slugs.includes(res?.slug as string)) return void reply('💔 Already taken')
-        await this.client.DB.characters.updateOne({ mwl: 'married' }, { $push: { slugs: res?.slug } })
+        const res = this.handler.haigushaResponse.get(from) as WaifuResponse
+        if (slugs.includes(res)) return void reply('💔 Already taken')
+        await this.client.DB.characters.updateOne({ mwl: 'married' }, { $push: { slugs: res } })
         await this.client.DB.user.updateOne(
             { jid: sender.jid },
             { $set: { 'haigusha.married': true, 'haigusha.data': res } }
@@ -46,18 +47,11 @@ export default class command extends BaseCommand {
             },
             {
                 name: res?.name as string,
-                image: await this.client.utils.getBuffer(res?.display_picture as string)
+                image: await this.client.utils.getBuffer(res?.image_link as string)
             }
         ]
         const percentage = Math.floor(Math.random() * (100 - 65) + 65)
         const buffer = await new Ship(ship, percentage).build()
-        const buttons = [
-            {
-                buttonId: 'id1',
-                buttonText: { displayText: `${this.client.config.prefix}hg` },
-                type: 1
-            }
-        ]
         const buttonMessage = {
             image: buffer,
             caption: `🎉 You are now married to *${res?.name}*`,
