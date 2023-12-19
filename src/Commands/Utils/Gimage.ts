@@ -17,7 +17,7 @@ export default class extends BaseCommand {
         const amount = parseInt(texas[1])
         if (!amount)
             return void M.reply(
-                `Give me the number, Baka!\n\nExample: *${this.client.config.prefix}image kakashi hatake|5*`
+                `Give me the number, Baka!\n\nExample: *${this.client.config.prefix}gimg kakashi hatake|5*`
             )
         if (amount > 20) return void M.reply(`Do you want me to spam in this group?`)
         for (let i = 0; i < amount; i++) {
