@@ -1,10 +1,10 @@
 import { BaseCommand, Command, Message } from '../../Structures'
 import { IArgs } from '../../Types'
 
-@Command('pornserach', {
+@Command('pornsearch', {
     description: 'Will search porn from the given term.',
     category: 'nsfw',
-    usage: 'pornserach [term]',
+    usage: 'pornsearch [term]',
     aliases: ['prns'],
     exp: 15,
     cooldown: 20
@@ -17,7 +17,7 @@ export default class extends BaseCommand {
         const amount = parseInt(texas[1])
         if (!amount)
             return void M.reply(
-                `Give me the number, Baka!\n\nExample: *${this.client.config.prefix}pornserach russian|5*`
+                `Give me the number, Baka!\n\nExample: *${this.client.config.prefix}pornsearch russian|5*`
             )
         if (amount > 20) return void M.reply(`Do you want me to spam in this group?`)
         for (let i = 0; i < amount; i++) {
