@@ -8,8 +8,7 @@ import Baileys, {
     ParticipantAction,
     proto,
     WACallEvent,
-    BinaryNode,
-    useMultiFileAuthState
+    BinaryNode
 } from '@whiskeysockets/baileys'
 import P from 'pino'
 import { connect, set } from 'mongoose'
@@ -18,7 +17,7 @@ import qr from 'qr-image'
 import { Utils } from '../lib'
 import { Database, Contact, Message, Server, AuthenticationFromDatabase } from '.'
 import { Pokemon } from '../Database'
-import { IConfig, client, IEvent, ICall } from '../Types'
+import { IConfig, client, IEvent } from '../Types'
 
 export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>) {
     private client!: client
@@ -26,23 +25,23 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
         super()
         Config()
         this.config = {
-            name: 'Ligma',
+            name: process.env.BOT_NAME || 'Ligma',
             session: process.env.SESSION || 'Myno',
-            prefix: '-',
-            mods: [],
+            prefix: process.env.PREFIX || '#',
+            mods: (process.env.MODS || '').split(', ').map((user) => `${user}@s.whatsapp.net`),
             PORT: Number(process.env.PORT || Math.floor(Math.random() * (9000 - 3000) + 3000)),
-            casinoGroup: '',
-            adminsGroup: ''
+            casinoGroup: process.env.CSGC || '',
+            adminsGroup: process.env.AGC || ''
         }
         new Server(this)
     }
 
     public start = async (): Promise<client> => {
         if (!process.env.MONGO_URI) {
-            //throw new Error('No MongoDB URI provided')
+            throw new Error('No MongoDB URI provided')
         }
         set('strictQuery', false)
-        await connect('mongodb+srv://cara:das1234@cluster0.d2czz.mongodb.net/?retryWrites=true&w=majority')
+        await connect(process.env.MONGO_URI)
         this.log('Successfully Connected to the Database >.<//')
         const { useDatabaseAuth } = new AuthenticationFromDatabase(this.config.session)
         const { saveState, state, clearState } = await useDatabaseAuth()

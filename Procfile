@@ -1,1 +1,1 @@
-web: node --optimize_for_size --max-old-space-size=4096 dist/bot.js
+web: pm2 start dist/bot.js --deep-monitoring --attach
