@@ -13,7 +13,7 @@ interface IPinterestResponse {
 }
 
 @Command('pinterest', {
-    aliases: ['gify'],
+    aliases: ['pin'],
     description: 'Sends a image from pinterest of a given topic',
     category: 'utils',
     usage: 'pinterest [query]',
