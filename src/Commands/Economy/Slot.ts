@@ -25,8 +25,8 @@ export default class command extends BaseCommand {
         await this.client.DB.setGold(M.sender.jid, resultAmount)
         let text = '🎰 *SLOT MACHINE* 🎰\n\n'
         text += results.visualize()
-        text += `\n\n🍀 You had ${wallet} gold\n`
-        text += `\n🔆 Now you have ${wallet + resultAmount} gold\n`
+        text += `\n\n🍀 You had ${wallet} gold`
+        text += `\n🔆 Now you have ${wallet + resultAmount} gold`
         text += points <= 0 ? `\n📉 You lost ${amount} gold` : `\n📈 You won ${resultAmount} gold`
         const buttonMessage = {
             text: text
