@@ -36,7 +36,7 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
                 : [],
             PORT: Number(process.env.PORT || Math.floor(Math.random() * (9000 - 3000) + 3000)),
             casinoGroup: process.env.CSGC || '',
-            supportGroups: (process.env.SGC || '').split(', '),
+            supportGroups: (process.env.SGC || '').split(', ') || [],
             adminsGroup: process.env.AGC || ''
         }
         new Server(this)
