@@ -15,6 +15,8 @@ export default class command extends BaseCommand {
         if (M.numbers.length < 1) return void M.reply(`Have not provided any ammount`)
         const amount = M.numbers[0]
         const { wallet } = await this.client.DB.getUser(M.sender.jid)
+        if (amount < 100) return void (await M.reply('The minimum amount for slot is *100*'))
+        if (amount > 15000) return void (await M.reply('The maximum amount for slot is *15000*'))
         if (amount > wallet) return void M.reply(`You need to have a look in your wallet!!`)
         if (this.handler.highestBit.get(M.from)?.buyer == M.sender.jid) return void M.reply('Auction is Ongoing, Baka!')
         const machine = new SlotMachine(3, this.symbols)
