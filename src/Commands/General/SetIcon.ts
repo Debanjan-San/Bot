@@ -38,7 +38,7 @@ export default class command extends BaseCommand {
             buffer = await downloadMediaMessage(quoted?.message as proto.IMessage)
         }
         const imgurClient = new ImgurClient({
-            clientId: '7761afca6a3fe8b'
+            clientId: '66745e931f7c91f'
         })
         let data: ImgurApiResponse['data']
         if (messageType === 'video') {

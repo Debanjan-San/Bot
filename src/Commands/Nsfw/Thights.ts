@@ -3,7 +3,7 @@ import { BaseCommand, Command, Message } from '../../Structures'
 @Command('thighs', {
     description: 'Sends a random nsfw image',
     category: 'nsfw',
-    usage: '',
+    usage: 'thighs',
     exp: 20,
     cooldown: 5
 })

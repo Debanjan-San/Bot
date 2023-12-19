@@ -1,15 +1,15 @@
 import { BaseCommand, Command, Message } from '../../Structures'
 
-@Command('manga', {
+@Command('elves', {
     description: 'Sends a random nsfw image',
     category: 'nsfw',
-    usage: '',
+    usage: 'elves',
     exp: 20,
     cooldown: 5
 })
 export default class extends BaseCommand {
     public override execute = async ({ reply }: Message): Promise<void> => {
-        const { url } = await this.client.utils.fetch<{ url: string }>('https://hmtai.hatsunia.cfd/v2/manga')
+        const { url } = await this.client.utils.fetch<{ url: string }>('https://hmtai.hatsunia.cfd/v2/elves')
         return void (await reply(await this.client.utils.getBuffer(url), 'image'))
     }
 }

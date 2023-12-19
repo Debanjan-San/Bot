@@ -4,7 +4,7 @@ import { IArgs } from '../../Types'
 @Command('googleimage', {
     description: 'Will search img from the given term.',
     category: 'utils',
-    usage: 'image',
+    usage: 'googleimage [term]',
     aliases: ['gimg'],
     exp: 15,
     cooldown: 20
@@ -21,7 +21,7 @@ export default class extends BaseCommand {
             )
         if (amount > 20) return void M.reply(`Do you want me to spam in this group?`)
         for (let i = 0; i < amount; i++) {
-            const data = await this.client.utils.fetch<string[]>(`https://weeb-api.vercel.app/gisearch?query=${texas}`)
+            const data = await this.client.utils.fetch<string[]>(`https://weeb-api.vercel.app/gisearch?query=${term}`)
             if (!data.length) return void (await M.reply('*404 Error! Found no Results*'))
             const buffer = await this.client.utils.getBuffer(data[Math.floor(Math.random() * data.length)])
             await M.reply(buffer, 'image').catch(() => {

@@ -14,7 +14,7 @@ export default class command extends BaseCommand {
         let { icon } = await this.client.DB.getUser(sender.jid)
         if (!icon.custom) return void reply("Your icon can't be reset as your icon is not set to custom")
         const imgurClient = new ImgurClient({
-            clientId: '7761afca6a3fe8b'
+            clientId: '66745e931f7c91f'
         })
         await imgurClient.deleteImage(icon.hash as string)
         icon = {

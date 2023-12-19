@@ -1,11 +1,11 @@
 import { BaseCommand, Message, Command } from '../../Structures'
 import { IArgs } from '../../Types'
 
-@Command('google', {
-    aliases: ['g', 'search'],
-    description: 'Search on the web ',
+@Command('github', {
+    aliases: ['git'],
+    description: 'Search on the github ',
     category: 'utils',
-    usage: 'google [query]',
+    usage: 'github [query]',
     exp: 10
 })
 export default class extends BaseCommand {
