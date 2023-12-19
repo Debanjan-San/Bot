@@ -28,9 +28,15 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
             name: process.env.BOT_NAME || 'Ligma',
             session: process.env.SESSION || 'Myno',
             prefix: process.env.PREFIX || '#',
-            mods: (process.env.MODS || '').split(', ').map((user) => `${user}@s.whatsapp.net`),
+            mods: process.env.MODS
+                ? process.env.MODS.split(',').map((id) => {
+                      if (id.endsWith('@s.whatsapp.net')) return id
+                      return id.replace('+', '').concat('@s.whatsapp.net')
+                  })
+                : [],
             PORT: Number(process.env.PORT || Math.floor(Math.random() * (9000 - 3000) + 3000)),
             casinoGroup: process.env.CSGC || '',
+            supportGroups: (process.env.SGC || '').split(', '),
             adminsGroup: process.env.AGC || ''
         }
         new Server(this)

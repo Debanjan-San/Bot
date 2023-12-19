@@ -9,6 +9,10 @@ export interface IConfig {
     mods: string[]
     /**port number where the server will be started */
     PORT: number
+    /** JIDS of the support groups */
+    supportGroups: string[]
+    /** JID of the casino group */
     casinoGroup: string
+    /** JID of the admins group */
     adminsGroup: string
 }

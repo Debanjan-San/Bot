@@ -31,6 +31,9 @@
       "CSGC": {
         "description": "Your casino group id"
       },
+      "SGC": {
+        "description": "Your support group id Ex: 17273820002@s.u, 172709820002@s.u,"
+      },
       "AGC": {
         "description": "Your admin group id"
       }
