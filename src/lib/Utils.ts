@@ -514,13 +514,12 @@ export class Utils {
         return buffer
     }
 
-    public gifToMp4 = async (gif: Buffer, write = false): Promise<Buffer | string> => {
+    public gifToMp4 = async (gif: Buffer): Promise<Buffer> => {
         const filename = `${tmpdir()}/${Math.random().toString(36)}`
         await writeFile(`${filename}.gif`, gif)
         await this.exec(
             `ffmpeg -f gif -i ${filename}.gif -movflags faststart -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" ${filename}.mp4`
         )
-        if (write) return `${filename}.mp4`
         const buffer = await readFile(`${filename}.mp4`)
         Promise.all([unlink(`${filename}.gif`), unlink(`${filename}.mp4`)])
         return buffer
