@@ -176,12 +176,16 @@ export class MessageHandler {
                     price,
                     description
                 })
+                let gifPlayback = false
                 let buffer = await this.client.utils.getBuffer(image)
                 let type: 'image' | 'video' = 'image'
                 if (tier === '6' || tier === 'S') type = 'video'
+                if (type === 'video') gifPlayback = true
                 const text = `🧧 *Details* 🧧\n\n🎈 *Name:* ${name}\n📘 *Description:* ${description}\n🎐 *Tier:* ${tier}\n🎏 *Price:* ${price}\n\nUse *${this.client.config.prefix}claim* to get this card for yourself.`
                 const buttonMessage = {
                     [type]: buffer,
+                    mimetype: gifPlayback ? 'video/mp4' : undefined,
+                    gifPlayback,
                     caption:
                         tier !== 'S'
                             ? `🃏 A Collectable card Appeared! 🃏\n\n${text}`
