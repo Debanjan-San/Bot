@@ -525,6 +525,17 @@ export class Utils {
         return buffer
     }
 
+    public webmToImage = async (webm: Buffer): Promise<Buffer> => {
+        const filename = `${tmpdir()}/${Math.random().toString(36)}`
+        await writeFile(`${filename}.webm`, webm)
+        await this.exec(
+            `ffmpeg -f webm -i ${filename}.webm -movflags faststart -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" ${filename}.mp4`
+        )
+        const buffer = await readFile(`${filename}.mp4`)
+        Promise.all([unlink(`${filename}.webm`), unlink(`${filename}.mp4`)])
+        return buffer
+    }
+
     public fetch = async <T>(url: string): Promise<T> => (await axios.get(url)).data
 
     public getBuffer = async (url: string): Promise<Buffer> =>
