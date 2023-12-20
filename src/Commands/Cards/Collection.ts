@@ -25,7 +25,10 @@ export default class command extends BaseCommand {
                 tier === '6' || tier === 'S' ? 'video' : 'image',
                 tier === '6' || tier === 'S',
                 undefined,
-                text
+                text,
+                undefined,
+                undefined,
+                await this.client.utils.getBuffer('https://cdn.shoob.gg/images/content/card_back.png')
             ))
         } else {
             const i = M.numbers[0] - 1
@@ -39,7 +42,10 @@ export default class command extends BaseCommand {
                 tier === '6' || tier === 'S' ? 'video' : 'image',
                 tier === '6' || tier === 'S',
                 undefined,
-                text
+                text,
+                undefined,
+                undefined,
+                await this.client.utils.getBuffer('https://cdn.shoob.gg/images/content/card_back.png')
             ))
         }
     }

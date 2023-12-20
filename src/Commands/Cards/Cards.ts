@@ -26,7 +26,10 @@ export default class command extends BaseCommand {
                 cards[0].tier === '6' || cards[0].tier === 'S' ? 'video' : 'image',
                 cards[0].tier === '6' || cards[0].tier === 'S',
                 undefined,
-                text
+                text,
+                undefined,
+                undefined,
+                await this.client.utils.getBuffer('https://cdn.shoob.gg/images/content/card_back.png')
             ))
         } else {
             const tiers: TCardsTier[] = []
@@ -49,7 +52,10 @@ export default class command extends BaseCommand {
                 cards[0].tier === '6' || cards[0].tier === 'S' ? 'video' : 'image',
                 cards[0].tier === '6' || cards[0].tier === 'S',
                 undefined,
-                text
+                text,
+                undefined,
+                undefined,
+                await this.client.utils.getBuffer('https://cdn.shoob.gg/images/content/card_back.png')
             ))
         }
     }

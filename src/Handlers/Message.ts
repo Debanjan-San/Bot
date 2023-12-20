@@ -190,7 +190,10 @@ export class MessageHandler {
                         tier !== 'S'
                             ? `🃏 A Collectable card Appeared! 🃏\n\n${text}`
                             : `🃏 Woahh! An S tier Card Appeared! 🃏\n\n${text}`,
-                    headerType: type === 'image' ? 4 : 5
+                    headerType: type === 'image' ? 4 : 5,
+                    jpegThumbnail: (
+                        await this.client.utils.getBuffer('https://cdn.shoob.gg/images/content/card_back.png')
+                    ).toString('base64')
                 }
                 await this.client.sendMessage(jid, buttonMessage as unknown as AnyMessageContent)
             })
@@ -313,7 +316,12 @@ export class MessageHandler {
                                     tier !== 'S'
                                         ? `🃏 A Collectable card Appeared! 🃏\n\n${text}`
                                         : `🃏 Woahh! An S tier Card Appeared! 🃏\n\n${text}`,
-                                headerType: type === 'image' ? 4 : 5
+                                headerType: type === 'image' ? 4 : 5,
+                                jpegThumbnail: (
+                                    await this.client.utils.getBuffer(
+                                        'https://cdn.shoob.gg/images/content/card_back.png'
+                                    )
+                                ).toString('base64')
                             }
                             await this.client.sendMessage(this.card[i], buttonMessage as unknown as AnyMessageContent)
                         })
