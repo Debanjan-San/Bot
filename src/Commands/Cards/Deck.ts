@@ -28,8 +28,7 @@ export default class command extends BaseCommand {
         } else {
             const i = M.numbers[0] - 1
             const { name, image, tier, description } = deck[i]
-            let buffer = await this.client.utils.getBuffer(image)
-            if (tier === '6' || tier === 'S') buffer = await this.client.utils.gifToMp4(buffer)
+            const buffer = await this.client.utils.cardToBuffer(image)
             const text = `🎈 *Name:* ${name}\n📘 *Description:* ${description}\n🎐 *Tier:* ${tier}`
             return void (await M.reply(
                 buffer,

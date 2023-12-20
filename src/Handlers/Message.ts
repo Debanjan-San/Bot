@@ -177,9 +177,8 @@ export class MessageHandler {
                     description
                 })
                 let gifPlayback = !image.endsWith('.png')
-                let buffer = await this.client.utils.getBuffer(image)
+                const buffer = await this.client.utils.cardToBuffer(image)
                 const [type, mimetype] = gifPlayback ? ['video', 'video/mp4'] : ['image', undefined]
-                if (type === 'video') buffer = await this.client.utils.webmToImage(buffer)
                 const text = `🧧 *Details* 🧧\n\n🎈 *Name:* ${name}\n📘 *Description:* ${description}\n🎐 *Tier:* ${tier}\n🎏 *Price:* ${price}\n\nUse *${this.client.config.prefix}claim* to get this card for yourself.`
                 const buttonMessage = {
                     [type]: buffer,
@@ -299,9 +298,8 @@ export class MessageHandler {
                                 description
                             })
                             let gifPlayback = !image.endsWith('.png')
-                            let buffer = await this.client.utils.getBuffer(image)
+                            const buffer = await this.client.utils.cardToBuffer(image)
                             const [type, mimetype] = gifPlayback ? ['video', 'video/mp4'] : ['image', undefined]
-                            if (type === 'video') buffer = await this.client.utils.webmToImage(buffer)
                             const text = `🧧 *Details* 🧧\n\n🎈 *Name:* ${name}\n📘 *Description:* ${description}\n🎐 *Tier:* ${tier}\n🎏 *Price:* ${price}\n\nUse *${this.client.config.prefix}claim* to get this card for yourself.`
                             const buttonMessage = {
                                 [type]: buffer,

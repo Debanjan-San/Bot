@@ -13,8 +13,8 @@ export default class command extends BaseCommand {
     override execute = async (M: Message): Promise<void> => {
         let url!: string
         let text = '*📮SUPPORT GROUP LINKS*\n\n'
-        const { supportGroups, casinoGroup } = this.client.config
-        if (casinoGroup) supportGroups.push(casinoGroup)
+        const { supportGroups, casinoGroup, battleGroup } = this.client.config
+        if (casinoGroup) supportGroups.push(...[casinoGroup, battleGroup])
         for (let i = 0; i < supportGroups.length; i++) {
             const { subject } = await this.client.groupMetadata(supportGroups[i])
             const code = await this.client.groupInviteCode(supportGroups[i])

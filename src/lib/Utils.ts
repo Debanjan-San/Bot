@@ -525,7 +525,7 @@ export class Utils {
         return buffer
     }
 
-    public webmToImage = async (webm: Buffer): Promise<Buffer> => {
+    public webmToMp4 = async (webm: Buffer): Promise<Buffer> => {
         const filename = `${tmpdir()}/${Math.random().toString(36)}`
         await writeFile(`${filename}.webm`, webm)
         await this.exec(
@@ -544,6 +544,13 @@ export class Utils {
                 responseType: 'arraybuffer'
             })
         ).data
+
+    public cardToBuffer = async (card: string): Promise<Buffer> => {
+        let buffer = await this.getBuffer(card)
+        if (card.endsWith('.webm')) buffer = await this.webmToMp4(buffer)
+        else if (card.endsWith('.gif')) buffer = await this.gifToMp4(buffer)
+        return buffer
+    }
 
     public exec = promisify(exec)
 
