@@ -12,6 +12,7 @@ import { IArgs, IPokemonAPIResponse } from '../../Types'
 })
 export default class extends BaseCommand {
     override execute = async (M: Message, { context }: IArgs): Promise<void> => {
+        if (M.from === this.client.config.battleGroup) return void M.reply('Bruh! Do not battle here!')
         const data = this.handler.pokemonBattleResponse.get(M.from)
         if (!data || !data.players.includes(M.sender.jid)) return void M.reply(`You aren't battling anyone here`)
         if (!context) return void M.reply('Invalid Usage!')

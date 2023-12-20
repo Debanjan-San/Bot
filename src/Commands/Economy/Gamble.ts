@@ -13,6 +13,7 @@ import { IArgs } from '../../Types'
 export default class command extends BaseCommand {
     private isDirection = (str: string) => ['left', 'right'].includes(str)
     override execute = async (M: Message, { args }: IArgs): Promise<void> => {
+        if (M.from === this.client.config.casinoGroup) return void M.reply('Bruh! Do not gamble here!')
         let arr = args.map((arg) => arg.toLowerCase().trim())
         if (Number(arr[0]) && !arr[1]) {
             return void (await M.reply(`Left or Right?`))

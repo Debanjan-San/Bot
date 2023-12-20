@@ -15,4 +15,6 @@ export interface IConfig {
     casinoGroup: string
     /** JID of the admins group */
     adminsGroup: string
+    /** JID of the battle group */
+    battleGroup: string
 }
