@@ -31,6 +31,7 @@ export default class command extends BaseCommand {
             let { name, image, tier, description } = deck[i]
             if (image.endsWith('.webm')) image = image.replace('.webm', '.gif')
             let buffer = await this.client.utils.getBuffer(image)
+            if (tier === '6' || tier === 'S') buffer = await this.client.utils.gifToMp4(buffer)
             const text = `🎈 *Name:* ${name}\n📘 *Description:* ${description}\n🎐 *Tier:* ${tier}`
             return void (await M.reply(
                 buffer,

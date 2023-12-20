@@ -19,6 +19,7 @@ export default class command extends BaseCommand {
             let { image, tier } = cardCollection[0]
             if (image.endsWith('.webm')) image = image.replace('.webm', '.gif')
             let buffer = await this.client.utils.getBuffer(image)
+            if (tier === '6' || tier === 'S') buffer = await this.client.utils.gifToMp4(buffer)
             return void (await M.reply(
                 buffer,
                 tier === '6' || tier === 'S' ? 'video' : 'image',
@@ -30,7 +31,8 @@ export default class command extends BaseCommand {
             const i = M.numbers[0] - 1
             let { name, image, tier, description } = cardCollection[i]
             if (image.endsWith('.webm')) image = image.replace('.webm', '.gif')
-            const buffer = await this.client.utils.getBuffer(image)
+            let buffer = await this.client.utils.getBuffer(image)
+            if (tier === '6' || tier === 'S') buffer = await this.client.utils.gifToMp4(buffer)
             const text = `🎈 *Name:* ${name}\n📘 *Description:* ${description}\n🎐 *Tier:* ${tier}`
             return void (await M.reply(
                 buffer,
