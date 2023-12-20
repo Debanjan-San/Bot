@@ -8,7 +8,7 @@ import { BaseCommand, Command, Message } from '../../Structures'
 })
 export default class command extends BaseCommand {
     override execute = async (M: Message): Promise<void> => {
-        if (M.from === this.client.config.casinoGroup) return void M.reply('Bruh! Do not rob here!')
+        if (M.from !== this.client.config.casinoGroup) return void M.reply('Bruh! Do not rob here!')
         const time = 900000
         const { lastRob: cd, inventory } = await this.client.DB.getUser(M.sender.jid)
         const timeLeft = inventory.find((x) => x.item === 'protection charm')

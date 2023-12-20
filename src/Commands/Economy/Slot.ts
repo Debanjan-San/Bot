@@ -12,6 +12,7 @@ import { BaseCommand, Command, Message } from '../../Structures'
 })
 export default class command extends BaseCommand {
     override execute = async (M: Message): Promise<void> => {
+        if (M.from !== this.client.config.casinoGroup) return void M.reply('Bruh! Do not rob here!')
         if (M.numbers.length < 1) return void M.reply(`Have not provided any ammount`)
         const amount = M.numbers[0]
         const { wallet } = await this.client.DB.getUser(M.sender.jid)
