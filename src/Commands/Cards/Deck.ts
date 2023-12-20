@@ -15,7 +15,8 @@ export default class command extends BaseCommand {
             let text = `🃏 *Deck*\n\n🎴 *ID:*\n\t🏮 *Username:* ${M.sender.username}\n\t🧧 *Tag:* #${tag}\n`
             for (let i = 0; i < deck.length; i++)
                 text += `\n*#${i + 1}*\n🎈 *Name:* ${deck[i].name}\n🎐 *Tier:* ${deck[i].tier}\n`
-            const { image, tier } = deck[0]
+            let { image, tier } = deck[0]
+            if (image.endsWith('.webm')) image = image.replace('.webm', '.gif')
             let buffer = await this.client.utils.getBuffer(image)
             if (tier === '6' || tier === 'S') buffer = await this.client.utils.gifToMp4(buffer)
             return void (await M.reply(
@@ -27,8 +28,9 @@ export default class command extends BaseCommand {
             ))
         } else {
             const i = M.numbers[0] - 1
-            const { name, image, tier, description } = deck[i]
-            const buffer = await this.client.utils.cardToBuffer(image)
+            let { name, image, tier, description } = deck[i]
+            if (image.endsWith('.webm')) image = image.replace('.webm', '.gif')
+            let buffer = await this.client.utils.getBuffer(image)
             const text = `🎈 *Name:* ${name}\n📘 *Description:* ${description}\n🎐 *Tier:* ${tier}`
             return void (await M.reply(
                 buffer,

@@ -16,8 +16,9 @@ export default class command extends BaseCommand {
             let text = `🃏 *Collection*\n\n🎴 *ID:*\n\t🏮 *Username:* ${M.sender.username}\n\t🧧 *Tag:* #${tag}\n\n`
             for (let i = 0; i < cardCollection.length; i++)
                 text += `\n*#${i + 1}* ${cardCollection[i].name} (Tier ${cardCollection[i].tier})`
-            const { image, tier } = cardCollection[0]
-            const buffer = await this.client.utils.cardToBuffer(image)
+            let { image, tier } = cardCollection[0]
+            if (image.endsWith('.webm')) image = image.replace('.webm', '.gif')
+            let buffer = await this.client.utils.getBuffer(image)
             return void (await M.reply(
                 buffer,
                 tier === '6' || tier === 'S' ? 'video' : 'image',
@@ -27,8 +28,9 @@ export default class command extends BaseCommand {
             ))
         } else {
             const i = M.numbers[0] - 1
-            const { name, image, tier, description } = cardCollection[i]
-            const buffer = await this.client.utils.cardToBuffer(image)
+            let { name, image, tier, description } = cardCollection[i]
+            if (image.endsWith('.webm')) image = image.replace('.webm', '.gif')
+            const buffer = await this.client.utils.getBuffer(image)
             const text = `🎈 *Name:* ${name}\n📘 *Description:* ${description}\n🎐 *Tier:* ${tier}`
             return void (await M.reply(
                 buffer,

@@ -525,17 +525,6 @@ export class Utils {
         return buffer
     }
 
-    public webmToMp4 = async (webm: Buffer): Promise<Buffer> => {
-        const filename = `${tmpdir()}/${Math.random().toString(36)}`
-        await writeFile(`${filename}.webm`, webm)
-        await this.exec(
-            `ffmpeg -f webm -i ${filename}.webm -movflags faststart -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" ${filename}.mp4`
-        )
-        const buffer = await readFile(`${filename}.mp4`)
-        Promise.all([unlink(`${filename}.webm`), unlink(`${filename}.mp4`)])
-        return buffer
-    }
-
     public fetch = async <T>(url: string): Promise<T> => (await axios.get(url)).data
 
     public getBuffer = async (url: string): Promise<Buffer> =>
@@ -544,13 +533,6 @@ export class Utils {
                 responseType: 'arraybuffer'
             })
         ).data
-
-    public cardToBuffer = async (card: string): Promise<Buffer> => {
-        let buffer = await this.getBuffer(card)
-        if (card.endsWith('.webm')) buffer = await this.webmToMp4(buffer)
-        else if (card.endsWith('.gif')) buffer = await this.gifToMp4(buffer)
-        return buffer
-    }
 
     public exec = promisify(exec)
 

@@ -17,7 +17,9 @@ export default class command extends BaseCommand {
         let text = `🃏 *Cards | ${M.sender.username}*\n`
         if (!sorted) {
             for (const card of cards) text += `\n*❯ ${card.name}*`
-            let buffer = await this.client.utils.getBuffer(cards[0].image)
+            let image = cards[0].image
+            if (image.endsWith('.webm')) image = image.replace('.webm', '.gif')
+            let buffer = await this.client.utils.getBuffer(image)
             if (cards[0].tier === '6' || cards[0].tier === 'S') buffer = await this.client.utils.gifToMp4(buffer)
             return void (await M.reply(
                 buffer,
@@ -38,7 +40,10 @@ export default class command extends BaseCommand {
                 const filteredCards = cards.filter((card) => card.tier === tier)
                 for (const card of filteredCards) text += `*❯ ${card.name}*\n`
             }
-            const buffer = await this.client.utils.cardToBuffer(cards[0].image)
+            let image = cards[0].image
+            if (image.endsWith('.webm')) image = image.replace('.webm', '.gif')
+            let buffer = await this.client.utils.getBuffer(image)
+            if (cards[0].tier === '6' || cards[0].tier === 'S') buffer = await this.client.utils.gifToMp4(buffer)
             return void (await M.reply(
                 buffer,
                 cards[0].tier === '6' || cards[0].tier === 'S' ? 'video' : 'image',

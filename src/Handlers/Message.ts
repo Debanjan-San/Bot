@@ -84,7 +84,7 @@ export class MessageHandler {
     }
 
     private spawnPokemon = async (): Promise<void> => {
-        schedule('*/11 * * * *', async () => {
+        schedule('*/5 * * * *', async () => {
             if (this.wild.length < 1) return void null
             for (let i = 0; i < this.wild.length; i++) {
                 setTimeout(async () => {
@@ -176,8 +176,10 @@ export class MessageHandler {
                     price,
                     description
                 })
-                let gifPlayback = !image.endsWith('.png')
-                const buffer = await this.client.utils.cardToBuffer(image)
+                const gifPlayback = !image.endsWith('.png')
+                if (gifPlayback) image = image.replace('.webm', '.gif')
+                let buffer = await this.client.utils.getBuffer(image)
+                if (gifPlayback) buffer = await this.client.utils.gifToMp4(buffer)
                 const [type, mimetype] = gifPlayback ? ['video', 'video/mp4'] : ['image', undefined]
                 const text = `🧧 *Details* 🧧\n\n🎈 *Name:* ${name}\n📘 *Description:* ${description}\n🎐 *Tier:* ${tier}\n🎏 *Price:* ${price}\n\nUse *${this.client.config.prefix}claim* to get this card for yourself.`
                 const buttonMessage = {
@@ -258,7 +260,7 @@ export class MessageHandler {
     }
 
     private spawnCard = async (): Promise<void> => {
-        schedule('*/19 * * * *', async () => {
+        schedule('*/10 * * * *', async () => {
             if (this.card.length < 1) return void null
             for (let i = 0; i < this.card.length; i++) {
                 setTimeout(async () => {
@@ -297,8 +299,10 @@ export class MessageHandler {
                                 price,
                                 description
                             })
-                            let gifPlayback = !image.endsWith('.png')
-                            const buffer = await this.client.utils.cardToBuffer(image)
+                            const gifPlayback = !image.endsWith('.png')
+                            if (gifPlayback) image = image.replace('.webm', '.gif')
+                            let buffer = await this.client.utils.getBuffer(image)
+                            if (gifPlayback) buffer = await this.client.utils.gifToMp4(buffer)
                             const [type, mimetype] = gifPlayback ? ['video', 'video/mp4'] : ['image', undefined]
                             const text = `🧧 *Details* 🧧\n\n🎈 *Name:* ${name}\n📘 *Description:* ${description}\n🎐 *Tier:* ${tier}\n🎏 *Price:* ${price}\n\nUse *${this.client.config.prefix}claim* to get this card for yourself.`
                             const buttonMessage = {
