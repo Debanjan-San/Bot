@@ -49,7 +49,7 @@ export default class command extends BaseCommand {
                 '',
                 `*[Use ${this.client.config.prefix}bid <ammount> to bid on this card]*`
             ].join('\n'),
-            undefined,
+            [M.sender.jid],
             undefined,
             await this.client.utils.getBuffer('https://cdn.shoob.gg/images/content/card_back.png')
         )
