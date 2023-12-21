@@ -1,4 +1,5 @@
 import { BaseCommand, Command, Message } from '../../Structures'
+import Collage from '../../lib/Collage'
 
 @Command('deck', {
     description: "Displays user's deck",
@@ -16,20 +17,8 @@ export default class command extends BaseCommand {
                 let text = `🃏 *Deck*\n\n🎴 *ID:*\n\t🏮 *Username:* ${M.sender.username}\n\t🧧 *Tag:* #${tag}\n`
                 for (let i = 0; i < deck.length; i++)
                     text += `\n*#${i + 1}*\n🎈 *Name:* ${deck[i].name}\n🎐 *Tier:* ${deck[i].tier}\n`
-                let { image, tier } = deck[0]
-                if (image.endsWith('.webm')) image = image.replace('.webm', '.gif')
-                let buffer = await this.client.utils.getBuffer(image)
-                if (tier === '6' || tier === 'S') buffer = await this.client.utils.gifToMp4(buffer)
-                return void (await M.reply(
-                    buffer,
-                    tier === '6' || tier === 'S' ? 'video' : 'image',
-                    tier === '6' || tier === 'S',
-                    undefined,
-                    text,
-                    undefined,
-                    undefined,
-                    await this.client.utils.getBuffer('https://cdn.shoob.gg/images/content/card_back.png')
-                ))
+                const collage = await new Collage(deck.map(({ image }) => image)).toBuffer()
+                return void (await M.reply(collage, 'image', undefined, undefined, text))
             } else {
                 const i = M.numbers[0] - 1
                 let { name, image, tier, description } = deck[i]
