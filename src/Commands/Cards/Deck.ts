@@ -18,7 +18,8 @@ export default class command extends BaseCommand {
                 for (let i = 0; i < deck.length; i++)
                     text += `\n*#${i + 1}*\n🎈 *Name:* ${deck[i].name}\n🎐 *Tier:* ${deck[i].tier}\n`
                 const collage = await new Collage(deck.map(({ image }) => image)).toBuffer()
-                return void (await M.reply(collage, 'image', undefined, undefined, text, undefined, undefined, collage))
+                console.log(collage)
+                return void (await M.reply(collage, 'image', undefined, undefined, text, undefined, undefined, await this.client.utils.getBuffer('https://cdn.shoob.gg/images/content/card_back.png')))
             } else {
                 const i = M.numbers[0] - 1
                 let { name, image, tier, description } = deck[i]
