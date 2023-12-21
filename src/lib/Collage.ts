@@ -32,10 +32,10 @@ export default class Collage {
                         const filename = (ext: string) => name.concat('.', ext)
                         await writeFile(filename('gif'), await this.util.getBuffer(image))
                         await this.util.exec(
-                            `ffmpeg -i "${filename('gif')}" -vf "select=eq(n\\,0)" -q:v 3 "${filename('png')}"`
+                            `ffmpeg -i "${filename('gif')}" -vf "select=eq(n\\,0)" -q:v 3 "${filename('jpg')}"`
                         )
-                        i = await readFile(filename('png'))
-                        this.util.exec(`rimraf "${filename('gif')}" "${filename('png')}"`)
+                        i = await readFile(filename('jpg'))
+                        this.util.exec(`rimraf "${filename('gif')}" "${filename('jpg')}"`)
                     }
                     return await loadImage(i)
                 })()
