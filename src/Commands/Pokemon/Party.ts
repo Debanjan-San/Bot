@@ -25,7 +25,7 @@ export default class command extends BaseCommand {
                 }
             }
             party.forEach((x, y) => {
-                text += `\n\n*🔰 #${y + 1}: *Name:* ${this.client.utils.capitalize(x.name)}\n🔮 *Level:* ${
+                text += `\n\n*🔰 #${y + 1}: Name:* ${this.client.utils.capitalize(x.name)}\n🔮 *Level:* ${
                     x.level
                 }\n🪄 *XP:* ${x.displayExp}`
             })
