@@ -1,7 +1,6 @@
 import { createCanvas, Image, loadImage } from 'canvas'
-import { writeFile, readFile } from 'fs/promises'
-import { tmpdir } from 'os'
 import { Utils } from './Utils'
+import sharp from 'sharp'
 
 export default class Collage {
     util = new Utils()
@@ -28,14 +27,9 @@ export default class Collage {
                     console.log(image)
                     if (image.endsWith('.webm')) image = image.replace('.webm', '.gif')
                     if (image.endsWith('.gif')) {
-                        const name = tmpdir().concat('/', Math.random().toString(36).substr(2, 5))
-                        const filename = (ext: string) => name.concat('.', ext)
-                        await writeFile(filename('gif'), await this.util.getBuffer(image))
-                        await this.util.exec(
-                            `ffmpeg -i "${filename('gif')}" -vf "select=eq(n\\,0)" -q:v 3 "${filename('jpg')}"`
-                        )
-                        i = await readFile(filename('jpg'))
-                        this.util.exec(`rimraf "${filename('gif')}" "${filename('jpg')}"`)
+                        i = await sharp(await this.util.getBuffer(image))
+                            .jpeg()
+                            .toBuffer()
                     }
                     return await loadImage(i)
                 })()
