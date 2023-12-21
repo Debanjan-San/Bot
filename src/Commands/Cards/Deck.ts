@@ -18,7 +18,7 @@ export default class command extends BaseCommand {
                 for (let i = 0; i < deck.length; i++)
                     text += `\n*#${i + 1}*\n🎈 *Name:* ${deck[i].name}\n🎐 *Tier:* ${deck[i].tier}\n`
                 const collage = await new Collage(deck.map(({ image }) => image)).toBuffer()
-                return void (await M.reply(collage, 'image', undefined, undefined, text))
+                return void (await M.reply(collage, 'image', undefined, undefined, text, undefined, undefined, collage))
             } else {
                 const i = M.numbers[0] - 1
                 let { name, image, tier, description } = deck[i]
