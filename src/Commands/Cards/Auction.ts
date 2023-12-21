@@ -24,15 +24,34 @@ export default class command extends BaseCommand {
         const card = deck[position]
         if (!card) return void (await M.reply('Invalid card index'))
         this.handler.auction.set(M.from, { seller: M.sender.jid, card, price, position })
+        let image = card.image
+        if (image.endsWith('.webm')) image = image.replace('.webm', '.gif')
+        let buffer = await this.client.utils.getBuffer(image)
+        if (card.tier === '6' || card.tier === 'S') buffer = await this.client.utils.gifToMp4(buffer)
         await M.reply(
-            `⛩️ *Auction has started for card ${card.name} - ${card.tier} by @${
-                M.sender.jid.split('@')[0]
-            } the lowest bit is ${price} Golds* ⛩️ \n _It will last for 5 minute only_`,
-            'text',
+            buffer,
+            card.tier === '6' || card.tier === 'S' ? 'video' : 'image',
+            card.tier === '6' || card.tier === 'S',
+            undefined,
+            [
+                '🟨 *AUCTION ONLINE* 🟨',
+                '',
+                '🃏 *Card Details* 🃏',
+                '',
+                `💠 *Title:* ${card.name}`,
+                `👑 *Tier:* ${card.tier}`,
+                `📝 *Description:* ${card.description}`,
+                '',
+                `⛩️ *Auction has started for this card by @${
+                    M.sender.jid.split('@')[0]
+                } the lowest bit is ${price} Golds* ⛩️`,
+                '_It will last for 5 minute only_',
+                '',
+                `*[Use ${this.client.config.prefix}bid <ammount> to bid on this card]*`
+            ].join('\n'),
             undefined,
             undefined,
-            undefined,
-            [M.sender.jid]
+            await this.client.utils.getBuffer('https://cdn.shoob.gg/images/content/card_back.png')
         )
 
         setTimeout(async () => {
