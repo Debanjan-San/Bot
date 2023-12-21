@@ -4,7 +4,7 @@ import { IArgs } from '../../Types/Message'
 @Command('auction', {
     category: 'cards',
     description: 'Auction of cards',
-    usage: '[index of the card from you deck] [lowest bit]',
+    usage: 'auction [index of the card from you deck] [lowest bit]',
     cooldown: 15,
     exp: 35,
     antiTrade: true
