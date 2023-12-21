@@ -24,16 +24,14 @@ export default class command extends BaseCommand {
                     await this.client.DB.user.updateOne({ jid: M.sender.jid }, { $set: { party } })
                 }
             }
-            const data: { name: string; hp: number; maxHp: number; female: boolean; level: number }[] = []
             party.forEach((x, y) => {
-                data.push({ name: x.name, hp: x.hp, maxHp: x.maxHp, female: x.female, level: x.level })
-                text += `\n\n*#${y + 1}*\n🎈 *Name:* ${this.client.utils.capitalize(x.name)}\n🔮 *Level:* ${
+                text += `\n\n*🔰 #${y + 1}: *Name:* ${this.client.utils.capitalize(x.name)}\n🔮 *Level:* ${
                     x.level
                 }\n🪄 *XP:* ${x.displayExp}`
             })
-            const buffer = await this.client.utils.gifToMp4(await partyScreen(data))
+            const buffer = await this.client.utils.getBuffer(party[0].image)
             text += `\n\n*[Use ${this.client.config.prefix}party <index_number> to see the stats of a pokemon in your party]*`
-            return void (await M.reply(buffer, 'video', true, undefined, text))
+            return void (await M.reply(buffer, 'image', true, undefined, text))
         } else {
             const index = M.numbers[0] - 1
             const pokemon = party[index]
