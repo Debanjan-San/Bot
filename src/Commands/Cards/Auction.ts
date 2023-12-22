@@ -75,9 +75,8 @@ export default class command extends BaseCommand {
             await this.client.DB.setGold(data?.seller!, winner?.bit!)
             await M.reply(
                 '🎉 *Auction has been ended!!*\n\n' +
-                    `@${winner?.buyer!.split('@')[0]} got ${data?.card!.name} - ${
-                        data?.card!.tier
-                    } for ${winner?.bit!} golds* \n_${text}_`,
+                    `@${winner?.buyer!.split('@')[0]} got ${data?.card!.name} - ${data?.card!
+                        .tier} for ${winner?.bit!} golds* \n_${text}_`,
                 'text',
                 undefined,
                 undefined,

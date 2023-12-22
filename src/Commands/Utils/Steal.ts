@@ -26,12 +26,12 @@ export default class command extends BaseCommand {
             return qualityFlag.length
                 ? parseInt(qualityFlag[0].split('--')[1], 10)
                 : flags.includes('--broke')
-                ? 1
-                : flags.includes('--low')
-                ? 10
-                : flags.includes('--high')
-                ? 100
-                : 50
+                  ? 1
+                  : flags.includes('--low')
+                    ? 10
+                    : flags.includes('--high')
+                      ? 100
+                      : 50
         }
 
         let quality = getQuality()
@@ -76,8 +76,8 @@ export default class command extends BaseCommand {
                     flags.includes('--crop') || flags.includes('--c')
                         ? 'CROPPED'
                         : flags.includes('--stretch') || flags.includes('--s')
-                        ? 'DEFAULT'
-                        : 'FULL'
+                          ? 'DEFAULT'
+                          : 'FULL'
                 ]
             }
         }

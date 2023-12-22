@@ -16,7 +16,7 @@ export default class command extends BaseCommand {
             return void M.reply(
                 'Provide the entry number of a pokemon in your pc that you wanna transfer to your party'
             )
-        if (party.length >= 6) return void M.reply('🟨 *Your party is full*')
+        if (party.length >= 6) return void M.reply('Your party is full')
         const i = M.numbers[1]
         if (i < 1 || i > pc.length) return void M.reply('Invalid entry number of pokemon in your pc')
         const text = `*${this.client.utils.capitalize(pc[i - 1].name)}* has been transferred to your party`

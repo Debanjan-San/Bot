@@ -18,7 +18,7 @@ export default class command extends BaseCommand {
         if (this.handler.auction.get(M.from)?.seller == M.sender.jid) return void M.reply('Auction is Ongoing, Baka!')
         const i = M.numbers[1]
         if (i < 1 || i > cardCollection.length) return void M.reply('Invalid index number of a card in your collection')
-        if (deck.length >= 12) return void M.reply('🟨 *Your deck is full*')
+        if (deck.length >= 12) return void M.reply('Your deck is full')
         const data = cardCollection[i - 1]
         deck.push(data)
         cardCollection.splice(i - 1, 1)

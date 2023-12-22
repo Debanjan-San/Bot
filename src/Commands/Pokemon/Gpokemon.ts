@@ -17,6 +17,7 @@ export default class extends BaseCommand {
         if (user === '') return void M.reply('Tag or quote is required!!')
         const t = party[M.numbers[0] - 1]
         const { party: targetParty } = await this.client.DB.getUser(user)
+        if (targetParty.length >= 6) return void M.reply("User's party is full")
         targetParty.push(t)
         party.splice(M.numbers[0] - 1, 1)
         await this.client.DB.updateUser(M.sender.jid, 'party', 'set', party)

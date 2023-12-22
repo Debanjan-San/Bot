@@ -35,13 +35,13 @@ export default class command extends BaseCommand {
                 flags.includes('--c') || flags.includes('--crop') || flags.includes('--cropped')
                     ? 'crop'
                     : flags.includes('--s') || flags.includes('--stretch') || flags.includes('--stretched')
-                    ? 'default'
-                    : flags.includes('--circle') ||
-                      flags.includes('--r') ||
-                      flags.includes('--round') ||
-                      flags.includes('--rounded')
-                    ? 'circle'
-                    : 'full'
+                      ? 'default'
+                      : flags.includes('--circle') ||
+                          flags.includes('--r') ||
+                          flags.includes('--round') ||
+                          flags.includes('--rounded')
+                        ? 'circle'
+                        : 'full'
         })
         return void (await M.reply(await sticker.build(), 'sticker'))
     }

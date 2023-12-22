@@ -31,9 +31,9 @@ export default class command extends BaseCommand {
         if (index < 0) {
             this.handler.pokemonTradeResponse.delete(M.from)
             return void M.reply(
-                `🟥 Pokemon trade cancelled as *@${
-                    trade?.creator.split('@')[0]
-                }* doesn't have the offered pokemon of the trade in his/her party`,
+                `🟥 Pokemon trade cancelled as *@${trade?.creator.split(
+                    '@'
+                )[0]}* doesn't have the offered pokemon of the trade in his/her party`,
                 'text',
                 undefined,
                 undefined,
@@ -47,9 +47,9 @@ export default class command extends BaseCommand {
         await this.client.DB.user.updateOne({ jid: M.sender.jid }, { $set: { party } })
         this.handler.pokemonTradeResponse.delete(M.from)
         return void M.reply(
-            `🎊 *Trade Completed!* 🎊\n\n*${this.client.utils.capitalize(pkmn.name)}* -----> *@${
-                trade?.creator.split('@')[0]
-            }*\n\n*${this.client.utils.capitalize(pokemon.name)}* -----> *@${M.sender.jid.split('@')[0]}*`,
+            `🎊 *Trade Completed!* 🎊\n\n*${this.client.utils.capitalize(pkmn.name)}* -----> *@${trade?.creator.split(
+                '@'
+            )[0]}*\n\n*${this.client.utils.capitalize(pokemon.name)}* -----> *@${M.sender.jid.split('@')[0]}*`,
             'text',
             undefined,
             undefined,

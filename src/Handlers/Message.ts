@@ -49,36 +49,39 @@ export class MessageHandler {
         schedule('*/5 * * * *', async () => {
             if (this.chara.length < 1) return void null
             for (let i = 0; i < this.chara.length; i++) {
-                setTimeout(async () => {
-                    const { chara, bot } = await this.client.DB.getGroup(this.wild[i])
-                    if (bot !== 'all' && bot !== this.client.config.name.split(' ')[0]) return void null
-                    if (!chara) return void null
-                    await new Character()
-                        .getRandomCharacter()
-                        .then(async (chara) => {
-                            const price = Math.floor(Math.random() * (50000 - 25000) + 25000)
-                            let source = ''
-                            await new Character()
-                                .getCharacterAnime(chara.mal_id)
-                                .then((res) => (source = res.data[0].anime.title))
-                                .catch(async () => {
-                                    await new Character()
-                                        .getCharacterManga(chara.mal_id.toString())
-                                        .then((res) => (source = res.data[0].manga.title))
-                                        .catch(() => {})
-                                })
-                            const buffer = await this.client.utils.getBuffer(chara.images.jpg.image_url)
-                            const buttonMessage = {
-                                image: buffer,
-                                jpegThumbnail: buffer.toString('base64'),
-                                caption: `*A claimable character Appeared!*\n\n🏮 *Name: ${chara.name}*\n\n📑 *About:* ${chara.about}\n\n🌐 *Source: ${source}*\n\n💰 *Price: ${price}*\n\n*[Use ${this.client.config.prefix}claim to have this character in your gallery]*`,
-                                headerType: 4
-                            }
-                            this.charaResponse.set(this.chara[i], { price, data: chara })
-                            await this.client.sendMessage(this.chara[i], buttonMessage)
-                        })
-                        .catch(() => {})
-                }, (i + 1) * 20 * 1000)
+                setTimeout(
+                    async () => {
+                        const { chara, bot } = await this.client.DB.getGroup(this.wild[i])
+                        if (bot !== 'all' && bot !== this.client.config.name.split(' ')[0]) return void null
+                        if (!chara) return void null
+                        await new Character()
+                            .getRandomCharacter()
+                            .then(async (chara) => {
+                                const price = Math.floor(Math.random() * (50000 - 25000) + 25000)
+                                let source = ''
+                                await new Character()
+                                    .getCharacterAnime(chara.mal_id)
+                                    .then((res) => (source = res.data[0].anime.title))
+                                    .catch(async () => {
+                                        await new Character()
+                                            .getCharacterManga(chara.mal_id.toString())
+                                            .then((res) => (source = res.data[0].manga.title))
+                                            .catch(() => {})
+                                    })
+                                const buffer = await this.client.utils.getBuffer(chara.images.jpg.image_url)
+                                const buttonMessage = {
+                                    image: buffer,
+                                    jpegThumbnail: buffer.toString('base64'),
+                                    caption: `*A claimable character Appeared!*\n\n🏮 *Name: ${chara.name}*\n\n📑 *About:* ${chara.about}\n\n🌐 *Source: ${source}*\n\n💰 *Price: ${price}*\n\n*[Use ${this.client.config.prefix}claim to have this character in your gallery]*`,
+                                    headerType: 4
+                                }
+                                this.charaResponse.set(this.chara[i], { price, data: chara })
+                                await this.client.sendMessage(this.chara[i], buttonMessage)
+                            })
+                            .catch(() => {})
+                    },
+                    (i + 1) * 20 * 1000
+                )
             }
         })
     }
@@ -87,61 +90,64 @@ export class MessageHandler {
         schedule('*/5 * * * *', async () => {
             if (this.wild.length < 1) return void null
             for (let i = 0; i < this.wild.length; i++) {
-                setTimeout(async () => {
-                    const { wild, bot } = await this.client.DB.getGroup(this.wild[i])
-                    if (bot !== 'all' && bot !== this.client.config.name.split(' ')[0]) return void null
-                    if (!wild) return void null
-                    const id = Math.floor(Math.random() * 898)
-                    const data = await this.client.utils.fetch<IPokemonAPIResponse>(
-                        `https://pokeapi.co/api/v2/pokemon/${id}`
-                    )
-                    const level = Math.floor(Math.random() * (30 - 15) + 15)
-                    const pokemonLevelCharts = await this.client.utils.fetch<{ level: number; expRequired: number }[]>(
-                        'https://shooting-star-unique-api.vercel.app/api/mwl/levels'
-                    )
-                    const expArr = pokemonLevelCharts.filter((x) => x.level <= level)
-                    const exp = expArr[expArr.length - 1].expRequired
-                    const image = data.sprites.other['official-artwork'].front_default as string
-                    const { hp, attack, defense, speed } = await this.client.utils.getPokemonStats(data.id, level)
-                    const { moves, rejectedMoves } = await this.client.utils.assignPokemonMoves(data.name, level)
-                    const client = new PokemonClient()
-                    const { gender_rate } = await client.getPokemonSpeciesByName(data.name)
-                    let female = false
-                    if (gender_rate >= 8) female = true
-                    if (gender_rate < 8 && gender_rate > 0)
-                        female = this.genders[Math.floor(Math.random() * this.genders.length)] === 'female'
-                    this.pokemonResponse.set(this.wild[i], {
-                        name: data.name,
-                        level,
-                        exp,
-                        image,
-                        id,
-                        displayExp: 0,
-                        hp,
-                        attack,
-                        defense,
-                        speed,
-                        maxHp: hp,
-                        maxDefense: defense,
-                        maxAttack: attack,
-                        maxSpeed: speed,
-                        types: data.types.map((type) => type.type.name),
-                        moves,
-                        rejectedMoves,
-                        state: {
-                            status: '',
-                            movesUsed: 0
-                        },
-                        female,
-                        tag: this.client.utils.generateRandomUniqueTag(10)
-                    })
-                    const buffer = await this.client.utils.getBuffer(image)
-                    await this.client.sendMessage(this.wild[i], {
-                        image: buffer,
-                        jpegThumbnail: buffer.toString('base64'),
-                        caption: `A wild Pokemon appeared! Use *${this.client.config.prefix}catch <pokemon_name>* to catch this pokemon`
-                    })
-                }, (i + 1) * 45 * 1000)
+                setTimeout(
+                    async () => {
+                        const { wild, bot } = await this.client.DB.getGroup(this.wild[i])
+                        if (bot !== 'all' && bot !== this.client.config.name.split(' ')[0]) return void null
+                        if (!wild) return void null
+                        const id = Math.floor(Math.random() * 898)
+                        const data = await this.client.utils.fetch<IPokemonAPIResponse>(
+                            `https://pokeapi.co/api/v2/pokemon/${id}`
+                        )
+                        const level = Math.floor(Math.random() * (30 - 15) + 15)
+                        const pokemonLevelCharts = await this.client.utils.fetch<
+                            { level: number; expRequired: number }[]
+                        >('https://shooting-star-unique-api.vercel.app/api/mwl/levels')
+                        const expArr = pokemonLevelCharts.filter((x) => x.level <= level)
+                        const exp = expArr[expArr.length - 1].expRequired
+                        const image = data.sprites.other['official-artwork'].front_default as string
+                        const { hp, attack, defense, speed } = await this.client.utils.getPokemonStats(data.id, level)
+                        const { moves, rejectedMoves } = await this.client.utils.assignPokemonMoves(data.name, level)
+                        const client = new PokemonClient()
+                        const { gender_rate } = await client.getPokemonSpeciesByName(data.name)
+                        let female = false
+                        if (gender_rate >= 8) female = true
+                        if (gender_rate < 8 && gender_rate > 0)
+                            female = this.genders[Math.floor(Math.random() * this.genders.length)] === 'female'
+                        this.pokemonResponse.set(this.wild[i], {
+                            name: data.name,
+                            level,
+                            exp,
+                            image,
+                            id,
+                            displayExp: 0,
+                            hp,
+                            attack,
+                            defense,
+                            speed,
+                            maxHp: hp,
+                            maxDefense: defense,
+                            maxAttack: attack,
+                            maxSpeed: speed,
+                            types: data.types.map((type) => type.type.name),
+                            moves,
+                            rejectedMoves,
+                            state: {
+                                status: '',
+                                movesUsed: 0
+                            },
+                            female,
+                            tag: this.client.utils.generateRandomUniqueTag(10)
+                        })
+                        const buffer = await this.client.utils.getBuffer(image)
+                        await this.client.sendMessage(this.wild[i], {
+                            image: buffer,
+                            jpegThumbnail: buffer.toString('base64'),
+                            caption: `A wild Pokemon appeared! Use *${this.client.config.prefix}catch <pokemon_name>* to catch this pokemon`
+                        })
+                    },
+                    (i + 1) * 45 * 1000
+                )
             }
         })
     }
@@ -157,16 +163,16 @@ export class MessageHandler {
                     tier === '1'
                         ? Math.floor(Math.random() * (1000 - 650) + 650)
                         : tier === '2'
-                        ? Math.floor(Math.random() * (1850 - 1110) + 1110)
-                        : tier === '3'
-                        ? Math.floor(Math.random() * (3400 - 2300) + 3400)
-                        : tier === '4'
-                        ? Math.floor(Math.random() * (5400 - 4100) + 4100)
-                        : tier === '5'
-                        ? Math.floor(Math.random() * (9800 - 7100) + 7100)
-                        : tier === '6'
-                        ? Math.floor(Math.random() * (24890 - 18350) + 18350)
-                        : Math.floor(Math.random() * (54160 - 37980) + 37980)
+                          ? Math.floor(Math.random() * (1850 - 1110) + 1110)
+                          : tier === '3'
+                            ? Math.floor(Math.random() * (3400 - 2300) + 3400)
+                            : tier === '4'
+                              ? Math.floor(Math.random() * (5400 - 4100) + 4100)
+                              : tier === '5'
+                                ? Math.floor(Math.random() * (9800 - 7100) + 7100)
+                                : tier === '6'
+                                  ? Math.floor(Math.random() * (24890 - 18350) + 18350)
+                                  : Math.floor(Math.random() * (54160 - 37980) + 37980)
                 this.cardResponse.set(jid, {
                     name,
                     id,
@@ -266,69 +272,75 @@ export class MessageHandler {
         schedule('*/10 * * * *', async () => {
             if (this.card.length < 1) return void null
             for (let i = 0; i < this.card.length; i++) {
-                setTimeout(async () => {
-                    const { cards, bot } = await this.client.DB.getGroup(this.card[i])
-                    if (bot !== 'all' && bot !== this.client.config.name.split(' ')[0]) return void null
-                    if (!cards) return void null
-                    const id = await this.client.utils.fetch<string>(
-                        'https://shooting-star-unique-api.vercel.app/api/mwl/random/card'
-                    )
-                    const url = `https://shoob.gg/cards/info/${id}`
-                    await this.client.utils
-                        .fetch<{ name: string; image: string; description: string; tier: TCardsTier }>(
-                            `https://shoob-146d4f044d9a.herokuapp.com/card?id=${id}`
+                setTimeout(
+                    async () => {
+                        const { cards, bot } = await this.client.DB.getGroup(this.card[i])
+                        if (bot !== 'all' && bot !== this.client.config.name.split(' ')[0]) return void null
+                        if (!cards) return void null
+                        const id = await this.client.utils.fetch<string>(
+                            'https://shooting-star-unique-api.vercel.app/api/mwl/random/card'
                         )
-                        .then(async ({ name, image, description, tier }) => {
-                            const price =
-                                tier === '1'
-                                    ? Math.floor(Math.random() * (1000 - 650) + 650)
-                                    : tier === '2'
-                                    ? Math.floor(Math.random() * (1850 - 1110) + 1110)
-                                    : tier === '3'
-                                    ? Math.floor(Math.random() * (3400 - 2300) + 3400)
-                                    : tier === '4'
-                                    ? Math.floor(Math.random() * (5400 - 4100) + 4100)
-                                    : tier === '5'
-                                    ? Math.floor(Math.random() * (9800 - 7100) + 7100)
-                                    : tier === '6'
-                                    ? Math.floor(Math.random() * (24890 - 18350) + 18350)
-                                    : Math.floor(Math.random() * (54160 - 37980) + 37980)
-                            this.cardResponse.set(this.card[i], {
-                                name,
-                                id,
-                                tier,
-                                image,
-                                url,
-                                price,
-                                description
+                        const url = `https://shoob.gg/cards/info/${id}`
+                        await this.client.utils
+                            .fetch<{ name: string; image: string; description: string; tier: TCardsTier }>(
+                                `https://shoob-146d4f044d9a.herokuapp.com/card?id=${id}`
+                            )
+                            .then(async ({ name, image, description, tier }) => {
+                                const price =
+                                    tier === '1'
+                                        ? Math.floor(Math.random() * (1000 - 650) + 650)
+                                        : tier === '2'
+                                          ? Math.floor(Math.random() * (1850 - 1110) + 1110)
+                                          : tier === '3'
+                                            ? Math.floor(Math.random() * (3400 - 2300) + 3400)
+                                            : tier === '4'
+                                              ? Math.floor(Math.random() * (5400 - 4100) + 4100)
+                                              : tier === '5'
+                                                ? Math.floor(Math.random() * (9800 - 7100) + 7100)
+                                                : tier === '6'
+                                                  ? Math.floor(Math.random() * (24890 - 18350) + 18350)
+                                                  : Math.floor(Math.random() * (54160 - 37980) + 37980)
+                                this.cardResponse.set(this.card[i], {
+                                    name,
+                                    id,
+                                    tier,
+                                    image,
+                                    url,
+                                    price,
+                                    description
+                                })
+                                const gifPlayback = !image.endsWith('.png')
+                                if (gifPlayback) image = image.replace('.webm', '.gif')
+                                let buffer = await this.client.utils.getBuffer(image)
+                                if (gifPlayback) buffer = await this.client.utils.gifToMp4(buffer)
+                                const [type, mimetype] = gifPlayback ? ['video', 'video/mp4'] : ['image', undefined]
+                                const text = `🧧 *Details* 🧧\n\n🎈 *Name:* ${name}\n📘 *Description:* ${description}\n🎐 *Tier:* ${tier}\n🎏 *Price:* ${price}\n\nUse *${this.client.config.prefix}claim* to get this card for yourself.`
+                                const buttonMessage = {
+                                    [type]: buffer,
+                                    mimetype,
+                                    gifPlayback,
+                                    caption:
+                                        tier !== 'S'
+                                            ? `🃏 A Collectable card Appeared! 🃏\n\n${text}`
+                                            : `🃏 Woahh! An S tier Card Appeared! 🃏\n\n${text}`,
+                                    headerType: type === 'image' ? 4 : 5,
+                                    jpegThumbnail: (
+                                        await this.client.utils.getBuffer(
+                                            'https://cdn.shoob.gg/images/content/card_back.png'
+                                        )
+                                    ).toString('base64')
+                                }
+                                await this.client.sendMessage(
+                                    this.card[i],
+                                    buttonMessage as unknown as AnyMessageContent
+                                )
                             })
-                            const gifPlayback = !image.endsWith('.png')
-                            if (gifPlayback) image = image.replace('.webm', '.gif')
-                            let buffer = await this.client.utils.getBuffer(image)
-                            if (gifPlayback) buffer = await this.client.utils.gifToMp4(buffer)
-                            const [type, mimetype] = gifPlayback ? ['video', 'video/mp4'] : ['image', undefined]
-                            const text = `🧧 *Details* 🧧\n\n🎈 *Name:* ${name}\n📘 *Description:* ${description}\n🎐 *Tier:* ${tier}\n🎏 *Price:* ${price}\n\nUse *${this.client.config.prefix}claim* to get this card for yourself.`
-                            const buttonMessage = {
-                                [type]: buffer,
-                                mimetype,
-                                gifPlayback,
-                                caption:
-                                    tier !== 'S'
-                                        ? `🃏 A Collectable card Appeared! 🃏\n\n${text}`
-                                        : `🃏 Woahh! An S tier Card Appeared! 🃏\n\n${text}`,
-                                headerType: type === 'image' ? 4 : 5,
-                                jpegThumbnail: (
-                                    await this.client.utils.getBuffer(
-                                        'https://cdn.shoob.gg/images/content/card_back.png'
-                                    )
-                                ).toString('base64')
-                            }
-                            await this.client.sendMessage(this.card[i], buttonMessage as unknown as AnyMessageContent)
-                        })
-                        .catch(() => {
-                            return void null
-                        })
-                }, (i + 1) * 48 * 1000)
+                            .catch(() => {
+                                return void null
+                            })
+                    },
+                    (i + 1) * 48 * 1000
+                )
             }
         })
     }

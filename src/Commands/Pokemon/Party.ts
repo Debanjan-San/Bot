@@ -60,8 +60,8 @@ export default class command extends BaseCommand {
                 pokemon.hp <= 0
                     ? 'Fainted'
                     : pokemon.state.status === ''
-                    ? 'Fine'
-                    : this.client.utils.capitalize(pokemon.state.status)
+                      ? 'Fine'
+                      : this.client.utils.capitalize(pokemon.state.status)
             }\n\n🟢 *HP:* ${pokemon.hp} / ${pokemon.maxHp}\n\n⬜ *Speed:* ${pokemon.speed} / ${
                 pokemon.maxSpeed
             }\n\n🛡 *Defense:* ${pokemon.defense} / ${pokemon.maxDefense}\n\n🟥 *Attack:* ${pokemon.attack} / ${

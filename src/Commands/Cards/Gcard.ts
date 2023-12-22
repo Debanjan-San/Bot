@@ -17,6 +17,7 @@ export default class extends BaseCommand {
         if (user === '') return void M.reply('Tag or quote is required!!')
         const t = deck[M.numbers[0] - 1]
         const { deck: targetDeck } = await this.client.DB.getUser(user)
+        if (targetDeck.length >= 12) return void M.reply("User's deck is full")
         targetDeck.push(t)
         deck.splice(M.numbers[0] - 1, 1)
         await this.client.DB.updateUser(M.sender.jid, 'deck', 'set', deck)
