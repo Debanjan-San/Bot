@@ -10,7 +10,6 @@ import Baileys, {
     WACallEvent,
     BinaryNode
 } from '@whiskeysockets/baileys'
-import P from 'pino'
 import { connect, set } from 'mongoose'
 import { Boom } from '@hapi/boom'
 import qr from 'qr-image'
@@ -57,7 +56,6 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
             version,
             printQRInTerminal: true,
             auth: state,
-            logger: P({ level: 'fatal' }),
             browser: ['WhatsApp_Bot', 'fatal', '4.0.0'],
             getMessage: async (key) => {
                 return {
