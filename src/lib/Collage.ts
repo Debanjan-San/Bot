@@ -1,6 +1,6 @@
 import { createCanvas, Image, loadImage } from 'canvas'
 import { Utils } from './Utils'
-import sharp from 'sharp'
+const sharp = require('sharp')
 
 export default class Collage {
     util = new Utils()
