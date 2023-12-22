@@ -1,6 +1,6 @@
 import { createCanvas, Image, loadImage } from 'canvas'
 import { Utils } from './Utils'
- // @ts-ignore
+// @ts-ignore
 import sharp from 'sharp'
 
 export default class Collage {
