@@ -278,7 +278,7 @@ export class MessageHandler {
                         if (bot !== 'all' && bot !== this.client.config.name.split(' ')[0]) return void null
                         if (!cards) return void null
                         const id = await this.client.utils.fetch<string>(
-                            'https://shooting-star-unique-api.vercel.app/api/mwl/random/card'
+                            'https://oni-chan-unique-api.vercel.app/api/card/id'
                         )
                         const url = `https://shoob.gg/cards/info/${id}`
                         await this.client.utils
