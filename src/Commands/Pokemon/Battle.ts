@@ -366,7 +366,7 @@ export default class extends BaseCommand {
                     const strong: string[] = []
                     for (const type of pkmn.types) {
                         const data = await this.client.utils.fetch<{ weakness: string[]; strong: string[] }>(
-                            `https://shooting-star-unique-api.vercel.app/api/mwl/type?type=${type}`
+                            `https://pokemon-u8cp.onrender.com/poke?type=${type}`
                         )
                         for (const w of data.weakness) weakness.push(w)
                         for (const s of data.strong) strong.push(s)
@@ -589,7 +589,7 @@ export default class extends BaseCommand {
         pkmn.exp += resultExp
         pkmn.displayExp += resultExp
         const pokemonLevelCharts = await this.client.utils.fetch<{ level: number; expRequired: number }[]>(
-            'https://shooting-star-unique-api.vercel.app/api/mwl/levels'
+            'https://gist.githubusercontent.com/Debanjan-San/5d129eadfcb7cf49250c767b378f05b2/raw/e2985d056368677d1a60106c71da23970b452800/pokelevel.json'
         )
         const levels = pokemonLevelCharts.filter((x) => pkmn.exp >= x.expRequired)
         if (pkmn.level < levels[levels.length - 1].level) {

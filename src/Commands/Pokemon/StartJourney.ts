@@ -79,7 +79,7 @@ export default class extends BaseCommand {
             flags.splice(flags.indexOf('--choose'))
             await this.client.DB.updateUser(M.sender.jid, 'companion', 'set', flags[0].replace('--', ''))
             const pokemonLevelCharts = await this.client.utils.fetch<{ level: number; expRequired: number }[]>(
-                'https://shooting-star-unique-api.vercel.app/api/mwl/levels'
+                'https://gist.githubusercontent.com/Debanjan-San/5d129eadfcb7cf49250c767b378f05b2/raw/e2985d056368677d1a60106c71da23970b452800/pokelevel.json'
             )
             const expArr = pokemonLevelCharts.filter((x) => x.level <= 5)
             const { expRequired: exp } = expArr[expArr.length - 1]

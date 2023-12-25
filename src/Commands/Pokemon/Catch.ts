@@ -43,7 +43,7 @@ export default class command extends BaseCommand {
         pkmn.exp += resultExp
         pkmn.displayExp += resultExp
         const pokemonLevelCharts = await this.client.utils.fetch<{ level: number; expRequired: number }[]>(
-            'https://shooting-star-unique-api.vercel.app/api/mwl/levels'
+            'https://gist.githubusercontent.com/Debanjan-San/5d129eadfcb7cf49250c767b378f05b2/raw/e2985d056368677d1a60106c71da23970b452800/pokelevel.json'
         )
         const levels = pokemonLevelCharts.filter((x) => pkmn.exp >= x.expRequired)
         if (pkmn.level < levels[levels.length - 1].level) {

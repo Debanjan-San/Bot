@@ -102,7 +102,9 @@ export class MessageHandler {
                         const level = Math.floor(Math.random() * (30 - 15) + 15)
                         const pokemonLevelCharts = await this.client.utils.fetch<
                             { level: number; expRequired: number }[]
-                        >('https://shooting-star-unique-api.vercel.app/api/mwl/levels')
+                        >(
+                            'https://gist.githubusercontent.com/Debanjan-San/5d129eadfcb7cf49250c767b378f05b2/raw/e2985d056368677d1a60106c71da23970b452800/pokelevel.json'
+                        )
                         const expArr = pokemonLevelCharts.filter((x) => x.level <= level)
                         const exp = expArr[expArr.length - 1].expRequired
                         const image = data.sprites.other['official-artwork'].front_default as string
@@ -217,7 +219,7 @@ export class MessageHandler {
         const i = typeof options.pokemon === 'string' ? options.pokemon.toLowerCase() : options.pokemon.toString()
         const level = options.level ? options.level : Math.floor(Math.random() * (30 - 15)) + 15
         const pokemonLevelCharts = await this.client.utils.fetch<{ level: number; expRequired: number }[]>(
-            'https://shooting-star-unique-api.vercel.app/api/mwl/levels'
+            'https://gist.githubusercontent.com/Debanjan-San/5d129eadfcb7cf49250c767b378f05b2/raw/e2985d056368677d1a60106c71da23970b452800/pokelevel.json'
         )
         const expArr = pokemonLevelCharts.filter((x) => x.level <= level)
         const { expRequired: exp } = expArr[expArr.length - 1]
@@ -704,7 +706,7 @@ export class MessageHandler {
         const evolutions = await this.client.utils.getPokemonEvolutionChain(pkmn.name)
         if (evolutions.length < 1) return void null
         const pokemonEvolutionChain = await this.client.utils.fetch<IPokemonEvolutionChain[]>(
-            'https://shooting-star-unique-api.vercel.app/api/mwl/chain'
+            'https://gist.githubusercontent.com/Debanjan-San/87ed858ff0d93ca4e023423b2ff12e29/raw/261285ed5587af31a80fda4f69a8ceb6f9c5fd96/evolutionchain.json'
         )
         const chain = pokemonEvolutionChain.filter((x) => evolutions.includes(x.species_name))
         if (chain.length < 1) return void null
