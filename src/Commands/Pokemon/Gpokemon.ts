@@ -16,7 +16,8 @@ export default class extends BaseCommand {
         const user = M.mentioned.length ? M.mentioned[0] : M.quoted ? M.quoted.sender.jid : ''
         if (user === '') return void M.reply('Tag or quote is required!!')
         const t = party[M.numbers[0] - 1]
-        const { party: targetParty } = await this.client.DB.getUser(user)
+        const { party: targetParty, companion } = await this.client.DB.getUser(user)
+        if (companion === 'None') return void M.reply('User have not started pokemon journey yet ')
         if (targetParty.length >= 6) return void M.reply("User's party is full")
         targetParty.push(t)
         party.splice(M.numbers[0] - 1, 1)
