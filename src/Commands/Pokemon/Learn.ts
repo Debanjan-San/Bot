@@ -10,6 +10,7 @@ import { IArgs } from '../../Types'
 })
 export default class extends BaseCommand {
     override execute = async (M: Message, { flags }: IArgs): Promise<void> => {
+        try {
         const Data = this.handler.pokemonMoveLearningResponse.get(`${M.from}${M.sender.jid}`)
         if (!flags.length || !Data) return void M.reply(!Data ? `You can't use this command yet-` : 'Invalid usage')
         const { party } = await this.client.DB.getUser(M.sender.jid)
@@ -46,5 +47,8 @@ export default class extends BaseCommand {
                 party[i].name
             )}* forgot the move *${deletedMove}* and learnt the move *${Move}*`
         ))
+        } catch (err) {
+         M.reply(JSON.stringify(err))
+       }
     }
 }
