@@ -158,7 +158,7 @@ export class MessageHandler {
         const url = `https://shoob.gg/cards/info/${id}`
         return await this.client.utils
             .fetch<{ name: string; image: string; description: string; tier: TCardsTier }>(
-                `https://shoob-146d4f044d9a.herokuapp.com/card?id=${id}`
+                `https://shoob.onrender.com/card?id=${id}`
             )
             .then(async ({ name, image, description, tier }) => {
                 const price =
@@ -285,7 +285,7 @@ export class MessageHandler {
                         const url = `https://shoob.gg/cards/info/${id}`
                         await this.client.utils
                             .fetch<{ name: string; image: string; description: string; tier: TCardsTier }>(
-                                `https://shoob-146d4f044d9a.herokuapp.com/card?id=${id}`
+                                `https://shoob.onrender.com/card?id=${id}`
                             )
                             .then(async ({ name, image, description, tier }) => {
                                 const price =
