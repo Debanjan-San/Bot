@@ -13,9 +13,9 @@ export default class command extends BaseCommand {
     override execute = async (M: Message): Promise<void> => {
         let url!: string
         let text = '*📮SUPPORT GROUP LINKS*\n\n'
-        const { supportGroups, casinoGroup, battleGroup } = this.client.config
+        let { supportGroups, casinoGroup, battleGroup } = this.client.config
         supportGroups.push(casinoGroup, battleGroup)
-        supportGroups.filter(value => value !== undefined && value !== null)
+        supportGroups = supportGroups.filter(value => value !== undefined && value !== null && value !== "")
         for (let i = 0; i < supportGroups.length; i++) {
             const { subject } = await this.client.groupMetadata(supportGroups[i])
             const code = await this.client.groupInviteCode(supportGroups[i])
