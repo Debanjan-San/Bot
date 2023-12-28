@@ -57,26 +57,27 @@ export default class command extends BaseCommand {
         setTimeout(async () => {
             const data = this.handler.auction.get(M.from)
             const winner = this.handler.highestBit.get(M.from)
-            this.handler.auction.delete(M.from)
-            this.handler.highestBit.delete(M.from)
-            if (!winner) return void (await M.reply('Auction has been ended!! no winner!!'))
+            if (!winner) return void (await M.reply('🟩 *Auction has been ended!! no winner!!*'))
             const { deck: targetdeck = [] } = await this.client.DB.getUser(data?.seller!)
-            const { cardCollection, deck } = await this.client.DB.getUser(winner?.buyer!)
+            const { cardCollection: collec, deck } = await this.client.DB.getUser(winner?.buyer!)
             let text = 'It is now in your deck'
             if (deck.length < 12) deck.push(data?.card!)
             else {
-                cardCollection.push(data?.card!)
+                collec.push(data?.card!)
                 text = `It has been stored in your collection`
             }
-            await this.client.DB.user.updateOne({ jid: M.sender.jid }, { $set: { deck, cardCollection } })
-            await this.client.DB.setGold(winner?.buyer!, -winner?.bit!)
+            await this.client.DB.user.updateOne({ jid: winner?.buyer! }, { $set: { cardCollection: collec, deck: deck } })
+            await this.client.DB.removeMoney(winner?.buyer!, winner?.bit!)
             targetdeck.splice(data?.position!, 1)
             await this.client.DB.user.updateOne({ jid: data?.seller! }, { $set: { deck: targetdeck } })
-            await this.client.DB.setGold(data?.seller!, winner?.bit!)
+            await this.client.DB.setMoney(data?.seller!, winner?.bit!)
+            this.handler.auction.delete(M.from)
+            this.handler.highestBit.delete(M.from)
             await M.reply(
-                '🎉 *Auction has been ended!!*\n\n' +
-                    `@${winner?.buyer!.split('@')[0]} got ${data?.card!.name} - ${data?.card!
-                        .tier} for ${winner?.bit!} golds* \n_${text}_`,
+                '🟩 *Auction has been ended!!*\n\n' +
+                    `@${winner?.buyer!.split('@')[0]} got ${data?.card!.name} - ${
+                        data?.card!.tier
+                    } for ${winner?.bit!} cradits* \n_${text}_`,
                 'text',
                 undefined,
                 undefined,
