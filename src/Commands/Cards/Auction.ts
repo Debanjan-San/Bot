@@ -57,6 +57,8 @@ export default class command extends BaseCommand {
         setTimeout(async () => {
             const data = this.handler.auction.get(M.from)
             const winner = this.handler.highestBit.get(M.from)
+            this.handler.auction.delete(M.from)
+            this.handler.highestBit.delete(M.from)
             if (!winner) return void (await M.reply('🟩 *Auction has been ended!! no winner!!*'))
             const { deck: targetdeck = [] } = await this.client.DB.getUser(data?.seller!)
             const { cardCollection: collec, deck } = await this.client.DB.getUser(winner?.buyer!)
@@ -71,8 +73,6 @@ export default class command extends BaseCommand {
             targetdeck.splice(data?.position!, 1)
             await this.client.DB.user.updateOne({ jid: data?.seller! }, { $set: { deck: targetdeck } })
             await this.client.DB.setGold(data?.seller!, winner?.bit!)
-            this.handler.auction.delete(M.from)
-            this.handler.highestBit.delete(M.from)
             await M.reply(
                 '🟩 *Auction has been ended!!*\n\n' +
                     `@${winner?.buyer!.split('@')[0]} got ${data?.card!.name} - ${
