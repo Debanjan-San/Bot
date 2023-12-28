@@ -14,7 +14,8 @@ export default class command extends BaseCommand {
         let url!: string
         let text = '*📮SUPPORT GROUP LINKS*\n\n'
         const { supportGroups, casinoGroup, battleGroup } = this.client.config
-        if (casinoGroup) supportGroups.push(...[casinoGroup, battleGroup])
+        supportGroups.push(casinoGroup, battleGroup)
+        supportGroups.filter(value => value !== undefined && value !== null)
         for (let i = 0; i < supportGroups.length; i++) {
             const { subject } = await this.client.groupMetadata(supportGroups[i])
             const code = await this.client.groupInviteCode(supportGroups[i])
