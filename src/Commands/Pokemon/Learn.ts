@@ -5,7 +5,7 @@ import { IArgs } from '../../Types'
     description: 'Learns Pokemon move',
     category: 'pokemon',
     cooldown: 5,
-    usage: 'learn --<move>',
+    usage: 'learn --[move]',
     exp: 20
 })
 export default class extends BaseCommand {
