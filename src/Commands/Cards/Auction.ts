@@ -67,10 +67,10 @@ export default class command extends BaseCommand {
                 text = `It has been stored in your collection`
             }
             await this.client.DB.user.updateOne({ jid: winner?.buyer! }, { $set: { cardCollection: collec, deck: deck } })
-            await this.client.DB.removeMoney(winner?.buyer!, winner?.bit!)
+            await this.client.DB.setGold(winner?.buyer!, -winner?.bit!)
             targetdeck.splice(data?.position!, 1)
             await this.client.DB.user.updateOne({ jid: data?.seller! }, { $set: { deck: targetdeck } })
-            await this.client.DB.setMoney(data?.seller!, winner?.bit!)
+            await this.client.DB.setGold(data?.seller!, winner?.bit!)
             this.handler.auction.delete(M.from)
             this.handler.highestBit.delete(M.from)
             await M.reply(
