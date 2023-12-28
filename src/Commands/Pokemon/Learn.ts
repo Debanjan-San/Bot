@@ -5,7 +5,7 @@ import { IArgs } from '../../Types'
     description: 'Learns Pokemon move',
     category: 'pokemon',
     cooldown: 5,
-    usage: 'learn',
+    usage: 'learn --<move>',
     exp: 20
 })
 export default class extends BaseCommand {
@@ -15,7 +15,6 @@ export default class extends BaseCommand {
         if (!flags.length || !Data) return void M.reply(!Data ? `You can't use this command yet-` : 'Invalid usage')
         const { party } = await this.client.DB.getUser(M.sender.jid)
         const { data, move } = Data
-        this.handler.pokemonMoveLearningResponse.delete(`${M.from}${M.sender.jid}`)
         const Move = move.name.split('-').map(this.client.utils.capitalize).join(' ')
         const i = party.findIndex((x) => x.name === data.name && x.level === data.level)
         if (flags.includes('--cancel')) {
@@ -42,6 +41,7 @@ export default class extends BaseCommand {
                 }
             }
         }
+        this.handler.pokemonMoveLearningResponse.delete(`${M.from}${M.sender.jid}`)
         return void (await M.reply(
             `Your *${this.client.utils.capitalize(
                 party[i].name
