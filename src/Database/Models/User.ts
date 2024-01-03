@@ -10,6 +10,9 @@ class Gallery implements ICharacter {
     @prop({ type: String, required: true })
     public url!: string
 
+    @prop({ required: true })
+    public name_kanji!: ICharacter['name_kanji']
+
     @prop({ type: Object, required: true })
     public images!: ICharacter['images']
 

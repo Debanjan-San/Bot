@@ -89,8 +89,9 @@ export default class command extends BaseCommand {
                         { $inc: { quizWins: 1 } }
                     )
                     for (let i = 0; i < length; i++)
-                        Text += `\n*#${i + 1} @${players?.players[i].jid.split('@')[0]}* - *${players?.players[i]
-                            .points}*`
+                        Text += `\n*#${i + 1} @${players?.players[i].jid.split('@')[0]}* - *${
+                            players?.players[i].points
+                        }*`
                     Text += `\n\n🎉 *@${players?.players[0].jid.split('@')[0]}* won this one 🎉`
                     return void (await this.client.sendMessage(M.from, {
                         text: Text,
@@ -98,8 +99,9 @@ export default class command extends BaseCommand {
                     }))
                 } else if (players?.players[0].points === 0) {
                     for (let i = 0; i < length; i++)
-                        Text += `\n*#${i + 1} @${players?.players[i].jid.split('@')[0]}* - *${players?.players[i]
-                            .points}*`
+                        Text += `\n*#${i + 1} @${players?.players[i].jid.split('@')[0]}* - *${
+                            players?.players[i].points
+                        }*`
                     Text += `\n\n*No one won this game*`
                     return void (await this.client.sendMessage(M.from, {
                         text: Text,
@@ -144,8 +146,9 @@ export default class command extends BaseCommand {
                 const length = players?.players.length as number
                 if (length > 0)
                     for (let i = 0; i < length; i++)
-                        Text += `\n*#${i + 1} @${players?.players[i].jid.split('@')[0]}* - *${players?.players[i]
-                            .points}*`
+                        Text += `\n*#${i + 1} @${players?.players[i].jid.split('@')[0]}* - *${
+                            players?.players[i].points
+                        }*`
                 if (length > 0 && counter !== quizzes.length - 1)
                     await this.client.sendMessage(M.from, {
                         text: Text,

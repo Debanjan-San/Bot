@@ -149,8 +149,8 @@ export default class extends BaseCommand {
                         party[i].hp <= 0
                             ? 'Fainted'
                             : party[i].state.status === ''
-                              ? 'Fine'
-                              : this.client.utils.capitalize(party[i].state.status)
+                            ? 'Fine'
+                            : this.client.utils.capitalize(party[i].state.status)
                     }\n🟢 *HP:* ${party[i].hp} / ${party[i].maxHp}\n🟧 *Types:* ${party[i].types
                         .map(this.client.utils.capitalize)
                         .join(', ')}`
@@ -341,8 +341,8 @@ export default class extends BaseCommand {
                                     move.effect === 'poison'
                                         ? 'Poisoned'
                                         : move.effect === 'sleep'
-                                          ? 'Sleeping'
-                                          : 'Paralyzed'
+                                        ? 'Sleeping'
+                                        : 'Paralyzed'
                                 }`,
                                 mentions: [data2.user]
                             })
@@ -352,8 +352,8 @@ export default class extends BaseCommand {
                                 move.effect === 'sleep'
                                     ? 'sleeping'
                                     : move.effect === 'poison'
-                                      ? 'poisoned'
-                                      : 'paralyzed'
+                                    ? 'poisoned'
+                                    : 'paralyzed'
                             pkmn.state.movesUsed = 5
                             Party[i2] = pkmn
                             this.handler.pokemonBattleResponse.set(M.from, data)

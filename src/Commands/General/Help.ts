@@ -85,13 +85,11 @@ export default class extends BaseCommand {
             })).filter((command) => command.data.config.category !== 'dev')
             const { nsfw } = await this.client.DB.getGroup(M.from)
             if (!nsfw) commands = commands.filter(({ data }) => data.config.category !== 'nsfw')
-            let text = `*👋🏻 (❤️ω❤️) Konnichiwa, senpai @${M.sender.jid.split('@')[0]}! I'm ${
+            let text = `⛩️ *❯─「  ${this.client.config.name.toUpperCase()} 」─❮* ⛩️\n\n*👋🏻 (❤️ω❤️) Konnichiwa, senpai @${
+                M.sender.jid.split('@')[0]
+            }! I'm ${
                 this.client.config.name
-            }, your trusty companion on this epic journey! 🚀✨*\n\n*🎋 Prifix: ${
-                this.client.config.prefix
-            }*\n\n📌 *❯─「${'𝙍𝙐𝙇𝙀𝙎'}」─❮* 📌\n*- Avoid spamming the bot; it's not cool.*\n*- Refrain from calling the bot to prevent a ban.*\n*- Stay away from doing anything foolish.*\n\n🎫 *${
-                this.client.config.name
-            } Command List* 🎫`
+            }, your trusty companion on this epic journey! 🚀✨*\n\n*⟾📫 Commands list📫*`
             const categories: string[] = []
             for (const command of commands) {
                 if (categories.includes(command.data.config.category)) continue
@@ -100,26 +98,16 @@ export default class extends BaseCommand {
             for (const category of categories) {
                 const categoryCommands: string[] = []
                 const filteredCommands = commands.filter((command) => command.data.config.category === category)
-                const data = this.list.find((x) => x.id.toLowerCase() === category.toLocaleLowerCase())
-                text += `\n\n${data?.emoji} *❯─「${data?.font}」─❮* ${data?.emoji}\n`
+                text += `\n\n*━━━━❰ ${this.client.utils.capitalize(category)}  ❱━━━━*\n\n`
                 filteredCommands.forEach((command) => categoryCommands.push(command.data.name))
-                text += `${categoryCommands
-                    .map((cmd) => `➤ \`\`\`${this.client.config.prefix}${cmd}\`\`\``)
-                    .join('\n')}`
+                text += `\`\`\`❐ ${categoryCommands.join(', ')}\`\`\``
             }
             text += '\n\n'
             text += `*📇 Notes:*
 *➪ Use ${this.client.config.prefix}help <command name> from help the list to see its description and usage*
 *➪ Eg: ${this.client.config.prefix}help profile*
 *➪ <> means required and [ ] means optional, don't include <> or [ ] when using command.*`
-            return void (await M.reply(
-                await this.client.utils.getBuffer('https://media.tenor.com/f-oT0-W_HVUAAAPo/saber.mp4'),
-                'video',
-                true,
-                undefined,
-                text,
-                [M.sender.jid]
-            ))
+            return void (await M.reply(text, 'text', undefined, undefined, undefined, [M.sender.jid]))
         } else {
             const cmd = context.trim().toLowerCase()
             const command = this.handler.commands.get(cmd) || this.handler.aliases.get(cmd)

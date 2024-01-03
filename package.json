@@ -11,7 +11,7 @@
     "@hapi/boom": "^9.1.4",
     "@shineiichijo/anime-news-network-scraper": "^1.0.1",
     "@shineiichijo/canvas-chan": "^1.0.1",
-    "@shineiichijo/marika": "^2.0.3",
+    "@shineiichijo/marika": "^3.0.0",
     "@shineiichijo/team-preview": "^1.1.4",
     "@typegoose/typegoose": "^11.5.1",
     "@whiskeysockets/baileys": "^6.4.0",

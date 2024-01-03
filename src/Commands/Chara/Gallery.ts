@@ -1,4 +1,4 @@
-import { Character } from '@shineiichijo/marika'
+import { Characters } from '@shineiichijo/marika'
 import { Command, BaseCommand, Message } from '../../Structures'
 
 @Command('gallery', {
@@ -19,7 +19,7 @@ export default class extends BaseCommand {
             text += '\n'
             gallery.forEach((x, i) => (text += `\n*#${i + 1} ${x.name}*`))
             return void (await M.reply(
-                await this.client.utils.getBuffer(gallery[0].images.jpg.image_url),
+                await this.client.utils.getBuffer(gallery[0].images.jpg.image_url as string),
                 'image',
                 undefined,
                 undefined,
@@ -27,24 +27,24 @@ export default class extends BaseCommand {
             ))
         }
         const data = gallery[M.numbers[0] - 1]
-        await new Character()
+        await new Characters()
             .getCharacterById(data.mal_id)
             .then(async (chara) => {
                 let source!: string
-                await new Character()
+                await new Characters()
                     .getCharacterAnime(chara.mal_id)
-                    .then((res) => (source = res.data[0].anime.title))
+                    .then((res) => (source = res[0].anime.title))
                     .catch(async () => {
-                        await new Character()
+                        await new Characters()
                             .getCharacterManga(chara.mal_id.toString())
-                            .then((res) => (source = res.data[0].manga.title))
+                            .then((res) => (source = res[0].manga.title))
                             .catch(() => (source = ''))
                     })
                 let text = `💙 *Name:* ${chara.name}\n💚 *Nicknames:* ${chara.nicknames.join(
                     ', '
                 )}\n💛 *Source:* ${source}`
                 if (chara.about !== null) text += `\n\n❤ *Description:* ${chara.about}`
-                const image = await this.client.utils.getBuffer(chara.images.jpg.image_url)
+                const image = await this.client.utils.getBuffer(chara.images.jpg.image_url as string)
                 return void (await M.reply(image, 'image', undefined, undefined, text, undefined, {
                     title: chara.name,
                     mediaType: 1,

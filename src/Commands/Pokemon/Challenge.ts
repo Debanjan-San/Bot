@@ -50,14 +50,11 @@ export default class extends BaseCommand {
                 jid.split('@')[0]
             }* for a Pokemon battle. Use *${this.client.config.prefix}challenge --accept* to start this battle`
             await M.reply(text, 'text')
-            setTimeout(
-                async () => {
-                    if (!this.handler.pokemonChallengeResponse.has(M.from)) return void null
-                    this.handler.pokemonChallengeResponse.delete(M.from)
-                    return void M.reply("Challenge cancelled as the challenged user didn't respond.")
-                },
-                6 * 10000 * 5
-            )
+            setTimeout(async () => {
+                if (!this.handler.pokemonChallengeResponse.has(M.from)) return void null
+                this.handler.pokemonChallengeResponse.delete(M.from)
+                return void M.reply("Challenge cancelled as the challenged user didn't respond.")
+            }, 6 * 10000 * 5)
         } else {
             switch (flags[0]) {
                 default:

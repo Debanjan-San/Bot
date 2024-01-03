@@ -44,12 +44,12 @@ export class EventHandler {
                       .map((jid) => `@${jid.split('@')[0]}`)
                       .join(' ')}*`
                 : event.action === 'remove'
-                  ? `Goodbye *${event.participants
-                        .map((jid) => `@${jid.split('@')[0]}`)
-                        .join(', ')}* 👋🏻, we're probably not gonna miss you.`
-                  : event.action === 'demote'
-                    ? `Ara Ara, looks like *@${event.participants[0].split('@')[0]}* got Demoted`
-                    : `Congratulations *@${event.participants[0].split('@')[0]}*, you're now an admin`
+                ? `Goodbye *${event.participants
+                      .map((jid) => `@${jid.split('@')[0]}`)
+                      .join(', ')}* 👋🏻, we're probably not gonna miss you.`
+                : event.action === 'demote'
+                ? `Ara Ara, looks like *@${event.participants[0].split('@')[0]}* got Demoted`
+                : `Congratulations *@${event.participants[0].split('@')[0]}*, you're now an admin`
         if (event.action === 'add') {
             let image!: Buffer
             try {

@@ -567,10 +567,10 @@ export class Utils {
         const w = winner?.endsWith('.net')
             ? winner
             : winner === 'White'
-              ? challenge.challenger
-              : winner === 'Black'
-                ? challenge.challengee
-                : null
+            ? challenge.challenger
+            : winner === 'Black'
+            ? challenge.challengee
+            : null
         handler.chess.challenges.set(jid, undefined)
         handler.chess.games.set(jid, undefined)
         handler.chess.ongoing.delete(jid)

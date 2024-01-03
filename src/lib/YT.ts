@@ -4,10 +4,7 @@ import { tmpdir } from 'os'
 import { Utils } from '.'
 
 export class YT {
-    constructor(
-        private url: string,
-        private type: 'video' | 'audio' = 'video'
-    ) {}
+    constructor(private url: string, private type: 'video' | 'audio' = 'video') {}
 
     public validate = (): boolean => validateURL(this.url)
 

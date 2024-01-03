@@ -6,10 +6,7 @@ import { client as NewsClient } from '@shineiichijo/anime-news-network-scraper'
 import { Client } from '../Structures'
 
 export class NewsHandler {
-    constructor(
-        private client: Client,
-        private handler: MessageHandler
-    ) {}
+    constructor(private client: Client, private handler: MessageHandler) {}
 
     public loadNewsEnabledGroups = async (): Promise<void> => {
         const groups = this.handler.groups ? this.handler.groups : await this.client.getAllGroups()

@@ -3,10 +3,7 @@ import { Client } from '.'
 import { ISender, DownloadableMessage, IGroup } from '../Types'
 
 export class Message {
-    constructor(
-        private M: proto.IWebMessageInfo,
-        private client: Client
-    ) {
+    constructor(private M: proto.IWebMessageInfo, private client: Client) {
         this.message = this.M
         this.from = M.key.remoteJid || ''
         this.chat = this.from.endsWith('@s.whatsapp.net') ? 'dm' : 'group'
@@ -14,8 +11,8 @@ export class Message {
             this.chat === 'dm' && this.M.key.fromMe
                 ? this.client.correctJid(this.client.user?.id || '')
                 : this.chat === 'group'
-                  ? this.client.correctJid(M.key.participant || '')
-                  : this.client.correctJid(this.from)
+                ? this.client.correctJid(M.key.participant || '')
+                : this.client.correctJid(this.from)
         )
         this.sender = {
             jid,
@@ -42,12 +39,12 @@ export class Message {
             return M.message?.conversation
                 ? M.message.conversation
                 : this.hasSupportedMediaMessage
-                  ? supportedMediaType
-                        .map((type) => M.message?.[type as 'imageMessage']?.caption)
-                        .filter((caption) => caption)[0] || ''
-                  : M.message?.extendedTextMessage?.text
-                    ? M.message?.extendedTextMessage.text
-                    : ''
+                ? supportedMediaType
+                      .map((type) => M.message?.[type as 'imageMessage']?.caption)
+                      .filter((caption) => caption)[0] || ''
+                : M.message?.extendedTextMessage?.text
+                ? M.message?.extendedTextMessage.text
+                : ''
         }
         this.content = getContent()
         this.urls = this.client.utils.extractUrls(this.content)
@@ -75,12 +72,12 @@ export class Message {
                     return quotedMessage?.conversation
                         ? quotedMessage.conversation
                         : supportedMediaType.includes(Type)
-                          ? supportedMediaType
-                                .map((type) => quotedMessage?.[type as 'imageMessage']?.caption)
-                                .filter((caption) => caption)[0] || ''
-                          : quotedMessage?.extendedTextMessage?.text
-                            ? quotedMessage?.extendedTextMessage.text
-                            : ''
+                        ? supportedMediaType
+                              .map((type) => quotedMessage?.[type as 'imageMessage']?.caption)
+                              .filter((caption) => caption)[0] || ''
+                        : quotedMessage?.extendedTextMessage?.text
+                        ? quotedMessage?.extendedTextMessage.text
+                        : ''
                 }
                 const { username, jid, isMod } = this.client.contact.getContact(this.client.correctJid(participant))
                 this.quoted = {
@@ -171,8 +168,8 @@ export class Message {
                 jpegThumbnail: thumbnail
                     ? thumbnail.toString('base64')
                     : type === 'image' && !thumbnail
-                      ? (content as Buffer).toString('base64')
-                      : undefined,
+                    ? (content as Buffer).toString('base64')
+                    : undefined,
                 contextInfo: externalAdReply
                     ? {
                           externalAdReply
