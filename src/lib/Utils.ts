@@ -340,7 +340,7 @@ export class Utils {
         const weakness: string[] = []
         for (const type of types) {
             const data = await this.fetch<{ type: string; weakness: string[]; strong: string[] }>(
-                `https://pokemon-u8cp.onrender.com/poke?type=${type}`
+                `https://battletypes.onrender.com/poke?type=${type}`
             )
             data.weakness.forEach((x) => weakness.push(x))
             data.strong.forEach((x) => strong.push(x))

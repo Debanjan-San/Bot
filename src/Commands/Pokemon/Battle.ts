@@ -366,7 +366,7 @@ export default class extends BaseCommand {
                     const strong: string[] = []
                     for (const type of pkmn.types) {
                         const data = await this.client.utils.fetch<{ weakness: string[]; strong: string[] }>(
-                            `https://pokemon-u8cp.onrender.com/poke?type=${type}`
+                            `https://battletypes.onrender.com/poke?type=${type}`
                         )
                         for (const w of data.weakness) weakness.push(w)
                         for (const s of data.strong) strong.push(s)
