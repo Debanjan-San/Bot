@@ -20,7 +20,10 @@ export class AuthenticationFromDatabase {
         let keys: any = {}
         const storedCreds = await this.DB.getSession(this.sessionId)
         if (storedCreds !== null && storedCreds.session) {
-            const parsedCreds = JSON.parse(storedCreds.session, BufferJSON.reviver)
+            const parsedCreds = JSON.parse(
+                storedCreds.session,
+                BufferJSON.reviver
+            )
             creds = parsedCreds.creds
             keys = parsedCreds.keys
         } else {
@@ -28,7 +31,11 @@ export class AuthenticationFromDatabase {
             creds = initAuthCreds()
         }
         const saveState = async (): Promise<void> => {
-            const session = JSON.stringify({ creds, keys }, BufferJSON.replacer, 2)
+            const session = JSON.stringify(
+                { creds, keys },
+                BufferJSON.replacer,
+                2
+            )
             await this.DB.updateSession(this.sessionId, session)
         }
         const clearState = async (): Promise<void> => {
@@ -44,7 +51,10 @@ export class AuthenticationFromDatabase {
                             let value = keys[key]?.[id]
                             if (value) {
                                 if (type === 'app-state-sync-key')
-                                    value = proto.Message.AppStateSyncKeyData.fromObject(value)
+                                    value =
+                                        proto.Message.AppStateSyncKeyData.fromObject(
+                                            value
+                                        )
                                 dict[id] = value
                             }
                             return dict
@@ -52,7 +62,8 @@ export class AuthenticationFromDatabase {
                     },
                     set: (data: any) => {
                         for (const _key in data) {
-                            const key = this.KEY_MAP[_key as keyof SignalDataTypeMap]
+                            const key =
+                                this.KEY_MAP[_key as keyof SignalDataTypeMap]
                             keys[key] = keys[key] || {}
                             Object.assign(keys[key], data[_key])
                         }

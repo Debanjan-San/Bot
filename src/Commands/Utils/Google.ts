@@ -10,7 +10,10 @@ import axios from 'axios'
     exp: 10
 })
 export default class extends BaseCommand {
-    public override execute = async (M: Message, { context }: IArgs): Promise<void> => {
+    public override execute = async (
+        M: Message,
+        { context }: IArgs
+    ): Promise<void> => {
         if (!context) return void M.reply('Provide a search term')
         const term = context.trim()
         await axios
@@ -18,7 +21,8 @@ export default class extends BaseCommand {
                 `https://www.googleapis.com/customsearch/v1?q=${context}&key=AIzaSyABA9H2sDYVwY0sDE7bqYUxihdixoL3ozM&cx=baf9bdb0c631236e5`
             )
             .then((res) => {
-                if (res.status !== 200) return void M.reply(`🔍 Error: ${res.status}`)
+                if (res.status !== 200)
+                    return void M.reply(`🔍 Error: ${res.status}`)
                 let result = ``
                 let index = 1
                 for (const item of res.data?.items) {

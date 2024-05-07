@@ -16,7 +16,8 @@ export class spotify extends Spotify {
         }
     }
 
-    public download = async (): Promise<Buffer> => await this.downloadTrack<undefined>(this.url)
+    public download = async (): Promise<Buffer> =>
+        await this.downloadTrack<undefined>(this.url)
 }
 
 interface spotifyInfo {

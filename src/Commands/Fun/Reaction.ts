@@ -13,8 +13,15 @@ const reactions = Object.keys(Reactions)
     usage: 'reaction (reaction) [tag/quote users] || (reaction) [tag/quote users]'
 })
 export default class command extends BaseCommand {
-    override execute = async (M: Message, { context }: IArgs): Promise<void> => {
-        const command = M.content.split(' ')[0].toLowerCase().slice(this.client.config.prefix.length).trim()
+    override execute = async (
+        M: Message,
+        { context }: IArgs
+    ): Promise<void> => {
+        const command = M.content
+            .split(' ')[0]
+            .toLowerCase()
+            .slice(this.client.config.prefix.length)
+            .trim()
         let flag = true
         if (command === 'r' || command === 'reaction') flag = false
         if (!flag && !context)
@@ -22,27 +29,41 @@ export default class command extends BaseCommand {
                 `🪧 *Available Reactions:*\n\n📍 ${reactions
                     .sort((x, y) => (x < y ? -1 : x > y ? 1 : 0))
                     .map((reaction) => this.client.utils.capitalize(reaction))
-                    .join('\n📍 ')}\n\n🔗 *Usage:* ${this.client.config.prefix}reaction (reaction) [tag/quote user] | ${
+                    .join('\n📍 ')}\n\n🔗 *Usage:* ${
                     this.client.config.prefix
-                }(reaction) [tag/quote user]\nExample: ${this.client.config.prefix}pat`
+                }reaction (reaction) [tag/quote user] | ${
+                    this.client.config.prefix
+                }(reaction) [tag/quote user]\nExample: ${
+                    this.client.config.prefix
+                }pat`
             )
-        const reaction = (flag ? command : context.split(' ')[0].trim().toLowerCase()) as reaction
+        const reaction = (
+            flag ? command : context.split(' ')[0].trim().toLowerCase()
+        ) as reaction
         if (!flag && !reactions.includes(reaction))
             return void M.reply(
                 `Invalid reaction. Use *${this.client.config.prefix}reaction* to see all of the available reactions`
             )
         const users = M.mentioned
-        if (M.quoted && !users.includes(M.quoted.sender.jid)) users.push(M.quoted.sender.jid)
+        if (M.quoted && !users.includes(M.quoted.sender.jid))
+            users.push(M.quoted.sender.jid)
         while (users.length < 1) users.push(M.sender.jid)
         const reactant = users[0]
         const single = reactant === M.sender.jid
-        const { url, words } = await new Reaction().getReaction(reaction, single)
+        const { url, words } = await new Reaction().getReaction(
+            reaction,
+            single
+        )
         return void (await M.reply(
-            await this.client.utils.gifToMp4(await this.client.utils.getBuffer(url)),
+            await this.client.utils.gifToMp4(
+                await this.client.utils.getBuffer(url)
+            ),
             'video',
             true,
             undefined,
-            `*@${M.sender.jid.split('@')[0]} ${words} ${single ? 'Themselves' : `@${reactant.split('@')[0]}`}*`,
+            `*@${M.sender.jid.split('@')[0]} ${words} ${
+                single ? 'Themselves' : `@${reactant.split('@')[0]}`
+            }*`,
             [M.sender.jid, reactant]
         ))
     }

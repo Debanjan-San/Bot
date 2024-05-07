@@ -5,14 +5,18 @@ import { ImgurClient } from 'imgur'
     category: 'general',
     aliases: ['reset-pfp', 'delete-icon', 'delete-pfp'],
     usage: 'reset-icon',
-    description: 'Resets the icon (or pfp) of the user (if the icon is set to custom)',
+    description:
+        'Resets the icon (or pfp) of the user (if the icon is set to custom)',
     exp: 10,
     cooldown: 20
 })
 export default class command extends BaseCommand {
     override execute = async ({ sender, reply }: Message): Promise<void> => {
         let { icon } = await this.client.DB.getUser(sender.jid)
-        if (!icon.custom) return void reply("Your icon can't be reset as your icon is not set to custom")
+        if (!icon.custom)
+            return void reply(
+                "Your icon can't be reset as your icon is not set to custom"
+            )
         const imgurClient = new ImgurClient({
             clientId: '66745e931f7c91f'
         })

@@ -15,19 +15,10 @@ export class Group {
     public nsfw!: boolean
 
     @prop({ type: Boolean, required: true, default: false })
-    public wild!: boolean
-
-    @prop({ type: Boolean, required: true, default: false })
-    public cards!: boolean
-
-    @prop({ type: Boolean, required: true, default: false })
     public news!: string
 
     @prop({ type: String, required: true, default: 'all' })
     public bot!: string
-
-    @prop({ type: Boolean, required: true, default: false })
-    public chara!: boolean
 }
 
 export type TGroupModel = Group & Document

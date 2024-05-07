@@ -9,21 +9,36 @@ import { AnyMessageContent, proto, delay } from '@whiskeysockets/baileys'
     usage: ''
 })
 export default class command extends BaseCommand {
-    override execute = async (M: Message, { context }: IArgs, arr: string[] = []): Promise<void> => {
+    override execute = async (
+        M: Message,
+        { context }: IArgs,
+        arr: string[] = []
+    ): Promise<void> => {
         try {
             let type: 'text' | 'image' | 'video' = 'text'
             let buffer!: Buffer
             if (M.hasSupportedMediaMessage) {
                 if (M.type === 'imageMessage') type = 'image'
                 if (M.type === 'videoMessage') type = 'video'
-                buffer = await M.downloadMediaMessage(M.message.message as proto.IMessage)
-            } else if (!M.hasSupportedMediaMessage && M.quoted && M.quoted.hasSupportedMediaMessage) {
+                buffer = await M.downloadMediaMessage(
+                    M.message.message as proto.IMessage
+                )
+            } else if (
+                !M.hasSupportedMediaMessage &&
+                M.quoted &&
+                M.quoted.hasSupportedMediaMessage
+            ) {
                 if (M.quoted.type === 'imageMessage') type = 'image'
                 if (M.quoted.type === 'videoMessage') type = 'video'
-                buffer = await M.downloadMediaMessage(M.quoted.message as proto.IMessage)
+                buffer = await M.downloadMediaMessage(
+                    M.quoted.message as proto.IMessage
+                )
             }
             let caption: string
-            if ((!context && !M.quoted?.content) || (!context && M.quoted?.content === ''))
+            if (
+                (!context && !M.quoted?.content) ||
+                (!context && M.quoted?.content === '')
+            )
                 return void M.reply('🟥 Provide the text to be broadcasted')
             if (context) caption = context.trim()
             else caption = M.quoted?.content.trim() as string
@@ -35,7 +50,8 @@ export default class command extends BaseCommand {
                     [type]: type === 'text' ? text : buffer,
                     caption: type === 'text' ? undefined : text,
                     gifPlayback: type === 'video' ? true : undefined,
-                    jpegThumbnail: type === 'image' ? buffer.toString('base64') : undefined
+                    jpegThumbnail:
+                        type === 'image' ? buffer.toString('base64') : undefined
                 } as unknown as AnyMessageContent)
                 arr.splice(arr.indexOf(group), 1)
             }

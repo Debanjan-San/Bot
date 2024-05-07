@@ -24,14 +24,18 @@ export default class command extends BaseCommand {
         const { getRandom } = new Quiz()
         const quizzes: IQuiz[] = []
         const session = M.numbers[0]
-        if (isNaN(session)) return void M.reply('The number of quizzes should be number, Baka!')
-        if (session < 3) return void M.reply('The minimum number of quizzes should be 3')
-        if (session > 30) return void M.reply('The maximum number of quizzes should be 30')
+        if (isNaN(session))
+            return void M.reply('The number of quizzes should be number, Baka!')
+        if (session < 3)
+            return void M.reply('The minimum number of quizzes should be 3')
+        if (session > 30)
+            return void M.reply('The maximum number of quizzes should be 30')
         for (let i = 0; i < session; i++) quizzes.push(getRandom())
         this.handler.quiz.answered.set(M.from, { players: [] })
         this.handler.quiz.board.set(M.from, { players: [] })
         let text = `🍀 *Question: ${quizzes[0].question}*\n`
-        for (let i = 0; i < quizzes[0].options.length; i++) text += `\n${this.emojis[i]} ${quizzes[0].options[i]}`
+        for (let i = 0; i < quizzes[0].options.length; i++)
+            text += `\n${this.emojis[i]} ${quizzes[0].options[i]}`
         text += `\n\n🧧 *Use ${this.client.config.prefix}answer <option_number> to answer this question.*\n\n📒 *Note: You only have 60 seconds to answer.*`
         this.handler.quiz.game.set(M.from, {
             answer: quizzes[0].answer,
@@ -59,7 +63,9 @@ export default class command extends BaseCommand {
             const length = players?.players.length as number
             if (length > 0)
                 for (let i = 0; i < length; i++)
-                    Text += `\n*#${i + 1} @${players?.players[i].jid.split('@')[0]}* - *${players?.players[i].points}*`
+                    Text += `\n*#${i + 1} @${
+                        players?.players[i].jid.split('@')[0]
+                    }* - *${players?.players[i].points}*`
             if (length > 0)
                 await this.client.sendMessage(M.from, {
                     text: Text,
@@ -89,19 +95,21 @@ export default class command extends BaseCommand {
                         { $inc: { quizWins: 1 } }
                     )
                     for (let i = 0; i < length; i++)
-                        Text += `\n*#${i + 1} @${players?.players[i].jid.split('@')[0]}* - *${
-                            players?.players[i].points
-                        }*`
-                    Text += `\n\n🎉 *@${players?.players[0].jid.split('@')[0]}* won this one 🎉`
+                        Text += `\n*#${i + 1} @${
+                            players?.players[i].jid.split('@')[0]
+                        }* - *${players?.players[i].points}*`
+                    Text += `\n\n🎉 *@${
+                        players?.players[0].jid.split('@')[0]
+                    }* won this one 🎉`
                     return void (await this.client.sendMessage(M.from, {
                         text: Text,
                         mentions: players?.players.map((player) => player.jid)
                     }))
                 } else if (players?.players[0].points === 0) {
                     for (let i = 0; i < length; i++)
-                        Text += `\n*#${i + 1} @${players?.players[i].jid.split('@')[0]}* - *${
-                            players?.players[i].points
-                        }*`
+                        Text += `\n*#${i + 1} @${
+                            players?.players[i].jid.split('@')[0]
+                        }* - *${players?.players[i].points}*`
                     Text += `\n\n*No one won this game*`
                     return void (await this.client.sendMessage(M.from, {
                         text: Text,
@@ -135,7 +143,9 @@ export default class command extends BaseCommand {
                     }
                     await this.client.sendMessage(M.from, {
                         text: `🕕 Timed out! The correct answer was ${
-                            this.emojis[i.options.findIndex((x) => x === i.answer)]
+                            this.emojis[
+                                i.options.findIndex((x) => x === i.answer)
+                            ]
                         } ${i.answer}`
                     })
                     this.handler.quiz.game.delete(M.from)
@@ -146,9 +156,9 @@ export default class command extends BaseCommand {
                 const length = players?.players.length as number
                 if (length > 0)
                     for (let i = 0; i < length; i++)
-                        Text += `\n*#${i + 1} @${players?.players[i].jid.split('@')[0]}* - *${
-                            players?.players[i].points
-                        }*`
+                        Text += `\n*#${i + 1} @${
+                            players?.players[i].jid.split('@')[0]
+                        }* - *${players?.players[i].points}*`
                 if (length > 0 && counter !== quizzes.length - 1)
                     await this.client.sendMessage(M.from, {
                         text: Text,

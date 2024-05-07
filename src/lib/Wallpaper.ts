@@ -7,9 +7,10 @@ export class Wallpaper {
 
     public fetchImages = async (): Promise<string[]> =>
         await this.utils
-            .fetch<{ images: number; results: { site: string; url: string }[] }>(
-                `${this.site}${this.query}&amount=${this.amount}`
-            )
+            .fetch<{
+                images: number
+                results: { site: string; url: string }[]
+            }>(`${this.site}${this.query}&amount=${this.amount}`)
             .then((res) => res.results.map((image) => image.url))
             .catch(() => [])
 

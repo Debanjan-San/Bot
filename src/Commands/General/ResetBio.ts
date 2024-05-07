@@ -11,11 +11,17 @@ import { BaseCommand, Command, Message } from '../../Structures'
 export default class command extends BaseCommand {
     override execute = async ({ sender, reply }: Message): Promise<void> => {
         let { about } = await this.client.DB.getUser(sender.jid)
-        if (!about.custom) return void reply("Your bio can't be reset as your bio is not set to custom")
+        if (!about.custom)
+            return void reply(
+                "Your bio can't be reset as your bio is not set to custom"
+            )
         about = {
             custom: false
         }
-        await this.client.DB.user.updateOne({ jid: sender.jid }, { $set: { about } })
+        await this.client.DB.user.updateOne(
+            { jid: sender.jid },
+            { $set: { about } }
+        )
         return void reply('Your bio has now been reset')
     }
 }

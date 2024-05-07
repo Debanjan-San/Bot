@@ -17,6 +17,9 @@ export default class extends BaseCommand {
                 url: string
             }[]
         }>('https://nekos.best/api/v2/husbando')
-        return void (await reply(await this.client.utils.getBuffer(results[0].url), 'image'))
+        return void (await reply(
+            await this.client.utils.getBuffer(results[0].url),
+            'image'
+        ))
     }
 }

@@ -10,13 +10,22 @@ import { getStats } from '../../lib'
     usage: 'profile [tag/quote user]'
 })
 export default class command extends BaseCommand {
-    override execute = async ({ mentioned, quoted, sender, reply, groupMetadata }: Message): Promise<void> => {
+    override execute = async ({
+        mentioned,
+        quoted,
+        sender,
+        reply,
+        groupMetadata
+    }: Message): Promise<void> => {
         const users = mentioned
-        if (quoted && !users.includes(quoted.sender.jid)) users.push(quoted.sender.jid)
+        if (quoted && !users.includes(quoted.sender.jid))
+            users.push(quoted.sender.jid)
         while (users.length < 1) users.push(sender.jid)
         let pfp!: Buffer
         try {
-            pfp = await this.client.utils.getBuffer((await this.client.profilePictureUrl(users[0], 'image')) || '')
+            pfp = await this.client.utils.getBuffer(
+                (await this.client.profilePictureUrl(users[0], 'image')) || ''
+            )
         } catch (error) {
             pfp = this.client.assets.get('404') as Buffer
         }
@@ -31,9 +40,14 @@ export default class command extends BaseCommand {
         let username: string = this.client.contact.getContact(users[0]).username
         if (users[0] === sender.jid) username = sender.username
         if (info.username.custom) username = info.username.name as string
-        const haigusha = info.haigusha.married ? info.haigusha.data?.name : 'None'
-        const admin = this.client.utils.capitalize(`${groupMetadata?.admins?.includes(users[0]) || false}`)
-        const ban = !info?.ban?.banned || info.ban.banned === null ? 'False' : 'True'
+        const haigusha = info.haigusha.married
+            ? info.haigusha.data?.name
+            : 'None'
+        const admin = this.client.utils.capitalize(
+            `${groupMetadata?.admins?.includes(users[0]) || false}`
+        )
+        const ban =
+            !info?.ban?.banned || info.ban.banned === null ? 'False' : 'True'
         const { rank } = getStats(info.level)
         let bio!: string
         try {
@@ -42,13 +56,19 @@ export default class command extends BaseCommand {
             bio = ''
         }
         if (info.about?.custom) bio = info.about.bio as string
-        const text = `🏮 *Username:* ${username}#${info.tag}\n\n🔖 *Bio:* ${bio}\n\n🎏 *Experience:* ${
+        const text = `🏮 *Username:* ${username}#${
+            info.tag
+        }\n\n🔖 *Bio:* ${bio}\n\n🎏 *Experience:* ${
             info.experience || 0
-        }\n\n🏅 *Rank:* ${rank}\n\n❤ *Haigusha:* ${haigusha}\n\n🧣 *Companion:* ${this.client.utils.capitalize(
-            info.companion
-        )}\n\n🍀 *Total Pokemon:* ${info.party.length + info.pc.length}\n\n🃏 *Cards:* ${
-            info.deck.length + info.cardCollection.length
-        }\n\n🍁 *Quiz Wins:* ${info.quizWins}\n\n👑 *Admin:* ${admin}\n\n💈 *Ban:* ${ban || 'False'}`
-        return void (await reply(pfp, type, type === 'video' ? true : undefined, undefined, text))
+        }\n\n🏅 *Rank:* ${rank}\n\n❤ *Haigusha:* ${haigusha}\n\n🍁 *Quiz Wins:* ${
+            info.quizWins
+        }\n\n👑 *Admin:* ${admin}\n\n💈 *Ban:* ${ban || 'False'}`
+        return void (await reply(
+            pfp,
+            type,
+            type === 'video' ? true : undefined,
+            undefined,
+            text
+        ))
     }
 }

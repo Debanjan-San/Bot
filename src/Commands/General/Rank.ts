@@ -10,17 +10,30 @@ import { getStats } from '../../lib'
     usage: 'rank [tag/quote user]'
 })
 export default class command extends BaseCommand {
-    override execute = async ({ reply, sender, quoted, mentioned }: Message): Promise<void> => {
+    override execute = async ({
+        reply,
+        sender,
+        quoted,
+        mentioned
+    }: Message): Promise<void> => {
         const users = mentioned
-        if (quoted && !users.includes(quoted.sender.jid)) users.push(quoted.sender.jid)
+        if (quoted && !users.includes(quoted.sender.jid))
+            users.push(quoted.sender.jid)
         while (users.length < 1) users.push(sender.jid)
-        const { experience, tag, username: name, level } = await this.client.DB.getUser(users[0])
+        const {
+            experience,
+            tag,
+            username: name,
+            level
+        } = await this.client.DB.getUser(users[0])
         let username: string = this.client.contact.getContact(users[0]).username
         if (users[0] === sender.jid) username = sender.username
         if (name.custom) username = name.name as string
         let pfp!: Buffer
         try {
-            pfp = await this.client.utils.getBuffer((await this.client.profilePictureUrl(users[0], 'image')) || '')
+            pfp = await this.client.utils.getBuffer(
+                (await this.client.profilePictureUrl(users[0], 'image')) || ''
+            )
         } catch (error) {
             pfp = await this.client.utils.getBuffer(
                 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg'

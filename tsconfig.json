@@ -1,8 +1,8 @@
 {
     "compilerOptions": {            
       "target": "ES6",                                
-      "module": "commonjs",                           
-      "lib": [],                                 
+      "module": "commonjs",                       
+      "lib": ["dom"],                                 
       "outDir": "./dist",                    
       "strict": true,                                
       "esModuleInterop": true,                        

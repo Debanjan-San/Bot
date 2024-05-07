@@ -34,6 +34,9 @@ export default class extends BaseCommand {
                 }[]
             }[]
         }>('https://api.waifu.im/search/?included_tags=maid')
-        return void (await reply(await this.client.utils.getBuffer(images[0].url), 'image'))
+        return void (await reply(
+            await this.client.utils.getBuffer(images[0].url),
+            'image'
+        ))
     }
 }

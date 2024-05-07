@@ -1,4 +1,7 @@
-import Baileys, { ParticipantAction, GroupMetadata } from '@whiskeysockets/baileys'
+import Baileys, {
+    ParticipantAction,
+    GroupMetadata
+} from '@whiskeysockets/baileys'
 
 export * from './Config'
 export * from './Command'
@@ -97,6 +100,7 @@ export interface IEvent {
 export interface WaifuResponse {
     name: string
     image_link: string
+    id: string
     romaji_name: string
     gender: 'Male' | 'Female'
     original_name: string
@@ -113,24 +117,6 @@ export interface WaifuResponse {
     description: string
 }
 
-export interface IPokemonChainResponse {
-    species: IPokemonSpecies
-    evolves_to: IPokemonEvolvesTo[]
-}
-
-export interface IPokemonSpecies {
-    name: string
-}
-
-export interface IPokemonEvolvesTo {
-    species: IPokemonSpecies
-    evolves_to: {
-        species: IPokemonSpecies
-    }[]
-}
-
-export type TCardsTier = '1' | '2' | '3' | '4' | '5' | '6' | 'S'
-
-export type TGroupFeature = 'news' | 'events' | 'nsfw' | 'cards' | 'wild' | 'mods' | 'chara'
+export type TGroupFeature = 'events' | 'nsfw' | 'mods'
 
 export type client = ReturnType<typeof Baileys>

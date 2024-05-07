@@ -12,22 +12,32 @@ import axios from 'axios'
     cooldown: 5
 })
 export default class extends BaseCommand {
-    public override execute = async (M: Message, { context }: IArgs): Promise<void> => {
+    public override execute = async (
+        M: Message,
+        { context }: IArgs
+    ): Promise<void> => {
         if (!context && (!M.quoted || M.quoted.content === ''))
-            return void M.reply('Provide the text you want as quotly sticker, Baka!')
+            return void M.reply(
+                'Provide the text you want as quotly sticker, Baka!'
+            )
         const content = context ? context.trim() : (M.quoted?.content as string)
         const users = M.mentioned
-        if (M.quoted && !users.includes(M.quoted.sender.jid)) users.push(M.quoted.sender.jid)
+        if (M.quoted && !users.includes(M.quoted.sender.jid))
+            users.push(M.quoted.sender.jid)
         while (users.length < 1) users.push(M.sender.jid)
         const user = users[0]
-        const username = user === M.sender.jid ? M.sender.username : this.client.contact.getContact(user).username
+        const username =
+            user === M.sender.jid
+                ? M.sender.username
+                : this.client.contact.getContact(user).username
         let pfp
         try {
             pfp =
                 (await this.client.profilePictureUrl(user, 'image')) ||
                 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg'
         } catch (error) {
-            pfp = 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg'
+            pfp =
+                'https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg'
         }
         try {
             const json = {
@@ -53,9 +63,13 @@ export default class extends BaseCommand {
                     }
                 ]
             }
-            const response = await axios.post('https://bot.lyo.su/quote/generate', json, {
-                headers: { 'Content-Type': 'application/json' }
-            })
+            const response = await axios.post(
+                'https://bot.lyo.su/quote/generate',
+                json,
+                {
+                    headers: { 'Content-Type': 'application/json' }
+                }
+            )
             const base64 = response.data.result.image
             const buffer = Buffer.from(base64, 'base64')
             const sticker = new Sticker(buffer, {

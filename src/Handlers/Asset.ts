@@ -16,12 +16,20 @@ export class AssetHandler {
                 this.path.push(asset)
                 const buffer = readFileSync(join(...this.path))
                 this.client.assets.set(asset.split('.')[0], buffer)
-                this.client.log(`Loaded: ${chalk.redBright(asset.split('.')[0])} from ${chalk.blueBright(folder)}`)
+                this.client.log(
+                    `Loaded: ${chalk.redBright(
+                        asset.split('.')[0]
+                    )} from ${chalk.blueBright(folder)}`
+                )
                 this.path.splice(this.path.indexOf(asset), 1)
             }
             this.path.splice(this.path.indexOf(folder), 1)
         }
-        return this.client.log(`Successfully loaded ${chalk.cyanBright(this.client.assets.size)} assets`)
+        return this.client.log(
+            `Successfully loaded ${chalk.cyanBright(
+                this.client.assets.size
+            )} assets`
+        )
     }
 
     private path = [__dirname, '..', '..', 'assets']

@@ -10,9 +10,13 @@ import { BaseCommand, Command, Message } from '../../Structures'
 })
 export default class command extends BaseCommand {
     override execute = async (M: Message): Promise<void> => {
-        if (!this.handler.quiz.board.has(M.from)) return void M.reply('No quiz are going on right now, Baka!')
+        if (!this.handler.quiz.board.has(M.from))
+            return void M.reply('No quiz are going on right now, Baka!')
         const ff = this.handler.quiz.forfeitable.get(M.from)
-        if (!ff) return void M.reply('*The game has just started. You can forfeit when the next question comes*')
+        if (!ff)
+            return void M.reply(
+                '*The game has just started. You can forfeit when the next question comes*'
+            )
         const id = this.handler.quiz.timer.get(M.from)?.id as NodeJS.Timeout
         clearInterval(id)
         const players = this.handler.quiz.board.get(M.from)?.players as {
@@ -27,10 +31,18 @@ export default class command extends BaseCommand {
         players.sort((a, b) => b.points - a.points)
         const length = players.length as number
         if (length > 0 && (players[0].points as number) > 0) {
-            await this.client.DB.setExp(players[0].jid as string, (players[0].points as number) * 3)
-            await this.client.DB.user.updateOne({ jid: players[0].jid as string }, { $inc: { quizWins: 1 } })
+            await this.client.DB.setExp(
+                players[0].jid as string,
+                (players[0].points as number) * 3
+            )
+            await this.client.DB.user.updateOne(
+                { jid: players[0].jid as string },
+                { $inc: { quizWins: 1 } }
+            )
             for (let i = 0; i < length; i++)
-                Text += `\n*#${i + 1} @${players[i].jid.split('@')[0]}* - *${players[i].points}*`
+                Text += `\n*#${i + 1} @${players[i].jid.split('@')[0]}* - *${
+                    players[i].points
+                }*`
             Text += `\n\n🎉 *@${players[0].jid.split('@')[0]}* won this one 🎉`
             return void (await this.client.sendMessage(M.from, {
                 text: Text,

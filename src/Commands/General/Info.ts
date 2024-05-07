@@ -24,9 +24,9 @@ export default class command extends BaseCommand {
                     command,
                     data
                 })).length
-            }\n💮 *Groups:* ${groups.length}\n🏮 *Mods:* ${this.client.config.mods.length}\n🎐 *Users:* ${
-                users.length
-            }\n🚦 *Uptime:* ${uptime}`
+            }\n💮 *Groups:* ${groups.length}\n🏮 *Mods:* ${
+                this.client.config.mods.length
+            }\n🎐 *Users:* ${users.length}\n🚦 *Uptime:* ${uptime}`
         ))
     }
 }

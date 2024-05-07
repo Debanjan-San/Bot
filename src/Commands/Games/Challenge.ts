@@ -9,15 +9,23 @@ import { Command, BaseCommand, Message } from '../../Structures'
 })
 export default class extends BaseCommand {
     public override execute = async (M: Message): Promise<void> => {
-        if (this.handler.chess.ongoing.has(M.from)) return void M.reply('A chess match ongoing atm for this group')
+        if (this.handler.chess.ongoing.has(M.from))
+            return void M.reply('A chess match ongoing atm for this group')
         let users = M.mentioned
-        if (M.quoted && !users.includes(M.quoted.sender.jid)) users.push(M.quoted.sender.jid)
+        if (M.quoted && !users.includes(M.quoted.sender.jid))
+            users.push(M.quoted.sender.jid)
         users = users.filter((x) => x !== M.sender.jid)
-        if (!users.length) return void M.reply('tag or quote someone to play with')
+        if (!users.length)
+            return void M.reply('tag or quote someone to play with')
         const user = users[0]
-        this.handler.chess.challenges.set(M.from, { challenger: M.sender.jid, challengee: user })
+        this.handler.chess.challenges.set(M.from, {
+            challenger: M.sender.jid,
+            challengee: user
+        })
         return void (await M.reply(
-            `@${M.sender.jid.split('@')[0]} has Challenged @${user.split('@')[0]} to a chess match. Use *${
+            `@${M.sender.jid.split('@')[0]} has Challenged @${
+                user.split('@')[0]
+            } to a chess match. Use *${
                 this.client.config.prefix
             }accept-ch* to start the challenge`,
             'text',

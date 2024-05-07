@@ -1,6 +1,6 @@
 import { IArgs, WaifuResponse } from '../../Types'
 import { BaseCommand, Command, Message } from '../../Structures'
-import { AnyMessageContent } from '@whiskeysockets/baileys'
+import MWL from '../../lib/MyWaifuList'
 
 @Command('haigusha', {
     description: 'Summons a random anime character to marry',
@@ -10,14 +10,17 @@ import { AnyMessageContent } from '@whiskeysockets/baileys'
     usage: 'haigusha || haigusha --waifu || haigusha --husbando'
 })
 export default class command extends BaseCommand {
-    override execute = async ({ from, message, reply }: Message, { flags }: IArgs): Promise<void> => {
+    override execute = async (
+        { from, message }: Message,
+        { flags }: IArgs
+    ): Promise<void> => {
+        const { random, randomCharacter } = new MWL()
         let haigusha
         if (flags.includes('--waifu'))
-            haigusha = await this.client.utils.fetch<WaifuResponse>('https://api.claustai.com/waifu')
+            haigusha = (await random('browse')) as WaifuResponse
         else if (flags.includes('--husbando'))
-            haigusha = await this.client.utils.fetch<WaifuResponse>('https://api.claustai.com/husbando')
-        else return void reply('Define the type of haigusha using the --waifu/ --husbando flags')
-        haigusha.gender = flags.includes('--husbando') ? 'Male' : 'Female'
+            haigusha = (await random('husbandos')) as WaifuResponse
+        else haigusha = (await randomCharacter()) as WaifuResponse
         this.handler.haigushaResponse.set(from, haigusha)
         let text = `🎐 *Name:* ${haigusha.name}\n\n`
         if (haigusha.original_name && haigusha.original_name !== '')

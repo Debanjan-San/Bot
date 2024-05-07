@@ -15,8 +15,13 @@ import { connect, set } from 'mongoose'
 import { Boom } from '@hapi/boom'
 import qr from 'qr-image'
 import { Utils } from '../lib'
-import { Database, Contact, Message, Server, AuthenticationFromDatabase } from '.'
-import { Pokemon } from '../Database'
+import {
+    Database,
+    Contact,
+    Message,
+    Server,
+    AuthenticationFromDatabase
+} from '.'
 import { IConfig, client, IEvent } from '../Types'
 
 export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>) {
@@ -25,8 +30,8 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
         super()
         Config()
         this.config = {
-            name: process.env.BOT_NAME || 'Ligma',
-            session: process.env.SESSION || 'Myno',
+            name: process.env.BOT_NAME || '𝓚𝓲𝓽𝓪𝓰𝓪𝔀𝓪',
+            session: process.env.SESSION || 'DASAYUU',
             prefix: process.env.PREFIX || '#',
             mods: process.env.MODS
                 ? process.env.MODS.split(',').map((id) => {
@@ -34,7 +39,10 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
                       return id.replace('+', '').concat('@s.whatsapp.net')
                   })
                 : [],
-            PORT: Number(process.env.PORT || Math.floor(Math.random() * (9000 - 3000) + 3000)),
+            PORT: Number(
+                process.env.PORT ||
+                    Math.floor(Math.random() * (9000 - 3000) + 3000)
+            ),
             casinoGroup: process.env.CSGC || '',
             supportGroups: (process.env.SGC || '').split(', ') || [],
             adminsGroup: process.env.AGC || '',
@@ -50,7 +58,9 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
         set('strictQuery', false)
         await connect(process.env.MONGO_URI)
         this.log('Successfully Connected to the Database >.<//')
-        const { useDatabaseAuth } = new AuthenticationFromDatabase(this.config.session)
+        const { useDatabaseAuth } = new AuthenticationFromDatabase(
+            this.config.session
+        )
         const { saveState, state, clearState } = await useDatabaseAuth()
         const { version } = await fetchLatestBaileysVersion()
         this.client = Baileys({
@@ -70,13 +80,22 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
         for (const method of Object.keys(this.client))
             this[method as keyof Client] = this.client[method as keyof client]
         this.ev.on('call', (a) => void this.emit('new_call', a[0]))
-        this.ev.on('contacts.update', async (contacts) => await this.contact.saveContacts(contacts))
+        this.ev.on(
+            'contacts.update',
+            async (contacts) => await this.contact.saveContacts(contacts)
+        )
         this.ev.on('messages.upsert', async ({ messages }) => {
             const M = new Message(messages[0], this)
-            if ((M.type === 'protocolMessage' || M.type === 'senderKeyDistributionMessage') && M.content === '')
+            if (
+                (M.type === 'protocolMessage' ||
+                    M.type === 'senderKeyDistributionMessage') &&
+                M.content === ''
+            )
                 return void null
             if (M.stubType && M.stubParameters) {
-                const emitParticipantsUpdate = (action: ParticipantAction): boolean =>
+                const emitParticipantsUpdate = (
+                    action: ParticipantAction
+                ): boolean =>
                     this.emit('participants_update', {
                         jid: M.from,
                         participants: M.stubParameters as string[],
@@ -89,7 +108,8 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
                             subject: M.stubParameters[0]
                         })
                     case proto.WebMessageInfo.StubType.GROUP_PARTICIPANT_ADD:
-                    case proto.WebMessageInfo.StubType.GROUP_PARTICIPANT_ADD_REQUEST_JOIN:
+                    case proto.WebMessageInfo.StubType
+                        .GROUP_PARTICIPANT_ADD_REQUEST_JOIN:
                     case proto.WebMessageInfo.StubType.GROUP_PARTICIPANT_INVITE:
                         return void emitParticipantsUpdate('add')
                     case proto.WebMessageInfo.StubType.GROUP_PARTICIPANT_LEAVE:
@@ -97,7 +117,8 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
                         return void emitParticipantsUpdate('remove')
                     case proto.WebMessageInfo.StubType.GROUP_PARTICIPANT_DEMOTE:
                         return void emitParticipantsUpdate('demote')
-                    case proto.WebMessageInfo.StubType.GROUP_PARTICIPANT_PROMOTE:
+                    case proto.WebMessageInfo.StubType
+                        .GROUP_PARTICIPANT_PROMOTE:
                         return void emitParticipantsUpdate('promote')
                 }
             }
@@ -112,7 +133,10 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
             }
             const { connection, lastDisconnect } = update
             if (connection === 'close') {
-                if ((lastDisconnect?.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut) {
+                if (
+                    (lastDisconnect?.error as Boom)?.output?.statusCode !==
+                    DisconnectReason.loggedOut
+                ) {
                     this.log('Reconnecting...')
                     setTimeout(() => this.start(), 3000)
                 } else {
@@ -171,9 +195,11 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
         return await this.sendNode(stanza)
     }
 
-    public getAllGroups = async (): Promise<string[]> => Object.keys(await this.groupFetchAllParticipating())
+    public getAllGroups = async (): Promise<string[]> =>
+        Object.keys(await this.groupFetchAllParticipating())
 
-    public correctJid = (jid: string): string => `${jid.split('@')[0].split(':')[0]}@s.whatsapp.net`
+    public correctJid = (jid: string): string =>
+        `${jid.split('@')[0].split(':')[0]}@s.whatsapp.net`
 
     public assets = new Map<string, Buffer>()
 
@@ -253,11 +279,4 @@ type Events = {
     participants_update: (event: IEvent) => void
     new_group_joined: (group: { jid: string; subject: string }) => void
     open: () => void
-    pokemon_levelled_up: (data: {
-        M: Message
-        pokemon: Pokemon
-        inBattle: boolean
-        player: 'player1' | 'player2'
-        user: string
-    }) => void
 }

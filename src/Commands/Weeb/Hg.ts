@@ -12,14 +12,20 @@ import { WaifuResponse } from '../../Types'
 export default class command extends BaseCommand {
     override execute = async (M: Message): Promise<void> => {
         const users = M.mentioned
-        if (M.quoted && !users.includes(M.quoted.sender.jid)) users.push(M.quoted.sender.jid)
+        if (M.quoted && !users.includes(M.quoted.sender.jid))
+            users.push(M.quoted.sender.jid)
         while (users.length < 1) users.push(M.sender.jid)
         let user = users[0]
         if (M.type === 'buttonsResponseMessage') user = M.sender.jid
-        const { haigusha: Haigusha, username: name } = await this.client.DB.getUser(user)
+        const { haigusha: Haigusha, username: name } =
+            await this.client.DB.getUser(user)
         if (!Haigusha.married)
             return void M.reply(
-                `${user === M.sender.jid ? "You aren't" : `*@${user.split('@')[0]}* isn't`} married to anyone`,
+                `${
+                    user === M.sender.jid
+                        ? "You aren't"
+                        : `*@${user.split('@')[0]}* isn't`
+                } married to anyone`,
                 'text',
                 undefined,
                 undefined,
@@ -36,7 +42,9 @@ export default class command extends BaseCommand {
         text += `❤️‍🩹 *Married to:* ${username}\n\n`
         if (haigusha.age) text += `🍀 *Age:* ${haigusha.age}\n\n`
         text += `🎀 *Gender:* ${haigusha.gender}\n\n🔗 *Appearance:* ${haigusha.appears_in}\n\n❄ *Description:* ${haigusha.description}`
-        const buffer = await this.client.utils.getBuffer(haigusha.image_link as string)
+        const buffer = await this.client.utils.getBuffer(
+            haigusha.image_link as string
+        )
         return void (await this.client.sendMessage(
             M.from,
             {

@@ -1,4 +1,11 @@
-import { proto, MessageType, MediaType, AnyMessageContent, downloadContentFromMessage } from '@whiskeysockets/baileys'
+import {
+    proto,
+    MessageType,
+    MediaType,
+    AnyMessageContent,
+    downloadContentFromMessage,
+    generateWAMessageFromContent
+} from '@whiskeysockets/baileys'
 import { Client } from '.'
 import { ISender, DownloadableMessage, IGroup } from '../Types'
 
@@ -20,66 +27,104 @@ export class Message {
             isMod,
             isAdmin: false
         }
-        this.type = (Object.keys(M.message || {})[0] as MessageType) || 'conversation'
+        this.type =
+            (Object.keys(M.message || {})[0] as MessageType) || 'conversation'
         if (this.M.pushName) this.sender.username = this.M.pushName
         const supportedMediaType = ['videoMessage', 'imageMessage']
         this.hasSupportedMediaMessage =
             this.type === 'buttonsMessage'
-                ? supportedMediaType.includes(Object.keys(M.message?.buttonsMessage || {})[0])
+                ? supportedMediaType.includes(
+                      Object.keys(M.message?.buttonsMessage || {})[0]
+                  )
                 : supportedMediaType.includes(this.type)
         const getContent = (): string => {
             if (M.message?.buttonsResponseMessage)
-                return (M.message?.buttonsResponseMessage?.selectedDisplayText as string).startsWith(
-                    this.client.config.prefix
-                )
-                    ? M.message?.buttonsResponseMessage?.selectedDisplayText || ''
+                return (
+                    M.message?.buttonsResponseMessage
+                        ?.selectedDisplayText as string
+                ).startsWith(this.client.config.prefix)
+                    ? M.message?.buttonsResponseMessage?.selectedDisplayText ||
+                          ''
                     : M.message.buttonsResponseMessage.selectedButtonId || ''
             if (M.message?.listResponseMessage)
-                return M.message?.listResponseMessage?.singleSelectReply?.selectedRowId || ''
+                return (
+                    M.message?.listResponseMessage?.singleSelectReply
+                        ?.selectedRowId || ''
+                )
+            if (M.message?.interactiveResponseMessage) {
+                const paramsJson = JSON.parse(
+                    M.message?.interactiveResponseMessage
+                        ?.nativeFlowResponseMessage?.paramsJson as string
+                )
+                if (paramsJson && paramsJson.id) return paramsJson.id
+            }
+            if (M.message?.templateButtonReplyMessage)
+                return M.message?.templateButtonReplyMessage?.selectedId || ''
             return M.message?.conversation
                 ? M.message.conversation
                 : this.hasSupportedMediaMessage
                 ? supportedMediaType
-                      .map((type) => M.message?.[type as 'imageMessage']?.caption)
+                      .map(
+                          (type) => M.message?.[type as 'imageMessage']?.caption
+                      )
                       .filter((caption) => caption)[0] || ''
                 : M.message?.extendedTextMessage?.text
                 ? M.message?.extendedTextMessage.text
                 : ''
         }
+
         this.content = getContent()
         this.urls = this.client.utils.extractUrls(this.content)
-        const mentions = (M.message?.[this.type as 'extendedTextMessage']?.contextInfo?.mentionedJid || []).filter(
-            (x) => x !== null && x !== undefined
-        )
+        const mentions = (
+            M.message?.[this.type as 'extendedTextMessage']?.contextInfo
+                ?.mentionedJid || []
+        ).filter((x) => x !== null && x !== undefined)
         for (const mentioned of mentions) this.mentioned.push(mentioned)
         let text = this.content
-        for (const mentioned of this.mentioned) text = text.replace(mentioned.split('@')[0], '')
+        for (const mentioned of this.mentioned)
+            text = text.replace(mentioned.split('@')[0], '')
         this.numbers = this.client.utils.extractNumbers(text)
-        if (M.message?.[this.type as 'extendedTextMessage']?.contextInfo?.quotedMessage) {
+        if (
+            M.message?.[this.type as 'extendedTextMessage']?.contextInfo
+                ?.quotedMessage
+        ) {
             const { quotedMessage, participant, stanzaId } =
-                M.message?.[this.type as 'extendedTextMessage']?.contextInfo || {}
+                M.message?.[this.type as 'extendedTextMessage']?.contextInfo ||
+                {}
             if (quotedMessage && participant && stanzaId) {
                 const Type = Object.keys(quotedMessage)[0] as MessageType
                 const getQuotedContent = (): string => {
                     if (quotedMessage?.buttonsResponseMessage)
-                        return (quotedMessage?.buttonsResponseMessage?.selectedDisplayText as string).startsWith(
-                            this.client.config.prefix
-                        )
-                            ? quotedMessage?.buttonsResponseMessage?.selectedDisplayText || ''
-                            : quotedMessage?.buttonsResponseMessage.selectedButtonId || ''
+                        return (
+                            quotedMessage?.buttonsResponseMessage
+                                ?.selectedDisplayText as string
+                        ).startsWith(this.client.config.prefix)
+                            ? quotedMessage?.buttonsResponseMessage
+                                  ?.selectedDisplayText || ''
+                            : quotedMessage?.buttonsResponseMessage
+                                  .selectedButtonId || ''
                     if (quotedMessage?.listResponseMessage)
-                        return quotedMessage?.listResponseMessage?.singleSelectReply?.selectedRowId || ''
+                        return (
+                            quotedMessage?.listResponseMessage
+                                ?.singleSelectReply?.selectedRowId || ''
+                        )
                     return quotedMessage?.conversation
                         ? quotedMessage.conversation
                         : supportedMediaType.includes(Type)
                         ? supportedMediaType
-                              .map((type) => quotedMessage?.[type as 'imageMessage']?.caption)
+                              .map(
+                                  (type) =>
+                                      quotedMessage?.[type as 'imageMessage']
+                                          ?.caption
+                              )
                               .filter((caption) => caption)[0] || ''
                         : quotedMessage?.extendedTextMessage?.text
                         ? quotedMessage?.extendedTextMessage.text
                         : ''
                 }
-                const { username, jid, isMod } = this.client.contact.getContact(this.client.correctJid(participant))
+                const { username, jid, isMod } = this.client.contact.getContact(
+                    this.client.correctJid(participant)
+                )
                 this.quoted = {
                     sender: {
                         jid,
@@ -89,7 +134,9 @@ export class Message {
                     } || {
                         username: 'User',
                         jid: this.client.correctJid(participant),
-                        isMod: this.client.config.mods.includes(this.client.correctJid(participant)),
+                        isMod: this.client.config.mods.includes(
+                            this.client.correctJid(participant)
+                        ),
                         isAdmin: false
                     },
                     content: getQuotedContent(),
@@ -98,11 +145,16 @@ export class Message {
                     hasSupportedMediaMessage:
                         Type !== 'buttonsMessage'
                             ? supportedMediaType.includes(Type)
-                            : supportedMediaType.includes(Object.keys(quotedMessage?.buttonsMessage || {})[1]),
+                            : supportedMediaType.includes(
+                                  Object.keys(
+                                      quotedMessage?.buttonsMessage || {}
+                                  )[1]
+                              ),
                     key: {
                         remoteJid: this.from,
                         fromMe:
-                            this.client.correctJid(participant) === this.client.correctJid(this.client.user?.id || ''),
+                            this.client.correctJid(participant) ===
+                            this.client.correctJid(this.client.user?.id || ''),
                         id: stanzaId,
                         participant
                     }
@@ -114,10 +166,14 @@ export class Message {
 
     public simplify = async (): Promise<Message> => {
         const { username } = await this.client.DB.getUser(this.sender.jid)
-        if (username.custom && username.name) this.sender.username = username.name
+        if (username.custom && username.name)
+            this.sender.username = username.name
         if (this.quoted) {
-            const { username } = await this.client.DB.getUser(this.quoted.sender.jid)
-            if (username.custom && username.name) this.quoted.sender.username = username.name
+            const { username } = await this.client.DB.getUser(
+                this.quoted.sender.jid
+            )
+            if (username.custom && username.name)
+                this.quoted.sender.username = username.name
         }
         if (this.chat === 'dm') return this
         return await this.client
@@ -129,7 +185,10 @@ export class Message {
                     .map((x) => x.id)
                 this.groupMetadata = result
                 this.sender.isAdmin = result.admins.includes(this.sender.jid)
-                if (this.quoted) this.quoted.sender.isAdmin = result.admins.includes(this.quoted.sender.jid)
+                if (this.quoted)
+                    this.quoted.sender.isAdmin = result.admins.includes(
+                        this.quoted.sender.jid
+                    )
                 return this
             })
             .catch(() => this)
@@ -143,9 +202,83 @@ export class Message {
         return this.M.messageStubParameters
     }
 
+    public sendButtonMessage = async ({
+        jid,
+        body,
+        header,
+        footer,
+        buttons
+    }: {
+        jid?: string
+        body: string
+        header: string
+        footer: string
+        buttons: {
+            name: string
+            buttonParamsJson: string
+        }[]
+    }) => {
+        const msg = generateWAMessageFromContent(
+            jid || this.from,
+            {
+                viewOnceMessage: {
+                    message: {
+                        messageContextInfo: {
+                            deviceListMetadata: {},
+                            deviceListMetadataVersion: 2
+                        },
+                        interactiveMessage:
+                            proto.Message.InteractiveMessage.create({
+                                body: proto.Message.InteractiveMessage.Body.create(
+                                    {
+                                        text: body
+                                    }
+                                ),
+                                footer: proto.Message.InteractiveMessage.Footer.create(
+                                    {
+                                        text: footer
+                                    }
+                                ),
+                                header: proto.Message.InteractiveMessage.Header.create(
+                                    {
+                                        title: header,
+                                        subtitle: '',
+                                        hasMediaAttachment: false
+                                    }
+                                ),
+                                nativeFlowMessage:
+                                    proto.Message.InteractiveMessage.NativeFlowMessage.create(
+                                        {
+                                            buttons
+                                        }
+                                    )
+                            })
+                    }
+                }
+            },
+            {
+                userJid: ''
+            }
+        )
+
+        await this.client.relayMessage(
+            msg.key.remoteJid as string,
+            msg.message as proto.IMessage,
+            {
+                messageId: msg.key.id as string
+            }
+        )
+    }
+
     public reply = async (
         content: string | Buffer,
-        type: 'text' | 'image' | 'video' | 'audio' | 'sticker' | 'document' = 'text',
+        type:
+            | 'text'
+            | 'image'
+            | 'video'
+            | 'audio'
+            | 'sticker'
+            | 'document' = 'text',
         gif?: boolean,
         mimetype?: string,
         caption?: string,
@@ -153,9 +286,14 @@ export class Message {
         externalAdReply?: proto.IContextInfo['externalAdReply'],
         thumbnail?: Buffer,
         fileName?: string,
-        options: { sections?: proto.Message.ListMessage.ISection[]; buttonText?: string; title?: string } = {}
+        options: {
+            sections?: proto.Message.ListMessage.ISection[]
+            buttonText?: string
+            title?: string
+        } = {}
     ): Promise<ReturnType<typeof this.client.sendMessage>> => {
-        if (type === 'text' && Buffer.isBuffer(content)) throw new Error('Cannot send Buffer as a text message')
+        if (type === 'text' && Buffer.isBuffer(content))
+            throw new Error('Cannot send Buffer as a text message')
         return this.client.sendMessage(
             this.from,
             {
@@ -197,7 +335,9 @@ export class Message {
             }
         })
 
-    public downloadMediaMessage = async (message: proto.IMessage): Promise<Buffer> => {
+    public downloadMediaMessage = async (
+        message: proto.IMessage
+    ): Promise<Buffer> => {
         let type = Object.keys(message)[0] as MessageType
         let msg = message[type as keyof typeof message]
         if (type === 'buttonsMessage' || type === 'viewOnceMessage') {

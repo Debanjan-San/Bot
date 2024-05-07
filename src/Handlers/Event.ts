@@ -23,7 +23,9 @@ export class EventHandler {
             })
         this.client.log(
             `${chalk.blueBright('EVENT')} ${chalk.green(
-                `${this.client.utils.capitalize(event.action)}[${event.participants.length}]`
+                `${this.client.utils.capitalize(event.action)}[${
+                    event.participants.length
+                }]`
             )} in ${chalk.cyanBright(group.subject)}`
         )
         const { events, bot } = await this.client.DB.getGroup(event.jid)
@@ -32,7 +34,9 @@ export class EventHandler {
             bot !== this.client.config.name.split(' ')[0] ||
             (event.action === 'remove' &&
                 event.participants.includes(
-                    `${(this.client.user?.id || '').split('@')[0].split(':')[0]}@s.whatsapp.net`
+                    `${
+                        (this.client.user?.id || '').split('@')[0].split(':')[0]
+                    }@s.whatsapp.net`
                 ))
         )
             return void null
@@ -48,13 +52,20 @@ export class EventHandler {
                       .map((jid) => `@${jid.split('@')[0]}`)
                       .join(', ')}* 👋🏻, we're probably not gonna miss you.`
                 : event.action === 'demote'
-                ? `Ara Ara, looks like *@${event.participants[0].split('@')[0]}* got Demoted`
-                : `Congratulations *@${event.participants[0].split('@')[0]}*, you're now an admin`
+                ? `Ara Ara, looks like *@${
+                      event.participants[0].split('@')[0]
+                  }* got Demoted`
+                : `Congratulations *@${
+                      event.participants[0].split('@')[0]
+                  }*, you're now an admin`
         if (event.action === 'add') {
             let image!: Buffer
             try {
                 image = await this.client.utils.getBuffer(
-                    (await this.client.profilePictureUrl(event?.jid || '', 'image')) || ''
+                    (await this.client.profilePictureUrl(
+                        event?.jid || '',
+                        'image'
+                    )) || ''
                 )
             } catch (error) {
                 image = this.client.assets.get('404') as Buffer
@@ -72,21 +83,34 @@ export class EventHandler {
         }))
     }
 
-    public sendMessageOnJoiningGroup = async (group: { subject: string; jid: string }): Promise<void> => {
-        this.client.log(`${chalk.blueBright('JOINED')} ${chalk.cyanBright(group.subject)}`)
+    public sendMessageOnJoiningGroup = async (group: {
+        subject: string
+        jid: string
+    }): Promise<void> => {
+        this.client.log(
+            `${chalk.blueBright('JOINED')} ${chalk.cyanBright(group.subject)}`
+        )
         return void (await this.client.sendMessage(group.jid, {
-            text: `Thanks for adding me in this group. Please use *${this.client.config.prefix}help* to get started.`
+            image: {
+                url: 'https://i.pinimg.com/originals/82/83/68/8283687daf61e2464f30537d2cbca205.jpg'
+            },
+            caption: `Thanks for adding me in this group. Please use *${this.client.config.prefix}help* to get started.`
         }))
     }
 
     private handleMods = (event: IEvent): void => {
         if (
             event.jid !== this.client.config.adminsGroup ||
-            (event.action !== 'promote' && event.action !== 'demote' && event.action !== 'remove')
+            (event.action !== 'promote' &&
+                event.action !== 'demote' &&
+                event.action !== 'remove')
         )
             return void null
         event.action === 'promote'
             ? this.client.config.mods.push(event.participants[0])
-            : this.client.config.mods.splice(this.client.config.mods.indexOf(event.participants[0]), 1)
+            : this.client.config.mods.splice(
+                  this.client.config.mods.indexOf(event.participants[0]),
+                  1
+              )
     }
 }
