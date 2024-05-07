@@ -4,7 +4,7 @@
     "build": "rimraf dist/ && tsc -p .",
     "format": "prettier --write --config .prettierrc.json \"src/**/*.ts\"",
     "start:build": "npm run build && node dist/bot.js",
-    "start": "pm2 start dist/bot.js --name",
+    "start": "node dist/bot.js",
     "postinstall": "npm run build"
   },
   "dependencies": {
