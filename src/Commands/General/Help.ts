@@ -190,7 +190,8 @@ This help menu is designed to help you get started with the bot.\n\n💡 My Pref
                         `*CMD:* ${this.client.config.prefix}${e.name}\nDescription: *${e.config.description}*\nUsage: ${e.config.usage}`
                 )
                 .join('\n\n')
-            text += '\n\nHope you have a great day!'
+            text += `\n\n*📇 Notes:*
+*➪ Use ${this.client.config.prefix}help <category number> from help the list to see its description and usage*`
             return void (await M.reply(
                 await this.client.utils.getBuffer(
                     'https://i.pinimg.com/236x/9c/14/3e/9c143ef8ea5d9bc91cfe3f60d09be960.jpg'
@@ -201,6 +202,20 @@ This help menu is designed to help you get started with the bot.\n\n💡 My Pref
                 text
             ))
         } else if (flags.includes('--list')) {
+            const rows: {
+                header: string
+                title: string
+                description: string
+                id: string
+            }[] = catagoryiesWithCommnads.map((e, i) => {
+                return {
+                    header: '',
+                    title: this.client.utils.capitalize(e.category),
+                    description: '',
+                    id: `${this.client.config.prefix}help ${i + 1}`
+                }
+            })
+
             text += '\n\n'
             text += catagoryiesWithCommnads
                 .map(
@@ -215,10 +230,26 @@ This help menu is designed to help you get started with the bot.\n\n💡 My Pref
 
             text += '\n\n'
             text += `*📇 Notes:*
-*➪ Use ${this.client.config.prefix}help <category number> from help the list to see its description and usage*
-*➪ Eg: ${this.client.config.prefix}help 1*`
+*➪ Use ${this.client.config.prefix}help <category number> from help the list to see its description and usage*`
 
-            return void (await M.reply(text))
+            return void (await M.sendButtonMessage({
+                header: `   ⛩️ *❯──「  ${this.client.config.name.toUpperCase()} 」──❮* ⛩️\n`,
+                body: text,
+                footer: `${this.client.config.name}© 2024`,
+                buttons: new Array({
+                    name: 'single_select',
+                    buttonParamsJson: JSON.stringify({
+                        title: '𝐂𝐀𝐓𝐄𝐆𝐎𝐑𝐘𝐒',
+                        sections: [
+                            {
+                                title: '',
+                                highlight_label: '',
+                                rows
+                            }
+                        ]
+                    })
+                })
+            }))
         } else {
             const cmd = context.trim().toLowerCase()
             const command =
