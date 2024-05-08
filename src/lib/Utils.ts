@@ -6,6 +6,7 @@ import { readFile, unlink, writeFile } from 'fs-extra'
 import puppeteer from 'puppeteer-extra'
 import plugin from 'puppeteer-extra-plugin-stealth'
 import regex from 'emoji-regex'
+import chrome from '@sparticuz/chromium'
 import * as linkify from 'linkifyjs'
 import { Canvacord } from 'canvacord'
 import { MessageHandler } from '../Handlers'
@@ -85,13 +86,11 @@ export class Utils {
     public superFetch = async (url: string): Promise<string> => {
         puppeteer.use(plugin())
         const browser = await puppeteer.launch({
+            args: chrome.args,
+            defaultViewport: chrome.defaultViewport,
+            executablePath: await chrome.executablePath(),
             headless: true,
-            args: [
-                "--proxy-server='direct://'",
-                '--proxy-bypass-list=*',
-                '--no-sandbox',
-                '--disable-setuid-sandbox'
-            ]
+            ignoreHTTPSErrors: true
         })
         const page = await browser.newPage()
         await page.setExtraHTTPHeaders({

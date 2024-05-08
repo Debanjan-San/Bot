@@ -6,11 +6,11 @@ import { IArgs, ICommand } from '../../Types'
     aliases: ['h'],
     cooldown: 10,
     exp: 20,
-    usage: 'help || help <command_name>',
+    usage: 'help || help <catagory index> || help --list',
     category: 'general'
 })
 export default class extends BaseCommand {
-    private list = [
+    private readonly list = [
         {
             id: 'general',
             font: '𝙂𝙀𝙉𝙀𝙍𝘼𝙇',
@@ -65,7 +65,7 @@ export default class extends BaseCommand {
             emoji: '🎐',
             description: 'Weeb-related commands for anime fans. 🍱'
         }
-    ]
+    ] as const
 
     public override execute = async (
         M: Message,
@@ -85,10 +85,48 @@ export default class extends BaseCommand {
             if (categories.includes(command.data.config.category)) continue
             categories.push(command.data.config.category)
         }
+        const catagoryiesWithCommnads: {
+            category: string
+            style:
+                | {
+                      id: string
+                      font: string
+                      emoji: string
+                      description: string
+                  }
+                | undefined // You should replace `any` with the actual type of `style`
+            commands: ICommand[] // You should replace `any` with the actual type of `commands`
+        }[] = categories.map((category) => {
+            return {
+                category,
+                style: this.list.find(
+                    ({ id }) => id == category.toLocaleLowerCase()
+                ),
+                commands: commands
+                    .filter(
+                        (command) => command.data.config.category === category
+                    )
+                    .map(({ data }) => data)
+            }
+        })
+
+        const inRange = (value: string | number): boolean => {
+            if (typeof value === 'number')
+                return value >= 1 && value <= catagoryiesWithCommnads.length + 1
+            else if (typeof value === 'string') {
+                const num: number = parseFloat(value)
+                return (
+                    !isNaN(num) &&
+                    num >= 1 &&
+                    num <= catagoryiesWithCommnads.length + 1
+                )
+            } else return false
+        }
+
         let text: string = `👋🏻 (❤️ω❤️) Konnichiwa, senpai ${M.sender.username}! this is ${this.client.config.name}\n\n🎋 *Support us by following us on instagram:*
 https://www.instagram.com/das_abae
                                     
-This help menu is designed to help you get started with the bot.\n\n    ⇓ *📪 Command list 📪* ⇓`
+This help menu is designed to help you get started with the bot.\n\n💡 My Prefix is *( ${this.client.config.prefix} )*\n\n    ⇓ *📪 Command list 📪* ⇓`
         if (!context) {
             const sections: {
                 title: string
@@ -125,29 +163,44 @@ This help menu is designed to help you get started with the bot.\n\n    ⇓ *�
                 header: `   ⛩️ *❯──「  ${this.client.config.name.toUpperCase()} 」──❮* ⛩️\n`,
                 body: text,
                 footer: `${this.client.config.name}© 2024`,
-                buttons: new Array({
-                    name: 'single_select',
-                    buttonParamsJson: JSON.stringify({
-                        title: '𝘾𝘼𝙏𝙀𝙂𝙊𝙍𝙔',
-                        sections
-                    })
-                })
+                buttons: new Array(
+                    {
+                        name: 'single_select',
+                        buttonParamsJson: JSON.stringify({
+                            title: '𝐂𝐀𝐓𝐄𝐆𝐎𝐑𝐘',
+                            sections
+                        })
+                    },
+                    {
+                        name: 'quick_reply',
+                        buttonParamsJson: JSON.stringify({
+                            display_text: '𝐋𝐈𝐒𝐓 𝐌𝐄𝐍𝐔',
+                            id: `${this.client.config.prefix}help --list`
+                        })
+                    }
+                )
             }))
+        } else if (inRange(context)) {
+            const index: number = parseFloat(context) - 1
+            const { style, commands } = catagoryiesWithCommnads[index]
+            text += `\n\n*━━❰･${style?.font} ${style?.emoji} 𝙎𝙄𝘿𝙀･❱━━*\n\n`
+            text += commands
+                .map(
+                    (e) =>
+                        `*CMD:* ${this.client.config.prefix}${e.name}\nDescription: *${e.config.description}*\nUsage: ${e.config.usage}`
+                )
+                .join('\n\n')
+            text += '\n\nHope you have a great day!'
+            return void (await M.reply(
+                await this.client.utils.getBuffer(
+                    'https://i.pinimg.com/236x/9c/14/3e/9c143ef8ea5d9bc91cfe3f60d09be960.jpg'
+                ),
+                'image',
+                undefined,
+                undefined,
+                text
+            ))
         } else if (flags.includes('--list')) {
-            const catagoryiesWithCommnads = categories.map((category) => {
-                return {
-                    category,
-                    style: this.list.find(
-                        ({ id }) => id == category.toLocaleLowerCase()
-                    ),
-                    commands: commands
-                        .filter(
-                            (command) =>
-                                command.data.config.category === category
-                        )
-                        .map(({ data }) => data)
-                }
-            })
             text += '\n\n'
             text += catagoryiesWithCommnads
                 .map(

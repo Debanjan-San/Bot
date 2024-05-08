@@ -136,10 +136,6 @@ export class MessageHandler {
             )
         if (command.config.category === 'dev' && !M.sender.isMod)
             return void M.reply('This command can only be used by the MODS')
-        if (command.config.casino && M.from !== this.client.config.casinoGroup)
-            return void M.reply(
-                `This command can only be used in the casino group. Use ${this.client.config.prefix}support to get the casino group link`
-            )
         const isAdmin = M.groupMetadata?.admins?.includes(
             this.client.correctJid(this.client.user?.id || '')
         )

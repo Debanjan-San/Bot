@@ -23,10 +23,7 @@ interface ICommandConfig {
     aliases?: string[]
     exp?: number
     dm?: boolean
-    casino?: boolean
     adminRequired?: boolean
-    antiBattle?: boolean
-    antiTrade?: boolean
 }
 
 export type TCategory =

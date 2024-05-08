@@ -13,6 +13,7 @@
     "@shineiichijo/canvas-chan": "^1.0.1",
     "@shineiichijo/marika": "^3.0.0",
     "@shineiichijo/team-preview": "^1.1.4",
+    "@sparticuz/chromium": "^123.0.1",
     "@typegoose/typegoose": "^11.5.1",
     "@whiskeysockets/baileys": "^6.4.0",
     "anime-quiz": "^3.0.0",
