@@ -5,7 +5,7 @@ import { BaseCommand, Command, Message } from '../../Structures'
         'Disables everyone in a group to send message except for the admins',
     adminRequired: true,
     category: 'moderation',
-    usage: '${helper.config.prefix}close',
+    usage: 'close',
     exp: 5,
     cooldown: 10
 })
