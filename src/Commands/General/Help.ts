@@ -187,7 +187,7 @@ This help menu is designed to help you get started with the bot.\n\n💡 My Pref
             text += commands
                 .map(
                     (e) =>
-                        `*CMD:* ${this.client.config.prefix}${e.name}\nDescription: *${e.config.description}*\nUsage: ${e.config.usage}`
+                        `*CMD:* ${this.client.config.prefix}${e.name}\nDescription: *${e.config.description}*\nUsage: ${this.client.config.prefix}${e.config.usage}`
                 )
                 .join('\n\n')
             text += `\n\n*📇 Notes:*
