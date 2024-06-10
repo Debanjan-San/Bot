@@ -17,12 +17,17 @@ export default class command extends BaseCommand {
         const buffer = await M.downloadMediaMessage(M.quoted.message)
         this.client.log(`${Buffer.isBuffer(buffer)}`)
         try {
-            const result = await this.client.utils.webpToImage(buffer)
-            return void (await M.reply(result, 'image'))
-        } catch (error) {
+            const type = M.quoted?.message.stickerMessage?.isAnimated
+                ? 'video'
+                : 'image'
             return void (await M.reply(
-                'Conversion failed as animated stickers are not supported'
+                type == 'video'
+                    ? await this.client.utils.webpToMp4(buffer)
+                    : await this.client.utils.webpToImage(buffer),
+                type
             ))
+        } catch (error) {
+            return void (await M.reply('Conversion failed!!'))
         }
     }
 }

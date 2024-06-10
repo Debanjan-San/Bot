@@ -9,11 +9,13 @@ export default class MWL {
         url: string
     ): Promise<WaifuResponse | undefined> => {
         try {
-            const html = await this.utils.superFetch(url)
-            const $ = cheerio.load(html)
+            const html = await this.utils.fetch(url, {
+                Host: 'mywaifulist.moe',
+                ...this.utils.heders(),
+                Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+            })
+            const $ = cheerio.load(html as string)
 
-            // Extracting data
-            // Extracting data
             const name = $(
                 '#app > div > div:nth-child(3) > div > div > div.px-3.md\\:px-0 > h1'
             )
@@ -102,7 +104,7 @@ export default class MWL {
                 .trim()
 
             const id = $('head > meta:nth-child(20)').attr('content') ?? ''
-            // Creating an object to hold the extracted data
+
             return {
                 name,
                 image_link,
@@ -130,16 +132,22 @@ export default class MWL {
 
     private getMAXPage = async (type: string): Promise<number | undefined> => {
         try {
-            const html = await this.utils.superFetch(
-                'https://mywaifulist.moe/' + type
+            const html = await this.utils.fetch(
+                'https://mywaifulist.moe/' + type,
+                {
+                    Host: 'mywaifulist.moe',
+                    ...this.utils.heders(),
+                    Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+                }
             )
-            const $ = cheerio.load(html)
+            const $ = cheerio.load(html as string)
             const lastPage = $(
                 '#app > div > div:nth-child(3) > div > div > div > div.flex-1.p-2 > nav > div:nth-child(14) > a'
             ).text()
             return parseInt(lastPage)
         } catch (err) {
             console.error(err)
+            return undefined
         }
     }
 
@@ -152,10 +160,15 @@ export default class MWL {
                 1,
                 MAX_PAGES as number
             )
-            const html = await this.utils.superFetch(
-                `https://mywaifulist.moe/${type}?page=${randomPage}`
+            const html = await this.utils.fetch(
+                `https://mywaifulist.moe/${type}?page=${randomPage}`,
+                {
+                    Host: 'mywaifulist.moe',
+                    ...this.utils.heders(),
+                    Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+                }
             )
-            const $ = cheerio.load(html)
+            const $ = cheerio.load(html as string)
             const links = $(
                 '#app > div > div:nth-child(3) > div > div > div > div.flex-1.p-2 > div > div > div > a'
             )
@@ -169,17 +182,22 @@ export default class MWL {
             return haigusha
         } catch (err) {
             console.error(err)
+            return undefined
         }
     }
 
     public randomCharacter = async (): Promise<WaifuResponse | undefined> => {
         try {
-            const html = await this.utils.superFetch(
-                'https://mywaifulist.moe/random'
+            const html = await this.utils.fetch(
+                'https://mywaifulist.moe/random',
+                {
+                    Host: 'mywaifulist.moe',
+                    ...this.utils.heders(),
+                    Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+                }
             )
-            const $ = cheerio.load(html)
+            const $ = cheerio.load(html as string)
 
-            // Extracting data
             const name = $(
                 '#app > div > div:nth-child(3) > div > div > div.px-3.md\\:px-0 > h1'
             )
@@ -268,7 +286,6 @@ export default class MWL {
 
             const id = $('head > meta:nth-child(20)').attr('content') ?? ''
 
-            // Creating an object to hold the extracted data
             const character: WaifuResponse = {
                 name,
                 image_link,
@@ -291,6 +308,39 @@ export default class MWL {
             return character
         } catch (err) {
             console.error(err)
+            return undefined
+        }
+    }
+
+    public waifuOfDay = async (): Promise<
+        | {
+              image: string
+              name: string
+          }
+        | undefined
+    > => {
+        try {
+            const html = await this.utils.fetch('https://mywaifulist.moe', {
+                Host: 'mywaifulist.moe',
+                ...this.utils.heders(),
+                Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+            })
+            const $ = cheerio.load(html as string)
+            const image =
+                $('#widget-waifu-of-the-day > a > img').attr('src') ?? ''
+            const name = $('#widget-waifu-of-the-day > a > div > h3')
+                .text()
+                .replace(/\n/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim()
+
+            return {
+                name,
+                image
+            }
+        } catch (err) {
+            console.log(err)
+            return undefined
         }
     }
 

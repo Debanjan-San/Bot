@@ -18,6 +18,6 @@ export default class command extends BaseCommand {
         } catch (error: any) {
             out = error.message
         }
-        return void M.reply(out)
+        return void (await M.reply(out))
     }
 }

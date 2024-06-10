@@ -25,13 +25,12 @@ export default class extends BaseCommand {
             )
         await this.client.utils
             .fetch<{
-                caption: string
                 urls: {
                     type: 'image' | 'video'
                     url: string
                 }[]
             }>(`https://weeb-api.vercel.app/insta?url=${url}`)
-            .then(({ caption, urls }) => {
+            .then(({ urls }) => {
                 urls.forEach(async ({ url, type }) => {
                     const buffer = await this.client.utils.getBuffer(url)
                     M.reply(buffer, type)

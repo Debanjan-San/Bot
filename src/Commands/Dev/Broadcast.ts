@@ -39,7 +39,9 @@ export default class command extends BaseCommand {
                 (!context && !M.quoted?.content) ||
                 (!context && M.quoted?.content === '')
             )
-                return void M.reply('🟥 Provide the text to be broadcasted')
+                return void (await M.reply(
+                    '🟥 Provide the text to be broadcasted'
+                ))
             if (context) caption = context.trim()
             else caption = M.quoted?.content.trim() as string
             if (!arr.length) arr = await this.client.getAllGroups()
@@ -55,7 +57,7 @@ export default class command extends BaseCommand {
                 } as unknown as AnyMessageContent)
                 arr.splice(arr.indexOf(group), 1)
             }
-            return void M.reply('Done!')
+            return void (await M.reply('Done!'))
         } catch {
             return await this.execute(M, { context, flags: [], args: [] }, arr)
         }

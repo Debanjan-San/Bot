@@ -24,7 +24,7 @@ export default class command extends BaseCommand {
         else Bot = context.trim().split(' ')[0].trim()
         const name = this.client.config.name.split(' ')[0]
         if (Bot === bot)
-            return void M.reply(
+            return void (await M.reply(
                 `🟨 ${
                     Bot === 'all'
                         ? '*Everyone* is'
@@ -32,9 +32,9 @@ export default class command extends BaseCommand {
                         ? 'I am'
                         : `*${Bot}* is`
                 } already active`
-            )
+            ))
         await this.client.DB.updateGroup(M.from, 'bot', Bot)
-        return void M.reply(
+        return void (await M.reply(
             `🟩 ${
                 Bot === name
                     ? 'I am'
@@ -42,6 +42,6 @@ export default class command extends BaseCommand {
                     ? '*Everyone* is'
                     : `*${Bot}* is`
             } active from now on`
-        )
+        ))
     }
 }

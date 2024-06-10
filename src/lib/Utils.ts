@@ -2,15 +2,18 @@ import axios from 'axios'
 import { tmpdir } from 'os'
 import { promisify } from 'util'
 import { exec } from 'child_process'
-import { readFile, unlink, writeFile } from 'fs-extra'
+import { promises, readFile, unlink, writeFile } from 'fs-extra'
 import puppeteer from 'puppeteer-extra'
 import plugin from 'puppeteer-extra-plugin-stealth'
+import FormData from 'form-data'
 import regex from 'emoji-regex'
+import { removeBackgroundFromImageBase64 } from 'remove.bg'
 import chrome from '@sparticuz/chromium'
 import * as linkify from 'linkifyjs'
 import { Canvacord } from 'canvacord'
 import { MessageHandler } from '../Handlers'
 import { Client } from '../Structures'
+import { load } from 'cheerio'
 
 export class Utils {
     public verifyWin = (
@@ -60,6 +63,97 @@ export class Utils {
         return `*${this.pad(hours)} hour(s), ${this.pad(
             minutes
         )} minute(s), ${this.pad(secs)} second(s)*`
+    }
+
+    public removeBackground = async (
+        input: Buffer
+    ): Promise<Buffer | { error: string }> => {
+        try {
+            const { base64img } = await removeBackgroundFromImageBase64({
+                base64img: input.toString('base64'),
+                apiKey: 'HK2zWrcXT8CsWF3z4Zr8eSau',
+                size: 'auto',
+                type: 'auto'
+            })
+            return Buffer.from(base64img, 'base64')
+        } catch (error) {
+            return { error: 'Something went wrong!!' }
+        }
+    }
+
+    public randomItems = <T>(arr: T[]): T =>
+        arr[Math.floor(Math.random() * arr.length)]
+
+    public generateRandomUserAgent = (): string => {
+        const versions: string[] = [
+            '4.0.3',
+            '4.1.1',
+            '4.2.2',
+            '4.3',
+            '4.4',
+            '5.0.2',
+            '5.1',
+            '6.0',
+            '7.0',
+            '8.0',
+            '9.0',
+            '10.0',
+            '11.0'
+        ]
+
+        const deviceModels: string[] = [
+            'M2004J19C',
+            'S2020X3',
+            'Xiaomi4S',
+            'RedmiNote9',
+            'SamsungS21',
+            'GooglePixel5'
+        ]
+
+        const buildVersions: string[] = [
+            'RP1A.200720.011',
+            'RP1A.210505.003',
+            'RP1A.210812.016',
+            'QKQ1.200114.002',
+            'RQ2A.210505.003'
+        ]
+
+        const randomElement = (arr: string[]): string =>
+            arr[Math.floor(Math.random() * arr.length)]
+
+        const randomChromeVersion = (): string => {
+            const majorVersion = Math.floor(Math.random() * 80) + 1
+            const minorVersion = Math.floor(Math.random() * 999) + 1
+            const buildVersion = Math.floor(Math.random() * 9999) + 1
+            return `Chrome/${majorVersion}.${minorVersion}.${buildVersion}`
+        }
+
+        const randomWhatsAppVersion = (): string => {
+            const major = Math.floor(Math.random() * 9) + 1
+            const minor = Math.floor(Math.random() * 9) + 1
+            return `WhatsApp/1.${major}.${minor}`
+        }
+
+        return `Mozilla/5.0 (Linux; Android ${randomElement(
+            versions
+        )}; ${randomElement(deviceModels)} Build/${randomElement(
+            buildVersions
+        )}) AppleWebKit/537.36 (KHTML, like Gecko) ${randomChromeVersion()} Mobile Safari/537.36 ${randomWhatsAppVersion()}`
+    }
+
+    public generateRandomIP = (): string => {
+        const randomByte = (): number => Math.floor(Math.random() * 256)
+        return `${randomByte()}.${randomByte()}.${randomByte()}.${randomByte()}`
+    }
+
+    public heders = (): {
+        'User-Agent': string
+        'X-Forwarded-For': string
+    } => {
+        return {
+            'User-Agent': this.generateRandomUserAgent(),
+            'X-Forwarded-For': this.generateRandomIP()
+        }
     }
 
     public displayBoard = async (Board: string[]): Promise<Buffer> => {
@@ -197,6 +291,44 @@ export class Utils {
         return buffer
     }
 
+    public webpToMp4 = async (webp: Buffer): Promise<Buffer> => {
+        const request = async (form: FormData, file?: string) => {
+            const { data } = await axios.post(
+                file
+                    ? `https://ezgif.com/webp-to-mp4/${file}`
+                    : 'https://ezgif.com/webp-to-mp4',
+                form,
+                {
+                    headers: {
+                        'Content-Type': `multipart/form-data; boundary=${
+                            (form as any)._boundary
+                        }`
+                    }
+                }
+            )
+            return load(data)
+        }
+
+        const form1 = new FormData()
+        form1.append('new-image-url', '')
+        form1.append('new-image', webp, { filename: 'bold' })
+
+        const $1 = await request(form1)
+        const file = $1('input[name="file"]').attr('value')
+
+        const form2 = new FormData()
+        form2.append('file', file)
+        form2.append('convert', 'Convert WebP to MP4!')
+
+        const $2 = await request(form2, file)
+        const videoSrc = $2('div#output > p.outfile > video > source').attr(
+            'src'
+        )
+
+        const buffer = await this.getBuffer(`https:${videoSrc}`)
+        return buffer
+    }
+
     public mp3ToOpus = async (mp3: Buffer): Promise<Buffer> => {
         const filename = `${tmpdir()}/${Math.random().toString(36)}`
         await writeFile(`${filename}.mp3`, mp3)
@@ -219,8 +351,10 @@ export class Utils {
         return buffer
     }
 
-    public fetch = async <T>(url: string): Promise<T> =>
-        (await axios.get(url)).data
+    public fetch = async <T>(
+        url: string,
+        headers?: { [key: string]: string }
+    ): Promise<T> => (await axios.get(url, { headers })).data
 
     public getBuffer = async (url: string): Promise<Buffer> =>
         (

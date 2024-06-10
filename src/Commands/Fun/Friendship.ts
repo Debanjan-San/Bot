@@ -18,7 +18,7 @@ export default class command extends BaseCommand {
             this.client.user?.id.split('@')[0].split(':')[0]
         }@s.whatsapp.net`
         if (users[0] === bot || users[1] === bot)
-            return void M.reply("Don't include me, Baka!")
+            return void (await M.reply("Don't include me, Baka!"))
         const friendship: IFriendShip[] = []
         for (const user of users) {
             const name = this.client.contact.getContact(user).username

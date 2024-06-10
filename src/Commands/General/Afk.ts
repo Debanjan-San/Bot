@@ -21,6 +21,6 @@ export default class extends BaseCommand {
             reason,
             time
         })
-        return void M.reply(`${M.sender.username} is now Away!`)
+        return void (await M.reply(`${M.sender.username} is now Away!`))
     }
 }

@@ -25,7 +25,7 @@ export default class command extends BaseCommand {
         let flag = true
         if (command === 'r' || command === 'reaction') flag = false
         if (!flag && !context)
-            return void M.reply(
+            return void (await M.reply(
                 `🪧 *Available Reactions:*\n\n📍 ${reactions
                     .sort((x, y) => (x < y ? -1 : x > y ? 1 : 0))
                     .map((reaction) => this.client.utils.capitalize(reaction))
@@ -36,14 +36,14 @@ export default class command extends BaseCommand {
                 }(reaction) [tag/quote user]\nExample: ${
                     this.client.config.prefix
                 }pat`
-            )
+            ))
         const reaction = (
             flag ? command : context.split(' ')[0].trim().toLowerCase()
         ) as reaction
         if (!flag && !reactions.includes(reaction))
-            return void M.reply(
+            return void (await M.reply(
                 `Invalid reaction. Use *${this.client.config.prefix}reaction* to see all of the available reactions`
-            )
+            ))
         const users = M.mentioned
         if (M.quoted && !users.includes(M.quoted.sender.jid))
             users.push(M.quoted.sender.jid)

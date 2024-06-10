@@ -37,7 +37,7 @@ export default class command extends BaseCommand {
                 (await this.client.profilePictureUrl(M.sender.jid, 'image')) ||
                     ''
             )
-        if (!buffer) return void M.reply('*Provide an image*')
+        if (!buffer) return void (await M.reply('*Provide an image*'))
         const data = await loadImage(buffer)
         const base = await loadImage(
             this.client.assets.get('brazzers') as Buffer
