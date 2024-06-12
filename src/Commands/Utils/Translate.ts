@@ -7,7 +7,7 @@ import { IArgs } from '../../Types'
     category: 'utils',
     exp: 25,
     cooldown: 5,
-    aliases: ['tts']
+    aliases: ['tl']
 })
 export default class command extends BaseCommand {
     override execute = async (

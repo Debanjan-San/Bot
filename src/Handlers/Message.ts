@@ -162,6 +162,7 @@ export class MessageHandler {
         await this.client.DB.setExp(M.sender.jid, command.config.exp || 10)
         await this.handleUserStats(M)
         try {
+            await M.react('✅')
             await command.execute(M, this.formatArgs(args))
         } catch (error) {
             this.client.log((error as any).message, true)

@@ -126,7 +126,7 @@ export default class extends BaseCommand {
             return void M.reply(
                 `📗 *Command:* ${this.client.utils.capitalize(
                     command.name
-                )}\n*📕 *Aliases:* ${
+                )}\n📕 *Aliases:* ${
                     !command.config.aliases
                         ? ''
                         : command.config.aliases
