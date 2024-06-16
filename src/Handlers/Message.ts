@@ -3,8 +3,9 @@ import { readdirSync } from 'fs-extra'
 import chalk from 'chalk'
 import { AnyMessageContent } from '@whiskeysockets/baileys'
 import { Message, Client, BaseCommand } from '../Structures'
+import { chatBot } from '../lib/ChatBot'
 import { getStats } from '../lib'
-import { ICommand, IArgs, WaifuResponse } from '../Types'
+import { ICommand, IArgs, WaifuResponse, TMessage } from '../Types'
 import Game from 'chess-node'
 import MWL from '../lib/MyWaifuList'
 
@@ -62,6 +63,7 @@ export class MessageHandler {
         const title =
             M.chat === 'dm' ? 'DM' : M.groupMetadata?.subject || 'Group'
         await this.moderate(M)
+        await this.chatBot(M)
         await this.isOfflineUser(M)
         if (!args[0] || !args[0].startsWith(prefix))
             return void this.client.log(
@@ -170,6 +172,7 @@ export class MessageHandler {
     }
 
     public isOfflineUser = async (M: Message): Promise<void> => {
+        if (M.chat !== 'group') return void null
         const { afk } = await this.client.DB.getUser(M.sender.jid)
         if (!afk) return void null
         if (M.message.key.fromMe) return void null
@@ -255,7 +258,29 @@ export class MessageHandler {
         }
     }
 
-    public news: string[] = []
+    private chatBot = async (M: Message) => {
+        if (M.chat !== 'group') return void null
+        const { chatbot } = await this.client.DB.getGroup(M.from)
+        if (!chatbot || M.message.key.fromMe) return void null
+        if (M.quoted?.sender) M.mentioned.push(M.quoted.sender.jid)
+        if (
+            !M.mentioned.includes(
+                this.client.utils.sanitizeJid(this.client.user?.id ?? '')
+            )
+        )
+            return
+        M.mentioned.pop()
+        const text = M.content.replace(
+            /\b(\d+)\b/g,
+            (match: string, user: string) =>
+                this.client.contact.getContact(user).username || match
+        )
+        const previousChats = this.memories.get(M.sender.jid) ?? []
+        const { response, memories, error } = await chatBot(text, previousChats)
+        if (error) return void (await M.reply(error))
+        this.memories.set(M.sender.jid, memories)
+        return void (await M.reply(response as string))
+    }
 
     private formatArgs = (args: string[]): IArgs => {
         args.splice(0, 1)
@@ -314,6 +339,8 @@ export class MessageHandler {
     public commands = new Map<string, ICommand>()
 
     public aliases = new Map<string, ICommand>()
+
+    private memories = new Map<string, TMessage[] | undefined>()
 
     private cooldowns = new Map<string, number>()
 

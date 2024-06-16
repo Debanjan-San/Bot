@@ -65,6 +65,11 @@ export default class command extends BaseCommand {
             feature: 'nsfw',
             description: 'Enables the bot to send NSFW contents in the group',
             emoji: '🍀'
+        },
+        {
+            feature: 'chatbot',
+            description: 'Enables the bot to chat',
+            emoji: '🤖'
         }
     ]
 }
@@ -72,5 +77,5 @@ export default class command extends BaseCommand {
 interface IGroupFeatureInfo {
     feature: TGroupFeature
     description: string
-    emoji: '🧧' | '🎉' | '🍀'
+    emoji: '🧧' | '🎉' | '🍀' | '🤖'
 }

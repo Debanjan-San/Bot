@@ -81,6 +81,11 @@ export class Utils {
         }
     }
 
+    public sanitizeJid = (jid: string): string => {
+        const [a, b] = jid.split('@')
+        return a.split(':').shift()?.concat('@', b) ?? jid
+    }
+
     public randomItems = <T>(arr: T[]): T =>
         arr[Math.floor(Math.random() * arr.length)]
 

@@ -203,13 +203,11 @@ export class Message {
     }
 
     public sendButtonMessage = async ({
-        jid,
         body,
         header,
         footer,
         buttons
     }: {
-        jid?: string
         body: string
         header: string
         footer: string
@@ -219,7 +217,7 @@ export class Message {
         }[]
     }) => {
         const msg = generateWAMessageFromContent(
-            jid || this.from,
+            this.from,
             {
                 viewOnceMessage: {
                     message: {

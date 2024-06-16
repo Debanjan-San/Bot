@@ -117,6 +117,39 @@ export interface WaifuResponse {
     description: string
 }
 
-export type TGroupFeature = 'events' | 'nsfw' | 'mods'
+export interface TMessage {
+    id: string
+    content: string
+    role: 'user' | 'assistant'
+    createdAt?: string
+}
 
+export interface Data {
+    messages: TMessage[]
+    id: string
+    previewToken: null | string
+    userId: string
+    codeModelMode: boolean
+    agentMode: {
+        mode: boolean
+        id: string
+        name: string
+    }
+    trendingAgentMode: {}
+    isMicMode: boolean
+    isChromeExt: boolean
+    userSystemPrompt: string
+    githubToken: null | string
+    clickedAnswer2: boolean
+    clickedAnswer3: boolean
+    visitFromDelta: null | string
+}
+
+export interface ChatBotResponse {
+    response?: string
+    memories?: TMessage[]
+    error?: string
+}
+
+export type TGroupFeature = 'events' | 'nsfw' | 'mods' | 'chatbot'
 export type client = ReturnType<typeof Baileys>

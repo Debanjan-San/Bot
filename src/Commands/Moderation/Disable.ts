@@ -34,5 +34,5 @@ export default class command extends BaseCommand {
         )
     }
 
-    private features: TGroupFeature[] = ['events', 'mods', 'nsfw']
+    private features: TGroupFeature[] = ['events', 'mods', 'nsfw', 'chatbot']
 }

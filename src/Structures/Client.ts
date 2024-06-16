@@ -30,7 +30,7 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
         super()
         Config()
         this.config = {
-            name: process.env.BOT_NAME || '𝓚𝓲𝓽𝓪𝓰𝓪𝔀𝓪',
+            name: process.env.BOT_NAME || 'Kitagawa',
             session: process.env.SESSION || 'DASAYUU',
             prefix: process.env.PREFIX || '#',
             mods: process.env.MODS

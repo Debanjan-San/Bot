@@ -15,7 +15,7 @@ export class Group {
     public nsfw!: boolean
 
     @prop({ type: Boolean, required: true, default: false })
-    public news!: string
+    public chatbot!: string
 
     @prop({ type: String, required: true, default: 'all' })
     public bot!: string
