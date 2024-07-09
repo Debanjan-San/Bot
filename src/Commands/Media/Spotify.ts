@@ -11,21 +11,15 @@ import { IArgs } from '../../Types'
     aliases: ['sp']
 })
 export default class command extends BaseCommand {
-    override execute = async (
-        M: Message,
-        { context }: IArgs
-    ): Promise<void> => {
-        if (!context)
-            return void M.reply('Provide a Spotify track URL to download')
+    override execute = async (M: Message, { context }: IArgs): Promise<void> => {
+        if (!context) return void M.reply('Provide a Spotify track URL to download')
         const url = context.trim().split(' ')[0]
         const song = new spotify(url)
         const info = await song.getInfo()
         if (info.error) return void M.reply('Provide a valid Spotify track URL')
-        const caption = `🎧 *Title:* ${info.name || ''}\n🎤 *Artists:* ${(
-            info.artists || []
-        ).join(',')}\n💽 *Album:* ${info.album_name}\n📆 *Release Date:* ${
-            info.release_date || ''
-        }`
+        const caption = `🎧 *Title:* ${info.name || ''}\n🎤 *Artists:* ${(info.artists || []).join(',')}\n💽 *Album:* ${
+            info.album_name
+        }\n📆 *Release Date:* ${info.release_date || ''}`
         await M.reply(
             await this.client.utils.getBuffer(info.cover_url as string),
             'image',

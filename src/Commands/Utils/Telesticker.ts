@@ -18,13 +18,9 @@ interface ITelestickerResponse {
 })
 export default class extends BaseCommand {
     public override execute = async (M: Message): Promise<void> => {
-        if (!M.urls.length)
-            return void (await M.reply('Telegram sticker Link?'))
+        if (!M.urls.length) return void (await M.reply('Telegram sticker Link?'))
         const url = M.urls.find((url) => url.includes('t.me/addstickers'))
-        if (!url)
-            return void (await M.reply(
-                'No telegram addstickers URLs found in your message'
-            ))
+        if (!url) return void (await M.reply('No telegram addstickers URLs found in your message'))
         const data: ITelestickerResponse = await this.client.utils.fetch(
             `https://weeb-api.vercel.app/pinterest?query=${url}`
         )

@@ -11,10 +11,7 @@ import axios from 'axios'
     dm: false
 })
 export default class extends BaseCommand {
-    public override execute = async (
-        M: Message,
-        args: IArgs
-    ): Promise<void> => {
+    public override execute = async (M: Message, args: IArgs): Promise<void> => {
         await axios
             .get(`https://v2.jokeapi.dev/joke/Any`)
             .then((response) => {

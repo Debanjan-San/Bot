@@ -8,10 +8,7 @@ import { IArgs } from '../../Types'
     usage: 'join [link]'
 })
 export default class command extends BaseCommand {
-    override execute = async (
-        { quoted, reply }: Message,
-        { context }: IArgs
-    ): Promise<void> => {
+    override execute = async ({ quoted, reply }: Message, { context }: IArgs): Promise<void> => {
         if (!quoted && !context)
             return void reply(
                 'Provide the invite link next to the command or by quoting the message which has the invite link'
@@ -21,8 +18,7 @@ export default class command extends BaseCommand {
         else body = context.trim()
         const URLS = this.client.utils.extractUrls(body)
         const urls = URLS.filter((url) => url.includes('chat.whatsapp.com'))
-        if (!urls.length || urls.length <= 0)
-            return void reply("I don't see any invite links")
+        if (!urls.length || urls.length <= 0) return void reply("I don't see any invite links")
         const splittedUrl = urls[0].split('/')
         const code = splittedUrl[splittedUrl.length - 1]
         await this.client

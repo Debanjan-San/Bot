@@ -3,10 +3,7 @@ import { TMessage, ChatBotResponse, Data } from '../Types'
 
 const messages: TMessage[] = []
 
-export const chatBot = async (
-    text: string = '',
-    memories: TMessage[] = []
-): Promise<ChatBotResponse> => {
+export const chatBot = async (text: string = '', memories: TMessage[] = []): Promise<ChatBotResponse> => {
     messages.push(...memories)
     messages.push({
         id: 'K07GJTEoYUzi6Rl3Iz8p-',
@@ -36,16 +33,12 @@ export const chatBot = async (
             visitFromDelta: null
         }
 
-        const response = await axios.post(
-            'https://www.blackbox.ai/api/chat',
-            data,
-            {
-                headers: {
-                    Host: 'blackbox.ai',
-                    Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
-                }
+        const response = await axios.post('https://www.blackbox.ai/api/chat', data, {
+            headers: {
+                Host: 'blackbox.ai',
+                Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
             }
-        )
+        })
 
         const responseText = response.data.replace(/\$@\$.+?\$@\$/g, '')
 

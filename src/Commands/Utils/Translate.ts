@@ -10,13 +10,8 @@ import { IArgs } from '../../Types'
     aliases: ['tl']
 })
 export default class command extends BaseCommand {
-    override execute = async (
-        M: Message,
-        { flags, context }: IArgs
-    ): Promise<void> => {
-        const text = (
-            M.quoted ? M.quoted.message.conversation : context
-        ) as string
+    override execute = async (M: Message, { flags, context }: IArgs): Promise<void> => {
+        const text = (M.quoted ? M.quoted.message.conversation : context) as string
         if (!text || !flags)
             return void (await M.reply(
                 `You are using wrong format ${this.client.config.prefix}tts [quote/caption] --[langTo]`
@@ -24,9 +19,7 @@ export default class command extends BaseCommand {
         const langTo = flags[0].replace('--', '')
         if (!this.supportedLanguages.includes(langTo))
             return void (await M.reply(
-                `🔊 *Available languages:*\n\n ${this.supportedLanguages.join(
-                    ', '
-                )}\n\n${
+                `🔊 *Available languages:*\n\n ${this.supportedLanguages.join(', ')}\n\n${
                     this.client.config.prefix
                 }tts [quote/caption] --[langTo]`
             ))
@@ -79,12 +72,8 @@ export default class command extends BaseCommand {
                 Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
             })) as string[][]
 
-            const translatedText = data[0]
-                .map((item: string) => item[0])
-                .join('')
-            return translatedText.trim().length > 1
-                ? { langTo, translatedText }
-                : { error: 'Invalid Input!!' }
+            const translatedText = data[0].map((item: string) => item[0]).join('')
+            return translatedText.trim().length > 1 ? { langTo, translatedText } : { error: 'Invalid Input!!' }
         } catch (error) {
             return { error: 'Failed to translate!!' }
         }

@@ -12,31 +12,18 @@ import { proto } from '@whiskeysockets/baileys/WAProto'
     aliases: ['s']
 })
 export default class command extends BaseCommand {
-    override execute = async (
-        M: Message,
-        { flags, context }: IArgs
-    ): Promise<void> => {
+    override execute = async (M: Message, { flags, context }: IArgs): Promise<void> => {
         if (!M.hasSupportedMediaMessage && !M.quoted?.hasSupportedMediaMessage)
-            return void M.reply(
-                'Provide an image/gif/video by captioning it as a message or by quoting it'
-            )
+            return void M.reply('Provide an image/gif/video by captioning it as a message or by quoting it')
         let buffer!: Buffer
-        if (M.hasSupportedMediaMessage)
-            buffer = await M.downloadMediaMessage(
-                M.message.message as proto.IMessage
-            )
-        else if (M.quoted && M.quoted.hasSupportedMediaMessage)
-            buffer = await M.downloadMediaMessage(M.quoted.message)
+        if (M.hasSupportedMediaMessage) buffer = await M.downloadMediaMessage(M.message.message as proto.IMessage)
+        else if (M.quoted && M.quoted.hasSupportedMediaMessage) buffer = await M.downloadMediaMessage(M.quoted.message)
         flags.forEach((flag) => (context = context.replace(flag, '')))
         const numbersFlag = this.client.utils
             .extractNumbers(flags.join(' ').replace(/\--/g, ''))
             .filter((number) => number > 0 && number <= 100)
         const quality =
-            numbersFlag[0] ||
-            this.getQualityFromType(
-                flags.filter((flag) => this.qualityTypes.includes(flag))
-            ) ||
-            50
+            numbersFlag[0] || this.getQualityFromType(flags.filter((flag) => this.qualityTypes.includes(flag))) || 50
         const categories = this.getStickerEmojisFromCategories(flags)
         const pack = context.split('|')
         const sticker = new Sticker(buffer, {
@@ -45,13 +32,9 @@ export default class command extends BaseCommand {
             author: pack[2] ? pack[2].trim() : '',
             quality,
             type:
-                flags.includes('--c') ||
-                flags.includes('--crop') ||
-                flags.includes('--cropped')
+                flags.includes('--c') || flags.includes('--crop') || flags.includes('--cropped')
                     ? 'crop'
-                    : flags.includes('--s') ||
-                      flags.includes('--stretch') ||
-                      flags.includes('--stretched')
+                    : flags.includes('--s') || flags.includes('--stretch') || flags.includes('--stretched')
                     ? 'default'
                     : flags.includes('--circle') ||
                       flags.includes('--r') ||
@@ -81,9 +64,7 @@ export default class command extends BaseCommand {
         }
     }
 
-    private getStickerEmojisFromCategories = (
-        flags: string[]
-    ): Categories[] => {
+    private getStickerEmojisFromCategories = (flags: string[]): Categories[] => {
         const categories: Categories[] = []
         for (const flag of flags) {
             if (categories.length >= 3) return categories

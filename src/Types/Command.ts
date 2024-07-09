@@ -26,13 +26,4 @@ interface ICommandConfig {
     adminRequired?: boolean
 }
 
-export type TCategory =
-    | 'dev'
-    | 'fun'
-    | 'games'
-    | 'nsfw'
-    | 'utils'
-    | 'moderation'
-    | 'weeb'
-    | 'general'
-    | 'media'
+export type TCategory = 'dev' | 'fun' | 'games' | 'nsfw' | 'utils' | 'moderation' | 'weeb' | 'general' | 'media'

@@ -9,29 +9,15 @@ import { IArgs, TGroupFeature } from '../../Types'
     usage: 'disable [feature]'
 })
 export default class command extends BaseCommand {
-    override execute = async (
-        M: Message,
-        { context }: IArgs
-    ): Promise<void> => {
-        if (!context)
-            return void M.reply('*Provide the feature that you wanna disable*')
-        const feature: TGroupFeature = context
-            .split(' ')[0]
-            .toLowerCase()
-            .trim() as TGroupFeature
-        if (!this.features.includes(feature))
-            return void M.reply('*Invalid option*')
+    override execute = async (M: Message, { context }: IArgs): Promise<void> => {
+        if (!context) return void M.reply('*Provide the feature that you wanna disable*')
+        const feature: TGroupFeature = context.split(' ')[0].toLowerCase().trim() as TGroupFeature
+        if (!this.features.includes(feature)) return void M.reply('*Invalid option*')
         const group = await this.client.DB.getGroup(M.from)
         if (!group[feature])
-            return void M.reply(
-                `🟨 *${this.client.utils.capitalize(
-                    feature
-                )}* is already disabled, Baka!`
-            )
+            return void M.reply(`🟨 *${this.client.utils.capitalize(feature)}* is already disabled, Baka!`)
         await this.client.DB.updateGroup(M.from, feature, false)
-        return void M.reply(
-            `🟥 *${this.client.utils.capitalize(feature)}* is now disabled`
-        )
+        return void M.reply(`🟥 *${this.client.utils.capitalize(feature)}* is now disabled`)
     }
 
     private features: TGroupFeature[] = ['events', 'mods', 'nsfw', 'chatbot']

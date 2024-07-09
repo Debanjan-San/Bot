@@ -11,14 +11,9 @@ import { IArgs } from '../../Types'
     dm: false
 })
 export default class extends BaseCommand {
-    public override execute = async (
-        M: Message,
-        { context }: IArgs
-    ): Promise<void> => {
+    public override execute = async (M: Message, { context }: IArgs): Promise<void> => {
         // load JSON
-        const quotes = JSON.parse(
-            (this.client.assets.get('quotes') as Buffer).toString()
-        ) as unknown as {
+        const quotes = JSON.parse((this.client.assets.get('quotes') as Buffer).toString()) as unknown as {
             quotes: {
                 _id: string
                 content: string
@@ -27,8 +22,7 @@ export default class extends BaseCommand {
         }
         if (!quotes) return void null
         // select a random quote
-        const quote =
-            quotes.quotes[Math.floor(Math.random() * quotes.quotes.length)]
+        const quote = quotes.quotes[Math.floor(Math.random() * quotes.quotes.length)]
         const text = `📝 *Content:* ${quote.content}\n\n*✍️ Author:* ${quote.author}`
         M.reply(text)
     }

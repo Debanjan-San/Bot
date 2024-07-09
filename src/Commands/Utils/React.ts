@@ -8,13 +8,7 @@ import { Command, BaseCommand, Message } from '../../Structures'
     exp: 10
 })
 export default class extends BaseCommand {
-    override execute = async ({
-        react,
-        reply,
-        quoted,
-        emojis,
-        message
-    }: Message): Promise<void> => {
+    override execute = async ({ react, reply, quoted, emojis, message }: Message): Promise<void> => {
         if (!emojis.length) return void reply('Provide an emoji to react')
         const key = quoted ? quoted.key : message.key
         return void (await react(emojis[0], key))

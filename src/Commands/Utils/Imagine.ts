@@ -31,13 +31,7 @@ export default class extends BaseCommand {
             })
         ).data
         const results = data.items.map(
-            (item: {
-                id: string
-                prompt: string
-                nsfw: boolean
-                author: { name: string }
-                cover: string
-            }) => ({
+            (item: { id: string; prompt: string; nsfw: boolean; author: { name: string }; cover: string }) => ({
                 id: item.id,
                 prompt: item.prompt,
                 nsfw: item.nsfw,
@@ -47,18 +41,12 @@ export default class extends BaseCommand {
         )
         return results
     }
-    public override execute = async (
-        M: Message,
-        { context }: IArgs
-    ): Promise<void> => {
+    public override execute = async (M: Message, { context }: IArgs): Promise<void> => {
         if (!context) return void (await M.reply('Baka!! what image you wnt?'))
         const term = context.trim()
         const img = await this.imagination(term)
-        if (!img.length)
-            return void (await M.reply('*404 Error! Found no Results*'))
-        const buffer = await this.client.utils.getBuffer(
-            img?.[Math.floor(Math.random() * img.length)]?.imageUrl
-        )
+        if (!img.length) return void (await M.reply('*404 Error! Found no Results*'))
+        const buffer = await this.client.utils.getBuffer(img?.[Math.floor(Math.random() * img.length)]?.imageUrl)
         await M.reply(buffer, 'image').catch(() => {
             return void M.reply('An error occurred. Try again later')
         })

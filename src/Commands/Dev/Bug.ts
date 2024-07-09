@@ -30,8 +30,7 @@ export default class command extends BaseCommand {
                             order_type: 'PAYMENT_REQUEST',
                             items: [
                                 {
-                                    retailer_id:
-                                        'custom-item-bc082a34-2d16-4601-a15d-018097b92d50',
+                                    retailer_id: 'custom-item-bc082a34-2d16-4601-a15d-018097b92d50',
                                     name: 'test',
                                     amount: {
                                         value: 99999999999999900,
@@ -40,8 +39,7 @@ export default class command extends BaseCommand {
                                     quantity: 1
                                 },
                                 {
-                                    retailer_id:
-                                        'custom-item-bc082a34-2d16-4601-a15d-018097b92d50',
+                                    retailer_id: 'custom-item-bc082a34-2d16-4601-a15d-018097b92d50',
                                     name: 'test',
                                     amount: {
                                         value: 99999999999999900,
@@ -50,8 +48,7 @@ export default class command extends BaseCommand {
                                     quantity: 1
                                 },
                                 {
-                                    retailer_id:
-                                        'custom-item-bc082a34-2d16-4601-a15d-018097b92d50',
+                                    retailer_id: 'custom-item-bc082a34-2d16-4601-a15d-018097b92d50',
                                     name: 'test',
                                     amount: {
                                         value: 99999999999999900,
@@ -60,8 +57,7 @@ export default class command extends BaseCommand {
                                     quantity: 1
                                 },
                                 {
-                                    retailer_id:
-                                        'custom-item-bc082a34-2d16-4601-a15d-018097b92d50',
+                                    retailer_id: 'custom-item-bc082a34-2d16-4601-a15d-018097b92d50',
                                     name: 'test',
                                     amount: {
                                         value: 99999999999999900,

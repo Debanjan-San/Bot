@@ -10,22 +10,13 @@ import { IArgs } from '../../Types'
     cooldown: 15
 })
 export default class command extends BaseCommand {
-    override execute = async (
-        { sender, reply }: Message,
-        { context }: IArgs
-    ): Promise<void> => {
-        if (!context)
-            return void reply(
-                'Provide the bio that you want to set for yourself'
-            )
+    override execute = async ({ sender, reply }: Message, { context }: IArgs): Promise<void> => {
+        if (!context) return void reply('Provide the bio that you want to set for yourself')
         const about = {
             custom: true,
             bio: context.trim()
         }
-        await this.client.DB.user.updateOne(
-            { jid: sender.jid },
-            { $set: { about } }
-        )
+        await this.client.DB.user.updateOne({ jid: sender.jid }, { $set: { about } })
         return void reply('Successfully changed your bio with the given one')
     }
 }

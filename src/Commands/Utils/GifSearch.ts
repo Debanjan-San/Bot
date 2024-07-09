@@ -17,30 +17,15 @@ interface IGifyResponse {
     exp: 10
 })
 export default class extends BaseCommand {
-    public override execute = async (
-        M: Message,
-        { context }: IArgs
-    ): Promise<void> => {
-        if (!context)
-            return void (await M.reply(
-                'Sorry you did not give any search term!'
-            ))
-        const data: { results: IGifyResponse[] } =
-            await this.client.utils.fetch(
-                `https://g.tenor.com/v1/search?q=${context}&key=LIVDSRZULELA&limit=8`
-            )
+    public override execute = async (M: Message, { context }: IArgs): Promise<void> => {
+        if (!context) return void (await M.reply('Sorry you did not give any search term!'))
+        const data: { results: IGifyResponse[] } = await this.client.utils.fetch(
+            `https://g.tenor.com/v1/search?q=${context}&key=LIVDSRZULELA&limit=8`
+        )
         const video = await this.client.utils.getBuffer(
-            data.results?.[Math.floor(Math.random() * data.results.length)]
-                ?.media[0]?.mp4?.url as string
+            data.results?.[Math.floor(Math.random() * data.results.length)]?.media[0]?.mp4?.url as string
         )
 
-        return void (await M.reply(
-            video,
-            'video',
-            true,
-            undefined,
-            `Here you go`,
-            undefined
-        ))
+        return void (await M.reply(video, 'video', true, undefined, `Here you go`, undefined))
     }
 }

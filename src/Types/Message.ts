@@ -6,6 +6,4 @@ export interface IArgs {
     flags: string[]
 }
 
-export type DownloadableMessage = Parameters<
-    typeof downloadContentFromMessage
->[0]
+export type DownloadableMessage = Parameters<typeof downloadContentFromMessage>[0]

@@ -9,6 +9,5 @@ import { BaseCommand, Command, Message } from '../../Structures'
     usage: 'hi'
 })
 export default class command extends BaseCommand {
-    override execute = async ({ reply, sender }: Message): Promise<void> =>
-        void reply(`Hello! *${sender.username}*`)
+    override execute = async ({ reply, sender }: Message): Promise<void> => void reply(`Hello! *${sender.username}*`)
 }

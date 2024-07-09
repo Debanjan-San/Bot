@@ -26,8 +26,7 @@ export default class Collage {
                 return await (async () => {
                     let i: string | Buffer = image
                     console.log(image)
-                    if (image.endsWith('.webm'))
-                        image = image.replace('.webm', '.gif')
+                    if (image.endsWith('.webm')) image = image.replace('.webm', '.gif')
                     if (image.endsWith('.gif')) {
                         i = await sharp(await this.util.getBuffer(image))
                             .jpeg()

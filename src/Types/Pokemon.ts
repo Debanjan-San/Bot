@@ -563,17 +563,7 @@ interface PokemonColor {
     /** The identifier for this resource */
     id: number
     /** The name for this resource */
-    name:
-        | 'black'
-        | 'blue'
-        | 'brown'
-        | 'gray'
-        | 'green'
-        | 'pink'
-        | 'purple'
-        | 'red'
-        | 'white'
-        | 'yellow'
+    name: 'black' | 'blue' | 'brown' | 'gray' | 'green' | 'pink' | 'purple' | 'red' | 'white' | 'yellow'
     /** The name of this resource listed in different languages */
     names: Name[]
     /** A list of the Pokémon species that have this color */
@@ -650,16 +640,7 @@ interface PokemonHabitat {
     /** The identifier for this resource */
     id: number
     /** The name for this resource */
-    name:
-        | 'cave'
-        | 'forest'
-        | 'grassland'
-        | 'mountain'
-        | 'rare'
-        | 'rough-terrain'
-        | 'sea'
-        | 'urban'
-        | 'waters-edge'
+    name: 'cave' | 'forest' | 'grassland' | 'mountain' | 'rare' | 'rough-terrain' | 'sea' | 'urban' | 'waters-edge'
     /** The name of this resource listed in different languages */
     names: Name[]
     /** A list of the Pokémon species that can be found in this habitat */

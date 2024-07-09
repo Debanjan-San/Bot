@@ -36,18 +36,10 @@ export class Database {
         update: User[typeof field]
     ): Promise<void> => {
         await this.getUser(jid)
-        await this.user.updateOne(
-            { jid },
-            { [`$${method}`]: { [field]: update } }
-        )
+        await this.user.updateOne({ jid }, { [`$${method}`]: { [field]: update } })
     }
 
-    public banUser = async (
-        jid: string,
-        bannedBy: string,
-        bannedIn: string,
-        reason: string
-    ) => {
+    public banUser = async (jid: string, bannedBy: string, bannedIn: string, reason: string) => {
         await this.getUser(jid)
         const time = moment.tz('Etc/GMT').format('MMM D, YYYY HH:mm:ss')
         await this.user.updateOne(
@@ -84,14 +76,9 @@ export class Database {
     }
 
     public getGroup = async (jid: string): Promise<TGroupModel> =>
-        (await this.group.findOne({ jid })) ||
-        (await new this.group({ jid }).save())
+        (await this.group.findOne({ jid })) || (await new this.group({ jid }).save())
 
-    public updateGroup = async (
-        jid: string,
-        field: keyof Group,
-        update: boolean | string
-    ): Promise<void> => {
+    public updateGroup = async (jid: string, field: keyof Group, update: boolean | string): Promise<void> => {
         await this.getGroup(jid)
         await this.group.updateOne({ jid }, { $set: { [field]: update } })
     }
@@ -103,19 +90,14 @@ export class Database {
         return result.slugs
     }
 
-    public getSession = async (
-        sessionId: string
-    ): Promise<TSessionModel | null> =>
+    public getSession = async (sessionId: string): Promise<TSessionModel | null> =>
         await this.session.findOne({ sessionId })
 
     public saveNewSession = async (sessionId: string): Promise<void> => {
         await new this.session({ sessionId }).save()
     }
 
-    public updateSession = async (
-        sessionId: string,
-        session: string
-    ): Promise<void> => {
+    public updateSession = async (sessionId: string, session: string): Promise<void> => {
         await this.session.updateOne({ sessionId }, { $set: { session } })
     }
 
@@ -124,20 +106,12 @@ export class Database {
     }
 
     public getContacts = async (): Promise<Contact[]> => {
-        const result =
-            (await this.contact.findOne({ ID: 'contacts' })) ||
-            (await new this.contact({ ID: 'contacts' }))
+        const result = (await this.contact.findOne({ ID: 'contacts' })) || (await new this.contact({ ID: 'contacts' }))
         return result.data
     }
 
-    public updateOfflineStatus = async (
-        jid: string,
-        action: boolean,
-        reason: string = ''
-    ) => {
-        const time = action
-            ? moment.tz('Etc/GMT').format('MMM D, YYYY HH:mm:ss')
-            : ''
+    public updateOfflineStatus = async (jid: string, action: boolean, reason: string = '') => {
+        const time = action ? moment.tz('Etc/GMT').format('MMM D, YYYY HH:mm:ss') : ''
         await this.user.updateOne(
             { jid },
             {
@@ -150,46 +124,29 @@ export class Database {
         )
     }
 
-    public denyCommand = async (
-        command: string,
-        reason: string,
-        username: string
-    ) => {
+    public denyCommand = async (command: string, reason: string, username: string) => {
         const disabledCommands = await this.getDisabledCommands()
         const time = moment.tz('Etc/GMT').format('MMM D, YYYY HH:mm:ss')
         disabledCommands.push({ command, reason, time, deniedBy: username })
-        await this.disabledCommands.updateOne(
-            { title: 'commands' },
-            { $set: { disabledCommands } }
-        )
+        await this.disabledCommands.updateOne({ title: 'commands' }, { $set: { disabledCommands } })
     }
 
     public acceptCommand = async (index: number) => {
         const disabledCommands = await this.getDisabledCommands()
         disabledCommands.splice(index, 1)
-        await this.disabledCommands.updateOne(
-            { title: 'commands' },
-            { $set: { disabledCommands } }
-        )
+        await this.disabledCommands.updateOne({ title: 'commands' }, { $set: { disabledCommands } })
     }
 
-    public getDisabledCommands = async (): Promise<
-        TCommandModel['disabledCommands']
-    > => {
+    public getDisabledCommands = async (): Promise<TCommandModel['disabledCommands']> => {
         const result =
             (await this.disabledCommands.findOne({ title: 'commands' })) ||
             (await new this.disabledCommands({ title: 'commands' }).save())
         return result.disabledCommands
     }
 
-    public updateDisabledCommands = async (
-        update: TCommandModel['disabledCommands']
-    ): Promise<void> => {
+    public updateDisabledCommands = async (update: TCommandModel['disabledCommands']): Promise<void> => {
         await this.getDisabledCommands()
-        await this.disabledCommands.updateOne(
-            { title: 'commands' },
-            { $set: { disabledCommands: update } }
-        )
+        await this.disabledCommands.updateOne({ title: 'commands' }, { $set: { disabledCommands: update } })
     }
 
     private utils = new Utils()

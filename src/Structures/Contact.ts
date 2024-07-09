@@ -4,9 +4,7 @@ import { Database, Client } from '.'
 
 export class Contact {
     constructor(private client: Client) {}
-    public saveContacts = async (
-        contacts: Partial<contact>[]
-    ): Promise<void> => {
+    public saveContacts = async (contacts: Partial<contact>[]): Promise<void> => {
         if (!this.contacts.has('contacts')) {
             const data = await this.DB.getContacts()
             this.contacts.set('contacts', data)
@@ -16,8 +14,7 @@ export class Contact {
             if (contact.id) {
                 const index = data.findIndex(({ id }) => id === contact.id)
                 if (index >= 0) {
-                    if (contact.notify !== data[index].notify)
-                        data[index].notify = contact.notify
+                    if (contact.notify !== data[index].notify) data[index].notify = contact.notify
                     continue
                 }
                 data.push({

@@ -9,17 +9,10 @@ export class CallHandler {
         if (call.status !== 'offer') return void null
         const caller = call.from
         const { username } = this.client.contact.getContact(caller)
-        this.client.log(
-            `${chalk.cyanBright('Call')} from ${chalk.blueBright(username)}`
-        )
+        this.client.log(`${chalk.cyanBright('Call')} from ${chalk.blueBright(username)}`)
         await this.client.rejectCall(call)
         await this.client.sendMessage(caller, { text: 'You are now banned' })
-        await this.client.DB.banUser(
-            caller,
-            'Automatic-Ban',
-            'DM',
-            'For calling the bot'
-        )
+        await this.client.DB.banUser(caller, 'Automatic-Ban', 'DM', 'For calling the bot')
         return void (await this.client.updateBlockStatus(caller, 'block'))
     }
 }

@@ -10,19 +10,10 @@ import { IArgs } from '../../Types'
     aliases: ['gcicon']
 })
 export default class command extends BaseCommand {
-    override execute = async (
-        M: Message,
-        { context }: IArgs
-    ): Promise<void> => {
+    override execute = async (M: Message, { context }: IArgs): Promise<void> => {
         try {
-            if (!context)
-                return void (await M.reply(
-                    'Provite the description to change.'
-                ))
-            return void (await this.client.groupUpdateDescription(
-                M.from,
-                context
-            ))
+            if (!context) return void (await M.reply('Provite the description to change.'))
+            return void (await this.client.groupUpdateDescription(M.from, context))
         } catch (err) {
             return void (await M.reply('Error!!'))
         }

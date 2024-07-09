@@ -10,16 +10,11 @@ import MWL from '../../lib/MyWaifuList'
     usage: 'haigusha || haigusha --waifu || haigusha --husbando'
 })
 export default class command extends BaseCommand {
-    override execute = async (
-        { from, message }: Message,
-        { flags }: IArgs
-    ): Promise<void> => {
+    override execute = async ({ from, message }: Message, { flags }: IArgs): Promise<void> => {
         const { random, randomCharacter } = new MWL()
         let haigusha
-        if (flags.includes('--waifu'))
-            haigusha = (await random('browse')) as WaifuResponse
-        else if (flags.includes('--husbando'))
-            haigusha = (await random('husbandos')) as WaifuResponse
+        if (flags.includes('--waifu')) haigusha = (await random('browse')) as WaifuResponse
+        else if (flags.includes('--husbando')) haigusha = (await random('husbandos')) as WaifuResponse
         else haigusha = (await randomCharacter()) as WaifuResponse
         this.handler.haigushaResponse.set(from, haigusha)
         let text = `🎐 *Name:* ${haigusha.name}\n\n`

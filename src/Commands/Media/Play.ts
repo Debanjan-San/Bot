@@ -12,18 +12,11 @@ import { AnyMessageContent } from '@whiskeysockets/baileys'
     cooldown: 25
 })
 export default class command extends BaseCommand {
-    override execute = async (
-        M: Message,
-        { context }: IArgs
-    ): Promise<void> => {
-        if (!context)
-            return void M.reply('Provide the song name that you want to play')
+    override execute = async (M: Message, { context }: IArgs): Promise<void> => {
+        if (!context) return void M.reply('Provide the song name that you want to play')
         const term = context.trim()
         const { videos } = await yts(term)
-        if (!videos || videos.length < 1)
-            return void M.reply(
-                `No matching songs found of the given term | *"${term}"*`
-            )
+        if (!videos || videos.length < 1) return void M.reply(`No matching songs found of the given term | *"${term}"*`)
         const yt = new YT(videos[0].url, 'audio')
         const audio = await this.client.utils.mp3ToOpus(await yt.download())
         return void (await this.client.sendMessage(
@@ -35,9 +28,7 @@ export default class command extends BaseCommand {
                         title: videos[0].title.substr(0, 30),
                         body: videos[0].description.substr(0, 30),
                         mediaType: 2,
-                        thumbnail: await this.client.utils.getBuffer(
-                            videos[0].thumbnail as string
-                        ),
+                        thumbnail: await this.client.utils.getBuffer(videos[0].thumbnail as string),
                         mediaUrl: videos[0].url
                     }
                 }

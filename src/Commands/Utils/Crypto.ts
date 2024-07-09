@@ -11,27 +11,16 @@ import { IArgs } from '../../Types'
     cooldown: 20
 })
 export default class extends BaseCommand {
-    public override execute = async (
-        M: Message,
-        { args }: IArgs
-    ): Promise<void> => {
+    public override execute = async (M: Message, { args }: IArgs): Promise<void> => {
         args = args.map((x) => x.toUpperCase())
         let text = ''
         await axios
             .get(`https://public.coindcx.com/market_data/current_prices`)
             .then(async (res) => {
-                if (!res)
-                    return void M.reply(
-                        'ERROR\nThis might be due to API service being down'
-                    )
+                if (!res) return void M.reply('ERROR\nThis might be due to API service being down')
 
                 const data = res.data
-                const count =
-                    args.length > 2
-                        ? isNaN(parseInt(args[2]))
-                            ? 1
-                            : parseInt(args[2])
-                        : 1
+                const count = args.length > 2 ? (isNaN(parseInt(args[2])) ? 1 : parseInt(args[2])) : 1
                 if (args[0] === '') {
                     text = `*Crypto Prices*\n\n`
                     // loop over the array of key and value, and add them to the text
@@ -72,9 +61,7 @@ export default class extends BaseCommand {
             })
             .catch((err) => {
                 console.log(err)
-                return void M.reply(
-                    'ERROR\nThis might be due to API service being down'
-                )
+                return void M.reply('ERROR\nThis might be due to API service being down')
             })
 
         return void M.reply(text)

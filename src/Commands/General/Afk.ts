@@ -10,10 +10,7 @@ import moment from 'moment-timezone'
     cooldown: 5
 })
 export default class extends BaseCommand {
-    public override execute = async (
-        M: Message,
-        { context }: IArgs
-    ): Promise<void> => {
+    public override execute = async (M: Message, { context }: IArgs): Promise<void> => {
         const reason = context ? context.trim() : ''
         const time = moment.tz('Etc/GMT').format('MMM D, YYYY HH:mm:s')
         await this.client.DB.updateUser(M.sender.jid, 'afk', 'set', {

@@ -8,16 +8,8 @@ export class Server {
 
         this.app.get('/wa/qr', async (req: Request, res: Response) => {
             const { session } = req.query
-            if (
-                !session ||
-                !this.client ||
-                this.client.config.session !== (req.query.session as string)
-            )
-                return void res
-                    .status(404)
-                    .setHeader('Content-Type', 'text/plain')
-                    .send('Invalid Session')
-                    .end()
+            if (!session || !this.client || this.client.config.session !== (req.query.session as string))
+                return void res.status(404).setHeader('Content-Type', 'text/plain').send('Invalid Session').end()
             if (!this.client || !this.client.QR)
                 return void res
                     .status(404)
@@ -33,9 +25,7 @@ export class Server {
 
         this.app.all('*', (req: Request, res: Response) => res.sendStatus(404))
 
-        this.app.listen(client.config.PORT, () =>
-            client.log(`Server started on PORT : ${client.config.PORT}`)
-        )
+        this.app.listen(client.config.PORT, () => client.log(`Server started on PORT : ${client.config.PORT}`))
     }
 
     private path = join(__dirname, '..', '..', 'frontend')

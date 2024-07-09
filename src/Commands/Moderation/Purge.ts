@@ -12,14 +12,10 @@ export default class command extends BaseCommand {
     override execute = async (M: Message): Promise<void> => {
         if (!M.groupMetadata) return void M.reply('*Try Again!*')
         const { participants, owner } = M.groupMetadata
-        if (M.sender.jid !== owner)
-            return void M.reply(
-                'This command can only be used by the owner of the group'
-            )
+        if (M.sender.jid !== owner) return void M.reply('This command can only be used by the owner of the group')
         if (this.purgeSet.has(M.from)) {
             const arr = participants.map((participant) => participant.id)
-            if (arr.includes(owner as string))
-                arr.splice(arr.indexOf(owner as string), 1)
+            if (arr.includes(owner as string)) arr.splice(arr.indexOf(owner as string), 1)
             await this.client
                 .groupParticipantsUpdate(M.from, arr, 'remove')
                 .then(async () => {

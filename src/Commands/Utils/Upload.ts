@@ -21,39 +21,20 @@ export default class command extends BaseCommand {
         message,
         type
     }: Message): Promise<void> => {
-        if (
-            (!hasSupportedMediaMessage && !quoted) ||
-            (!hasSupportedMediaMessage && !quoted?.hasSupportedMediaMessage)
-        )
-            return void reply(
-                `Provide the image/video/gif you wanna set as your icon by quoting/captioning`
-            )
+        if ((!hasSupportedMediaMessage && !quoted) || (!hasSupportedMediaMessage && !quoted?.hasSupportedMediaMessage))
+            return void reply(`Provide the image/video/gif you wanna set as your icon by quoting/captioning`)
         let buffer!: Buffer
         let messageType: 'image' | 'video' = 'image'
         if (hasSupportedMediaMessage) {
-            if (
-                type === 'videoMessage' &&
-                (message.message?.videoMessage?.seconds as number) > 45
-            )
-                return void reply(
-                    `The duration of video should not be longer than 45 seconds`
-                )
+            if (type === 'videoMessage' && (message.message?.videoMessage?.seconds as number) > 45)
+                return void reply(`The duration of video should not be longer than 45 seconds`)
             if (type === 'videoMessage') messageType = 'video'
-            buffer = await downloadMediaMessage(
-                message.message as proto.IMessage
-            )
+            buffer = await downloadMediaMessage(message.message as proto.IMessage)
         } else {
-            if (
-                quoted?.type === 'videoMessage' &&
-                (quoted?.message.videoMessage?.seconds as number) > 45
-            )
-                return void reply(
-                    `The duration of video should not be longer than 45 seconds`
-                )
+            if (quoted?.type === 'videoMessage' && (quoted?.message.videoMessage?.seconds as number) > 45)
+                return void reply(`The duration of video should not be longer than 45 seconds`)
             if (quoted?.type === 'videoMessage') messageType = 'video'
-            buffer = await downloadMediaMessage(
-                quoted?.message as proto.IMessage
-            )
+            buffer = await downloadMediaMessage(quoted?.message as proto.IMessage)
         }
         const imgurClient = new ImgurClient({
             clientId: '66745e931f7c91f'

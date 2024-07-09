@@ -45,14 +45,10 @@ export const ranks = [
     '♨ Valor'
 ]
 
-export const getStats = (
-    level: number
-): { requiredXpToLevelUp: number; rank: string } => {
+export const getStats = (level: number): { requiredXpToLevelUp: number; rank: string } => {
     let required = 100
-    for (let i = 1; i <= level; i++)
-        required += 5 * (i * 50) + 100 * i * (i * (i + 1)) + 300
-    const rank =
-        level > ranks.length ? ranks[ranks.length - 1] : ranks[level - 1]
+    for (let i = 1; i <= level; i++) required += 5 * (i * 50) + 100 * i * (i * (i + 1)) + 300
+    const rank = level > ranks.length ? ranks[ranks.length - 1] : ranks[level - 1]
     return {
         requiredXpToLevelUp: required,
         rank

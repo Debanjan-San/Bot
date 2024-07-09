@@ -8,21 +8,13 @@ import { BaseCommand, Command, Message } from '../../Structures'
     usage: 'divorce'
 })
 export default class command extends BaseCommand {
-    override execute = async ({
-        from,
-        sender,
-        reply,
-        message
-    }: Message): Promise<void> => {
+    override execute = async ({ from, sender, reply, message }: Message): Promise<void> => {
         const { haigusha } = await this.client.DB.getUser(sender.jid)
         if (!haigusha.married) return void reply("You aren't married to anyone")
         const buttonMessage = {
             text: `💔 You divorced *${haigusha.data?.name}*`
         }
-        await this.client.DB.characters.updateOne(
-            { mwl: 'married' },
-            { $pull: { slugs: haigusha.data.id } }
-        )
+        await this.client.DB.characters.updateOne({ mwl: 'married' }, { $pull: { slugs: haigusha.data.id } })
         await this.client.DB.user.updateOne(
             { jid: sender.jid },
             {

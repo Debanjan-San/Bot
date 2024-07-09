@@ -12,12 +12,8 @@ import { writeFile, readFile, unlink } from 'fs-extra'
     cooldown: 15
 })
 export default class command extends BaseCommand {
-    override execute = async (
-        M: Message,
-        { flags, context }: IArgs
-    ): Promise<void> => {
-        if (!M.quoted || M.quoted.type !== 'stickerMessage')
-            return void M.reply('Quote a sticker to format')
+    override execute = async (M: Message, { flags, context }: IArgs): Promise<void> => {
+        if (!M.quoted || M.quoted.type !== 'stickerMessage') return void M.reply('Quote a sticker to format')
         const pack = context.split('|')
         if (!pack[1])
             return void M.reply(

@@ -16,11 +16,7 @@ import { Client } from '../Structures'
 import { load } from 'cheerio'
 
 export class Utils {
-    public verifyWin = (
-        board: string[],
-        player1: string,
-        player2: string
-    ): string => {
+    public verifyWin = (board: string[], player1: string, player2: string): string => {
         const winningCombos = [
             [0, 1, 2],
             [3, 4, 5],
@@ -34,11 +30,7 @@ export class Utils {
         const hasWon = (board: string[], symbol: 'X' | 'O') => {
             let winner = false
             winningCombos.map((combo) => {
-                if (
-                    board[combo[0]] === symbol &&
-                    board[combo[1]] === symbol &&
-                    board[combo[2]] === symbol
-                ) {
+                if (board[combo[0]] === symbol && board[combo[1]] === symbol && board[combo[2]] === symbol) {
                     winner = true
                 }
             })
@@ -51,8 +43,7 @@ export class Utils {
         return 'draw'
     }
 
-    public getRandomNumber = (min: number, max: number): number =>
-        Math.floor(Math.random() * (max - min + 1)) + min
+    public getRandomNumber = (min: number, max: number): number => Math.floor(Math.random() * (max - min + 1)) + min
 
     public pad = (s: number): string => (s < 10 ? '0' : '') + s
 
@@ -60,14 +51,10 @@ export class Utils {
         const hours = Math.floor(seconds / (60 * 60))
         const minutes = Math.floor((seconds % (60 * 60)) / 60)
         const secs = Math.floor(seconds % 60)
-        return `*${this.pad(hours)} hour(s), ${this.pad(
-            minutes
-        )} minute(s), ${this.pad(secs)} second(s)*`
+        return `*${this.pad(hours)} hour(s), ${this.pad(minutes)} minute(s), ${this.pad(secs)} second(s)*`
     }
 
-    public removeBackground = async (
-        input: Buffer
-    ): Promise<Buffer | { error: string }> => {
+    public removeBackground = async (input: Buffer): Promise<Buffer | { error: string }> => {
         try {
             const { base64img } = await removeBackgroundFromImageBase64({
                 base64img: input.toString('base64'),
@@ -86,8 +73,7 @@ export class Utils {
         return a.split(':').shift()?.concat('@', b) ?? jid
     }
 
-    public randomItems = <T>(arr: T[]): T =>
-        arr[Math.floor(Math.random() * arr.length)]
+    public randomItems = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)]
 
     public generateRandomUserAgent = (): string => {
         const versions: string[] = [
@@ -106,14 +92,7 @@ export class Utils {
             '11.0'
         ]
 
-        const deviceModels: string[] = [
-            'M2004J19C',
-            'S2020X3',
-            'Xiaomi4S',
-            'RedmiNote9',
-            'SamsungS21',
-            'GooglePixel5'
-        ]
+        const deviceModels: string[] = ['M2004J19C', 'S2020X3', 'Xiaomi4S', 'RedmiNote9', 'SamsungS21', 'GooglePixel5']
 
         const buildVersions: string[] = [
             'RP1A.200720.011',
@@ -123,8 +102,7 @@ export class Utils {
             'RQ2A.210505.003'
         ]
 
-        const randomElement = (arr: string[]): string =>
-            arr[Math.floor(Math.random() * arr.length)]
+        const randomElement = (arr: string[]): string => arr[Math.floor(Math.random() * arr.length)]
 
         const randomChromeVersion = (): string => {
             const majorVersion = Math.floor(Math.random() * 80) + 1
@@ -139,9 +117,9 @@ export class Utils {
             return `WhatsApp/1.${major}.${minor}`
         }
 
-        return `Mozilla/5.0 (Linux; Android ${randomElement(
-            versions
-        )}; ${randomElement(deviceModels)} Build/${randomElement(
+        return `Mozilla/5.0 (Linux; Android ${randomElement(versions)}; ${randomElement(
+            deviceModels
+        )} Build/${randomElement(
             buildVersions
         )}) AppleWebKit/537.36 (KHTML, like Gecko) ${randomChromeVersion()} Mobile Safari/537.36 ${randomWhatsAppVersion()}`
     }
@@ -216,23 +194,16 @@ export class Utils {
         }
     }
 
-    public generateRandomHex = (): string =>
-        `#${(~~(Math.random() * (1 << 24))).toString(16)}`
+    public generateRandomHex = (): string => `#${(~~(Math.random() * (1 << 24))).toString(16)}`
 
-    public capitalize = (content: string): string =>
-        `${content[0].toUpperCase()}${content.substring(1).toLowerCase()}`
+    public capitalize = (content: string): string => `${content[0].toUpperCase()}${content.substring(1).toLowerCase()}`
 
     public generateRandomUniqueTag = (n: number = 4): string => {
         let max = 11
-        if (n > max)
-            return `${this.generateRandomUniqueTag(
-                max
-            )}${this.generateRandomUniqueTag(n - max)}`
+        if (n > max) return `${this.generateRandomUniqueTag(max)}${this.generateRandomUniqueTag(n - max)}`
         max = Math.pow(10, n + 1)
         const min = max / 10
-        return (Math.floor(Math.random() * (max - min + 1)) + min)
-            .toString()
-            .substring(1)
+        return (Math.floor(Math.random() * (max - min + 1)) + min).toString().substring(1)
     }
 
     public extractNumbers = (content: string): number[] => {
@@ -269,16 +240,11 @@ export class Utils {
         return arr
     }
 
-    public extractEmojis = (content: string): string[] =>
-        content.match(regex()) || []
+    public extractEmojis = (content: string): string[] => content.match(regex()) || []
 
-    public formatSeconds = (seconds: number): string =>
-        new Date(seconds * 1000).toISOString().substr(11, 8)
+    public formatSeconds = (seconds: number): string => new Date(seconds * 1000).toISOString().substr(11, 8)
 
-    public convertMs = (
-        ms: number,
-        to: 'seconds' | 'minutes' | 'hours' = 'seconds'
-    ): number => {
+    public convertMs = (ms: number, to: 'seconds' | 'minutes' | 'hours' = 'seconds'): number => {
         const seconds = parseInt((ms / 1000).toString().split('.')[0])
         const minutes = parseInt((seconds / 60).toString().split('.')[0])
         const hours = parseInt((minutes / 60).toString().split('.')[0])
@@ -299,15 +265,11 @@ export class Utils {
     public webpToMp4 = async (webp: Buffer): Promise<Buffer> => {
         const request = async (form: FormData, file?: string) => {
             const { data } = await axios.post(
-                file
-                    ? `https://ezgif.com/webp-to-mp4/${file}`
-                    : 'https://ezgif.com/webp-to-mp4',
+                file ? `https://ezgif.com/webp-to-mp4/${file}` : 'https://ezgif.com/webp-to-mp4',
                 form,
                 {
                     headers: {
-                        'Content-Type': `multipart/form-data; boundary=${
-                            (form as any)._boundary
-                        }`
+                        'Content-Type': `multipart/form-data; boundary=${(form as any)._boundary}`
                     }
                 }
             )
@@ -326,9 +288,7 @@ export class Utils {
         form2.append('convert', 'Convert WebP to MP4!')
 
         const $2 = await request(form2, file)
-        const videoSrc = $2('div#output > p.outfile > video > source').attr(
-            'src'
-        )
+        const videoSrc = $2('div#output > p.outfile > video > source').attr('src')
 
         const buffer = await this.getBuffer(`https:${videoSrc}`)
         return buffer
@@ -337,9 +297,7 @@ export class Utils {
     public mp3ToOpus = async (mp3: Buffer): Promise<Buffer> => {
         const filename = `${tmpdir()}/${Math.random().toString(36)}`
         await writeFile(`${filename}.mp3`, mp3)
-        await this.exec(
-            `ffmpeg -i ${filename}.mp3 -c:a libopus ${filename}.opus`
-        )
+        await this.exec(`ffmpeg -i ${filename}.mp3 -c:a libopus ${filename}.opus`)
         const buffer = await readFile(`${filename}.opus`)
         Promise.all([unlink(`${filename}.mp3`), unlink(`${filename}.opus`)])
         return buffer
@@ -356,10 +314,8 @@ export class Utils {
         return buffer
     }
 
-    public fetch = async <T>(
-        url: string,
-        headers?: { [key: string]: string }
-    ): Promise<T> => (await axios.get(url, { headers })).data
+    public fetch = async <T>(url: string, headers?: { [key: string]: string }): Promise<T> =>
+        (await axios.get(url, { headers })).data
 
     public getBuffer = async (url: string): Promise<Buffer> =>
         (
@@ -372,8 +328,7 @@ export class Utils {
 
     public chunk = <T>(arr: T[], length: number): T[][] => {
         const result = []
-        for (let i = 0; i < arr.length / length; i++)
-            result.push(arr.slice(i * length, i * length + length))
+        for (let i = 0; i < arr.length / length; i++) result.push(arr.slice(i * length, i * length + length))
         return result
     }
 

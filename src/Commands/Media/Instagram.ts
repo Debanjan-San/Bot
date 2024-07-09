@@ -10,8 +10,7 @@ import { Message, Command, BaseCommand } from '../../Structures'
 })
 export default class extends BaseCommand {
     public override execute = async (M: Message): Promise<void> => {
-        if (!M.urls.length)
-            return void M.reply('Please provide a instagram URL')
+        if (!M.urls.length) return void M.reply('Please provide a instagram URL')
         let [url] = M.urls
         if (
             !(
@@ -20,9 +19,7 @@ export default class extends BaseCommand {
                 url.includes('instagram.com/tv/')
             )
         )
-            return void M.reply(
-                `Wrong URL! Only Instagram posted videos, tv and reels can be downloaded`
-            )
+            return void M.reply(`Wrong URL! Only Instagram posted videos, tv and reels can be downloaded`)
         await this.client.utils
             .fetch<{
                 urls: {

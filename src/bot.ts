@@ -1,11 +1,5 @@
 import { Client } from './Structures'
-import {
-    MessageHandler,
-    AssetHandler,
-    CallHandler,
-    EventHandler,
-    ModHandler
-} from './Handlers'
+import { MessageHandler, AssetHandler, CallHandler, EventHandler, ModHandler } from './Handlers'
 ;(async () => {
     const client = new Client()
 

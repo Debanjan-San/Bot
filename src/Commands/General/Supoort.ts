@@ -15,17 +15,11 @@ export default class command extends BaseCommand {
         let text = '*📮SUPPORT GROUP LINKS*\n\n'
         let { supportGroups, casinoGroup, battleGroup } = this.client.config
         supportGroups.push(casinoGroup, battleGroup)
-        supportGroups = supportGroups.filter(
-            (value) => value !== undefined && value !== null && value !== ''
-        )
+        supportGroups = supportGroups.filter((value) => value !== undefined && value !== null && value !== '')
         for (let i = 0; i < supportGroups.length; i++) {
-            const { subject } = await this.client.groupMetadata(
-                supportGroups[i]
-            )
+            const { subject } = await this.client.groupMetadata(supportGroups[i])
             const code = await this.client.groupInviteCode(supportGroups[i])
-            text += `*#${
-                i + 1
-            }*\n*${subject}:* *https://chat.whatsapp.com/${code}*\n`
+            text += `*#${i + 1}*\n*${subject}:* *https://chat.whatsapp.com/${code}*\n`
             if (!url) url = `https://chat.whatsapp.com/${code}`
         }
         await this.client.sendMessage(M.sender.jid, {

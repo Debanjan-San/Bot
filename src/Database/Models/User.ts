@@ -1,9 +1,4 @@
-import {
-    prop,
-    getModelForClass,
-    modelOptions,
-    Severity
-} from '@typegoose/typegoose'
+import { prop, getModelForClass, modelOptions, Severity } from '@typegoose/typegoose'
 import { Document } from 'mongoose'
 import { WaifuResponse } from '../../Types'
 

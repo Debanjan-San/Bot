@@ -1,8 +1,7 @@
 import { BaseCommand, Command, Message } from '../../Structures'
 
 @Command('close', {
-    description:
-        'Disables everyone in a group to send message except for the admins',
+    description: 'Disables everyone in a group to send message except for the admins',
     adminRequired: true,
     category: 'moderation',
     usage: 'close',
@@ -10,11 +9,7 @@ import { BaseCommand, Command, Message } from '../../Structures'
     cooldown: 10
 })
 export default class command extends BaseCommand {
-    override execute = async ({
-        from,
-        reply,
-        groupMetadata
-    }: Message): Promise<void> => {
+    override execute = async ({ from, reply, groupMetadata }: Message): Promise<void> => {
         if (!groupMetadata) return void reply('*Try Again!*')
         const { announce } = groupMetadata
         if (announce) return void reply("The group's already closed")

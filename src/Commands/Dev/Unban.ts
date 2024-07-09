@@ -6,24 +6,17 @@ import { BaseCommand, Command, Message } from '../../Structures'
     usage: 'unban [tag/quote users]'
 })
 export default class command extends BaseCommand {
-    override execute = async ({
-        mentioned,
-        quoted,
-        reply
-    }: Message): Promise<void> => {
+    override execute = async ({ mentioned, quoted, reply }: Message): Promise<void> => {
         const users = mentioned
         const arr: string[] = []
-        if (quoted && !users.includes(quoted.sender.jid))
-            users.push(quoted.sender.jid)
+        if (quoted && !users.includes(quoted.sender.jid)) users.push(quoted.sender.jid)
         if (users.length <= 0) return void reply(`Tag/quote a user to unban`)
         let text = '🟩 Unbanned:\n'
         for (const user of users) {
             const { ban } = await this.client.DB.getUser(user)
             if (!ban?.banned) {
                 reply(
-                    `🟨 Skipped *@${
-                        user.split('@')[0]
-                    }* as he's already unbanned`,
+                    `🟨 Skipped *@${user.split('@')[0]}* as he's already unbanned`,
                     'text',
                     undefined,
                     undefined,

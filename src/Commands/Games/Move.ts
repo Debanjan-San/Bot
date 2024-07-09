@@ -11,30 +11,16 @@ import CIG from 'chess-image-generator-ts'
     category: 'games'
 })
 export default class extends BaseCommand {
-    public override execute = async (
-        M: Message,
-        { args }: IArgs
-    ): Promise<void> => {
+    public override execute = async (M: Message, { args }: IArgs): Promise<void> => {
         const print = (msg: string) => {
-            if (msg === 'Invalid Move' || msg === 'Not your turn')
-                return void M.reply(msg)
+            if (msg === 'Invalid Move' || msg === 'Not your turn') return void M.reply(msg)
             this.client.sendMessage(M.from, {
                 text: msg
             })
-            if (msg.includes('stalemate'))
-                return void this.client.utils.endChess(
-                    this.handler,
-                    this.client,
-                    M.from
-                )
+            if (msg.includes('stalemate')) return void this.client.utils.endChess(this.handler, this.client, M.from)
             if (msg.includes('wins')) {
                 const winner = msg.includes('Black wins') ? 'Black' : 'White'
-                return void this.client.utils.endChess(
-                    this.handler,
-                    this.client,
-                    M.from,
-                    winner
-                )
+                return void this.client.utils.endChess(this.handler, this.client, M.from, winner)
             }
         }
         const g = this.handler.chess.games.get(M.from)
@@ -45,44 +31,26 @@ export default class extends BaseCommand {
             )
         if (args[0] == 'castle') {
             const to = args[1]
-            if (
-                to.length != 2 ||
-                !(typeof to[0] == 'string') ||
-                isNaN(parseInt(to[1]))
-            )
+            if (to.length != 2 || !(typeof to[0] == 'string') || isNaN(parseInt(to[1])))
                 return void M.reply(
                     "A move's fromTile and toTile must be of the from 'XZ', where X is a letter A-H, and Z is a number 1-8."
                 )
             const move = {
                 piece: genRealMove(to)
             }
-            return void g.eventEmitter.emit(
-                M.from,
-                move,
-                print,
-                M.sender.jid,
-                () => async () => {
-                    const cig = new CIG()
-                    cig.loadArray(
-                        this.client.utils.parseChessBoard(
-                            g.board.getPieces(g.white, g.black)
-                        )
-                    )
-                    let sent = false
-                    while (!sent) {
-                        try {
-                            await cig
-                                .generateBuffer()
-                                .then(
-                                    async (data) => await M.reply(data, 'image')
-                                )
-                            sent = true
-                        } catch (err) {
-                            continue
-                        }
+            return void g.eventEmitter.emit(M.from, move, print, M.sender.jid, () => async () => {
+                const cig = new CIG()
+                cig.loadArray(this.client.utils.parseChessBoard(g.board.getPieces(g.white, g.black)))
+                let sent = false
+                while (!sent) {
+                    try {
+                        await cig.generateBuffer().then(async (data) => await M.reply(data, 'image'))
+                        sent = true
+                    } catch (err) {
+                        continue
                     }
                 }
-            )
+            })
         }
         const from = args[0]
         const to = args[1]
@@ -107,30 +75,18 @@ export default class extends BaseCommand {
             from: fromMove,
             to: toMove
         }
-        return void g.eventEmitter.emit(
-            M.from,
-            move,
-            print,
-            M.sender.jid,
-            async () => {
-                const cig = new CIG()
-                cig.loadArray(
-                    this.client.utils.parseChessBoard(
-                        g.board.getPieces(g.white, g.black)
-                    )
-                )
-                let sent = false
-                while (!sent) {
-                    try {
-                        await cig
-                            .generateBuffer()
-                            .then(async (data) => await M.reply(data, 'image'))
-                        sent = true
-                    } catch (err) {
-                        continue
-                    }
+        return void g.eventEmitter.emit(M.from, move, print, M.sender.jid, async () => {
+            const cig = new CIG()
+            cig.loadArray(this.client.utils.parseChessBoard(g.board.getPieces(g.white, g.black)))
+            let sent = false
+            while (!sent) {
+                try {
+                    await cig.generateBuffer().then(async (data) => await M.reply(data, 'image'))
+                    sent = true
+                } catch (err) {
+                    continue
                 }
             }
-        )
+        })
     }
 }

@@ -55,10 +55,7 @@ export class Reaction {
         }
     }
 
-    private getSuitableWords = (
-        reaction: reaction,
-        single: boolean = true
-    ): string => {
+    private getSuitableWords = (reaction: reaction, single: boolean = true): string => {
         switch (reaction) {
             case 'bite':
                 return 'Bit'
@@ -132,9 +129,7 @@ export class Reaction {
     }
 
     private fetch = async (url: string): Promise<{ url: string }> => {
-        const data = await this.utils.fetch<
-            { url: string } | { results: { anime_name: string; url: string }[] }
-        >(url)
+        const data = await this.utils.fetch<{ url: string } | { results: { anime_name: string; url: string }[] }>(url)
         const res = data as { results: { anime_name: string; url: string }[] }
         if (res.results) return res.results[0]
         return data as { url: string }

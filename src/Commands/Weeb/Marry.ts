@@ -11,12 +11,7 @@ import { WaifuResponse } from '../../Types'
     exp: 10
 })
 export default class command extends BaseCommand {
-    override execute = async ({
-        from,
-        sender,
-        reply,
-        message
-    }: Message): Promise<void> => {
+    override execute = async ({ from, sender, reply, message }: Message): Promise<void> => {
         if (!this.handler.haigushaResponse.has(from))
             return void reply(
                 `There are no summoned haigusha to marry. Use *${this.client.config.prefix}haigusha* to marry one`
@@ -34,10 +29,7 @@ export default class command extends BaseCommand {
         const res = this.handler.haigushaResponse.get(from) as WaifuResponse
         if (slugs.includes(res.id)) return void reply('💔 Already taken')
         slugs.push(res.id)
-        await this.client.DB.characters.updateOne(
-            { mwl: 'married' },
-            { $set: { slugs } }
-        )
+        await this.client.DB.characters.updateOne({ mwl: 'married' }, { $set: { slugs } })
         await this.client.DB.user.updateOne(
             { jid: sender.jid },
             { $set: { 'haigusha.married': true, 'haigusha.data': res } }
@@ -45,9 +37,7 @@ export default class command extends BaseCommand {
         this.handler.haigushaResponse.delete(from)
         let pfp: Buffer
         try {
-            pfp = await this.client.utils.getBuffer(
-                (await this.client.profilePictureUrl(sender.jid, 'image')) || ''
-            )
+            pfp = await this.client.utils.getBuffer((await this.client.profilePictureUrl(sender.jid, 'image')) || '')
         } catch (error) {
             pfp = this.client.assets.get('404') as Buffer
         }
@@ -58,9 +48,7 @@ export default class command extends BaseCommand {
             },
             {
                 name: res?.name as string,
-                image: await this.client.utils.getBuffer(
-                    res?.image_link as string
-                )
+                image: await this.client.utils.getBuffer(res?.image_link as string)
             }
         ]
         const percentage = Math.floor(Math.random() * (100 - 65) + 65)
@@ -70,12 +58,8 @@ export default class command extends BaseCommand {
             caption: `🎉 You are now married to *${res?.name}*`,
             jpegThumbnail: buffer.toString('base64')
         }
-        return void (await this.client.sendMessage(
-            from,
-            buttonMessage as AnyMessageContent,
-            {
-                quoted: message
-            }
-        ))
+        return void (await this.client.sendMessage(from, buttonMessage as AnyMessageContent, {
+            quoted: message
+        }))
     }
 }

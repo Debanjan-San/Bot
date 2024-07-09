@@ -12,22 +12,14 @@ import { AnyMessageContent } from '@whiskeysockets/baileys'
     cooldown: 10
 })
 export default class command extends BaseCommand {
-    override execute = async (
-        M: Message,
-        { context }: IArgs
-    ): Promise<void> => {
+    override execute = async (M: Message, { context }: IArgs): Promise<void> => {
         if (!context) return void M.reply('Provide the reddit you want')
         const query = context.toLowerCase().trim()
         const reddit = await new RedditFetcher(query).fetch()
-        if ((reddit as { error: string }).error)
-            return void M.reply('Invalid Subreddit')
-        const { url, nsfw, spoiler, title, author, subreddit, postLink } =
-            reddit as IRedditResponse
+        if ((reddit as { error: string }).error) return void M.reply('Invalid Subreddit')
+        const { url, nsfw, spoiler, title, author, subreddit, postLink } = reddit as IRedditResponse
         const group = await this.client.DB.getGroup(M.from)
-        if (nsfw && !group.nsfw)
-            return void M.reply(
-                "Cannot display NFSW content as the group hasn't enabled NSFW"
-            )
+        if (nsfw && !group.nsfw) return void M.reply("Cannot display NFSW content as the group hasn't enabled NSFW")
         if (spoiler)
             await M.reply(
                 this.client.assets.get('spoiler') as Buffer,

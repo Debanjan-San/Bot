@@ -12,12 +12,9 @@ export default class command extends BaseCommand {
     override execute = async (M: Message): Promise<void> => {
         if (!M.groupMetadata) return void M.reply('*Try Again!*')
         const users = M.mentioned
-        if (M.quoted && !users.includes(M.quoted.sender.jid))
-            users.push(M.quoted.sender.jid)
+        if (M.quoted && !users.includes(M.quoted.sender.jid)) users.push(M.quoted.sender.jid)
         if (!users.length || users.length < 1)
-            return void M.reply(
-                'Tag or quote the users that you want to promote, Baka!'
-            )
+            return void M.reply('Tag or quote the users that you want to promote, Baka!')
         let flag = false
         const skipped: string[] = []
         const arr: string[] = []
@@ -34,12 +31,8 @@ export default class command extends BaseCommand {
         }
         if (flag)
             M.reply(
-                `Skipped *${skipped
-                    .map((jid) => `@${jid.split('@')[0]}`)
-                    .join(', ')}* as ${
-                    skipped.length > 1
-                        ? 'they are already an admin'
-                        : 'he/she is already an admin'
+                `Skipped *${skipped.map((jid) => `@${jid.split('@')[0]}`).join(', ')}* as ${
+                    skipped.length > 1 ? 'they are already an admin' : 'he/she is already an admin'
                 }`,
                 'text',
                 undefined,
@@ -50,9 +43,7 @@ export default class command extends BaseCommand {
         if (arr.length < 0)
             return void M.reply(
                 `There are no users left to promote as ${
-                    users.length > 1
-                        ? 'all of them are already an admin'
-                        : "the user's already an admin"
+                    users.length > 1 ? 'all of them are already an admin' : "the user's already an admin"
                 }`
             )
         await this.client.groupParticipantsUpdate(M.from, arr, 'promote')

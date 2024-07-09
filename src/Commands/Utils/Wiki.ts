@@ -10,10 +10,7 @@ import { summary } from 'wikipedia'
     exp: 10
 })
 export default class extends BaseCommand {
-    public override execute = async (
-        M: Message,
-        { context }: IArgs
-    ): Promise<void> => {
+    public override execute = async (M: Message, { context }: IArgs): Promise<void> => {
         if (!context) return void M.reply('Provide a search term')
         const term = context.trim()
         const wiki = await summary(term)

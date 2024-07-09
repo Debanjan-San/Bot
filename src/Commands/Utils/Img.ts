@@ -11,15 +11,11 @@ import { BaseCommand, Command, Message } from '../../Structures'
 export default class command extends BaseCommand {
     override execute = async (M: Message): Promise<void> => {
         if (!M.quoted || (M.quoted && M.quoted.type !== 'stickerMessage'))
-            return void M.reply(
-                '*Quote the sticker that you want to convert, Baka!*'
-            )
+            return void M.reply('*Quote the sticker that you want to convert, Baka!*')
         const buffer = await M.downloadMediaMessage(M.quoted.message)
         this.client.log(`${Buffer.isBuffer(buffer)}`)
         try {
-            const type = M.quoted?.message.stickerMessage?.isAnimated
-                ? 'video'
-                : 'image'
+            const type = M.quoted?.message.stickerMessage?.isAnimated ? 'video' : 'image'
             return void (await M.reply(
                 type == 'video'
                     ? await this.client.utils.webpToMp4(buffer)
